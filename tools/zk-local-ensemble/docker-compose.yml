@@ -1,0 +1,57 @@
+version: '3.1'
+
+x-common: &x-common
+  init: true
+  restart: always
+  image: zookeeper:3.5.9
+
+x-environment: &x-environment
+  ZOO_ADMINSERVER_ENABLED: "true"
+  # List of 4LW commands we want to enable.
+  # Full list: https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_4lw
+  ZOO_4LW_COMMANDS_WHITELIST: "conf,cons,srvr,stat,mntr,envi"
+  # Set logging level to INFO and print it to stdout
+  ZOO_LOG4J_PROP: "INFO, CONSOLE"
+  # The ensemble is composed of 3 servers: see below for details on each one
+  ZOO_SERVERS: |-
+    server.1=zk1:2888:3888;2181
+    server.2=zk2:2888:3888;2181
+    server.3=zk3:2888:3888;2181
+
+services:
+  zk1:
+    <<: *x-common
+    hostname: zk1
+    ports:
+      - 2181:2181 # client port
+      - 8081:8080 # admin port
+    volumes:
+      - "./.zk-local-ensemble-data/zk1/data:/data"
+      - "./.zk-local-ensemble-data/zk1/datalog:/datalog"
+    environment:
+      <<: *x-environment
+      ZOO_MY_ID: 1
+  zk2:
+    <<: *x-common
+    hostname: zk2
+    ports:
+      - 2182:2181 # client port
+      - 8082:8080 # admin port
+    volumes:
+      - "./.zk-local-ensemble-data/zk2/data:/data"
+      - "./.zk-local-ensemble-data/zk2/datalog:/datalog"
+    environment:
+      <<: *x-environment
+      ZOO_MY_ID: 2
+  zk3:
+    <<: *x-common
+    hostname: zk3
+    ports:
+      - 2183:2181 # client port
+      - 8083:8080 # admin port
+    volumes:
+      - "./.zk-local-ensemble-data/zk3/data:/data"
+      - "./.zk-local-ensemble-data/zk3/datalog:/datalog"
+    environment:
+      <<: *x-environment
+      ZOO_MY_ID: 3

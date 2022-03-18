@@ -1,4 +1,4 @@
-# TFZK Terraform (legacy) provider for ZooKeeper
+# TFZK Terraform provider for ZooKeeper
 
 A Terraform provider for [Apache ZooKeeper](https://zookeeper.apache.org/)
 that can be leveraged as part of a bigger infrastructure that depends on having data stored in ZooKeeper

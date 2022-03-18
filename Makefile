@@ -1,7 +1,7 @@
 TEST?=$$(go list ./... | grep -v 'vendor')
 HOSTNAME=github.com
 NAMESPACE=tfzk
-NAME=zookeeper-legacy
+NAME=zookeeper
 BINARY=bin/terraform-provider-${NAME}
 VERSION=0.0.0-dev
 OS_ARCH=darwin_arm64

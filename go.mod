@@ -1,4 +1,4 @@
-module github.com/tfzk/terraform-provider-zookeeper-legacy
+module github.com/tfzk/terraform-provider-zookeeper
 
 go 1.17
 

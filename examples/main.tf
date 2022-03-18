@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     zookeeper = {
-      source  = "github.com/tfzk/zookeeper-legacy"
+      source  = "github.com/tfzk/zookeeper"
       # NOTE: Make sure the pick the latest version when using the provider.
       # Here we refer to the one installed via `Makefile` as part of the
       # local development lifecycle.
@@ -18,7 +18,7 @@ provider "zookeeper" {
 }
 
 resource "zookeeper_znode" "znode_with_json" {
-  path = "/examples/zookeeper-legacy/json"
+  path = "/examples/zookeeper/json"
 
   data = jsonencode({
     ivan        = "uno1"
@@ -30,7 +30,7 @@ resource "zookeeper_znode" "znode_with_json" {
 }
 
 resource "zookeeper_znode" "empty_parent_znode" {
-  path = "/examples/zookeeper-legacy/parent"
+  path = "/examples/zookeeper/parent"
 }
 
 resource "zookeeper_sequential_znode" "znode_seq_type1" {

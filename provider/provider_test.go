@@ -5,13 +5,13 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/stretchr/testify/assert"
+	testifyAssert "github.com/stretchr/testify/assert"
 
 	"github.com/tfzk/client"
 )
 
 func TestProvider(t *testing.T) {
-	assert := assert.New(t)
+	assert := testifyAssert.New(t)
 
 	err := Provider().InternalValidate()
 	assert.NoError(err)

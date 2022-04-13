@@ -13,13 +13,10 @@ import (
 func TestProvider(t *testing.T) {
 	assert := testifyAssert.New(t)
 
-	err := Provider().InternalValidate()
+	provider, err := New()
 	assert.NoError(err)
-}
 
-// testAccProviderFactory is a factory for the Provider used during Acceptance Tests
-func testAccProviderFactory() (*schema.Provider, error) {
-	return Provider(), nil
+	assert.NoError(provider.InternalValidate())
 }
 
 // testAccProviderFactories associates to each Provider factory instance, a name.
@@ -31,7 +28,9 @@ func testAccProviderFactory() (*schema.Provider, error) {
 // the provider and `terraform init` should be executed.
 func testAccProviderFactories() map[string]func() (*schema.Provider, error) {
 	return map[string]func() (*schema.Provider, error){
-		"zookeeper": testAccProviderFactory,
+		"zookeeper": func() (*schema.Provider, error) {
+			return New()
+		},
 	}
 }
 

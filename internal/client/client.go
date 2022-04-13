@@ -40,7 +40,7 @@ const (
 	MatchAnyVersion = -1
 )
 
-// NewClient constructs a new `Client` instance
+// NewClient constructs a new `Client` instance.
 func NewClient(servers string, sessionTimeoutSec int) (*Client, error) {
 	serversSplit := strings.Split(servers, ServersStringSeparator)
 
@@ -208,7 +208,7 @@ func (c *Client) Exists(path string) (bool, error) {
 	return exists, nil
 }
 
-// StatAsMap is an helper that returns the zk.Stat contained to ZNode
+// StatAsMap is an helper that returns the zk.Stat contained to ZNode.
 func (z *ZNode) StatAsMap() map[string]int64 {
 	return map[string]int64{
 		"czxid":          z.Stat.Czxid,

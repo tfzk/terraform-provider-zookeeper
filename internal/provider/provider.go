@@ -18,17 +18,17 @@ const (
 	providerEnvFieldSessionTimeout = "ZOOKEEPER_SESSION"
 )
 
-func Provider() *schema.Provider {
+func New() (*schema.Provider, error) {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			providerFieldServers: &schema.Schema{
+			providerFieldServers: {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   false,
 				DefaultFunc: schema.EnvDefaultFunc(providerEnvFieldServers, nil),
 				Description: "A string containing a comma separated list of 'host:port' pairs",
 			},
-			providerFieldSessionTimeout: &schema.Schema{
+			providerFieldSessionTimeout: {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Sensitive:   false,
@@ -44,15 +44,14 @@ func Provider() *schema.Provider {
 			typeZNode: datasourceZNode(),
 		},
 		ConfigureContextFunc: configureProviderContext,
-	}
+	}, nil
 }
 
 func configureProviderContext(ctx context.Context, rscData *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	servers := rscData.Get(providerFieldServers).(string)
 	sessionTimeout := rscData.Get(providerFieldSessionTimeout).(int)
 
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
+	diags := diag.Diagnostics{}
 
 	if servers != "" {
 		c, err := client.NewClient(servers, sessionTimeout)

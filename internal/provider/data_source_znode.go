@@ -14,15 +14,15 @@ func datasourceZNode() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceZNodeRead,
 		Schema: map[string]*schema.Schema{
-			fieldPath: &schema.Schema{
+			fieldPath: {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			fieldData: &schema.Schema{
+			fieldData: {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			fieldStat: &schema.Schema{
+			fieldStat: {
 				Type:     schema.TypeMap,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeInt},
@@ -32,8 +32,7 @@ func datasourceZNode() *schema.Resource {
 }
 
 func dataSourceZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
+	diags := diag.Diagnostics{}
 
 	zkClient := prvClient.(*client.Client)
 

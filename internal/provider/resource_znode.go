@@ -17,16 +17,16 @@ func resourceZNode() *schema.Resource {
 		UpdateContext: resourceZNodeUpdate,
 		DeleteContext: resourceZNodeDelete,
 		Schema: map[string]*schema.Schema{
-			fieldPath: &schema.Schema{
+			fieldPath: {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			fieldData: &schema.Schema{
+			fieldData: {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			fieldStat: &schema.Schema{
+			fieldStat: {
 				Type:     schema.TypeMap,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeInt},
@@ -36,8 +36,7 @@ func resourceZNode() *schema.Resource {
 }
 
 func resourceZNodeCreate(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
+	diags := diag.Diagnostics{}
 
 	zkClient := prvClient.(*client.Client)
 
@@ -59,8 +58,7 @@ func resourceZNodeCreate(ctx context.Context, rscData *schema.ResourceData, prvC
 }
 
 func resourceZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
+	diags := diag.Diagnostics{}
 
 	zkClient := prvClient.(*client.Client)
 
@@ -78,8 +76,7 @@ func resourceZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvCli
 }
 
 func resourceZNodeUpdate(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
+	diags := diag.Diagnostics{}
 
 	zkClient := prvClient.(*client.Client)
 
@@ -101,8 +98,7 @@ func resourceZNodeUpdate(ctx context.Context, rscData *schema.ResourceData, prvC
 }
 
 func resourceZNodeDelete(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
+	diags := diag.Diagnostics{}
 
 	zkClient := prvClient.(*client.Client)
 

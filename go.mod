@@ -3,9 +3,9 @@ module github.com/tfzk/terraform-provider-zookeeper
 go 1.17
 
 require (
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.12.0
+	github.com/go-zookeeper/zk v1.0.2
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.13.0
 	github.com/stretchr/testify v1.7.0
-	github.com/tfzk/client v1.0.0
 )
 
 require (
@@ -14,7 +14,6 @@ require (
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.7.0 // indirect
-	github.com/go-zookeeper/zk v1.0.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect

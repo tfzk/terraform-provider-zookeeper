@@ -131,8 +131,8 @@ github.com/hashicorp/terraform-plugin-go v0.8.0 h1:MvY43PcDj9VlBjYifBWCO/6j1wf10
 github.com/hashicorp/terraform-plugin-go v0.8.0/go.mod h1:E3GuvfX0Pz2Azcl6BegD6t51StXsVZMOYQoGO8mkHM0=
 github.com/hashicorp/terraform-plugin-log v0.3.0 h1:NPENNOjaJSVX0f7JJTl4f/2JKRPQ7S2ZN9B4NSqq5kA=
 github.com/hashicorp/terraform-plugin-log v0.3.0/go.mod h1:EjueSP/HjlyFAsDqt+okpCPjkT4NDynAe32AeDC4vps=
-github.com/hashicorp/terraform-plugin-sdk/v2 v2.12.0 h1:rjJxyLUVA180BG0ZXTOree4x2RVvo2jigdYoT2rw5j0=
-github.com/hashicorp/terraform-plugin-sdk/v2 v2.12.0/go.mod h1:TPjMXvpPNWagHzYOmVPzzRRIBTuaLVukR+esL08tgzg=
+github.com/hashicorp/terraform-plugin-sdk/v2 v2.13.0 h1:MyzzWWHOQgYCsoJZEC9YgDqyZoG8pftt2pcYG30A+Do=
+github.com/hashicorp/terraform-plugin-sdk/v2 v2.13.0/go.mod h1:TPjMXvpPNWagHzYOmVPzzRRIBTuaLVukR+esL08tgzg=
 github.com/hashicorp/terraform-registry-address v0.0.0-20210412075316-9b2996cce896 h1:1FGtlkJw87UsTMg5s8jrekrHmUPUJaMcu6ELiVhQrNw=
 github.com/hashicorp/terraform-registry-address v0.0.0-20210412075316-9b2996cce896/go.mod h1:bzBPnUIkI0RxauU8Dqo+2KrZZ28Cf48s8V6IHt3p4co=
 github.com/hashicorp/terraform-svchost v0.0.0-20200729002733-f050f53b9734 h1:HKLsbzeOsfXmKNpr3GiT18XAblV0BjCbzL8KQAMZGa0=
@@ -206,8 +206,6 @@ github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81P
 github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
 github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
-github.com/tfzk/client v1.0.0 h1:H2KW8oU3wrhhgDVmKtwKNANr5GRzQxPcghh3VM74Hsg=
-github.com/tfzk/client v1.0.0/go.mod h1:2cxQT5+7m9wFiQCzVGdpnNBhTIM6xw09fPm3iju1F0M=
 github.com/vmihailenco/msgpack v3.3.3+incompatible/go.mod h1:fy3FlTQTDXWkZ7Bh6AcGMlsjHatGryHQYUTf1ShIgkk=
 github.com/vmihailenco/msgpack v4.0.4+incompatible h1:dSLoQfGFAo3F6OoNhwUmLwVgaUXK79GlxNBwueZn0xI=
 github.com/vmihailenco/msgpack v4.0.4+incompatible/go.mod h1:fy3FlTQTDXWkZ7Bh6AcGMlsjHatGryHQYUTf1ShIgkk=

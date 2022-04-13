@@ -1,4 +1,4 @@
-package zookeeper
+package provider
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"github.com/tfzk/client"
+	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
 
 const (

@@ -1,4 +1,4 @@
-package zookeeper
+package provider
 
 import (
 	"os"
@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	testifyAssert "github.com/stretchr/testify/assert"
 
-	"github.com/tfzk/client"
+	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
 
 func TestProvider(t *testing.T) {

@@ -1,6 +1,7 @@
 package client
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 	"sort"
@@ -127,10 +128,18 @@ func (c *Client) createEmptyZNodes(pathsInOrder []string, createFlags int32, acl
 			return err
 		}
 
-		// Will only create the znode if they don't already exist
+		// Will only create the znode if they don't already exist.
+		//
+		// NOTE: Terraform graph can sometimes decide to create multiple
+		// ZNodes that share part of their path ancestry at the same time.
+		// When that happens, we have contention in this area of code,
+		// where a `path` that didn't exist above, it exists once we try
+		// to create it.
+		// For this reason, we avoid reporting an error if it is about
+		// a ZNode already existing.
 		if !exists {
 			_, err := c.zkConn.Create(path, nil, createFlags, acl)
-			if err != nil {
+			if err != nil && !errors.Is(err, zk.ErrNodeExists) {
 				return fmt.Errorf("failed to create parent ZNode '%s' (createFlags: %d, acl: %v): %w", path, createFlags, acl, err)
 			}
 		}

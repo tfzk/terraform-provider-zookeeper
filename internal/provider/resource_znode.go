@@ -2,8 +2,9 @@ package provider
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
+	"github.com/go-zookeeper/zk"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
@@ -17,16 +18,16 @@ func resourceZNode() *schema.Resource {
 		UpdateContext: resourceZNodeUpdate,
 		DeleteContext: resourceZNodeDelete,
 		Schema: map[string]*schema.Schema{
-			fieldPath: {
+			"path": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			fieldData: {
+			"data": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			fieldStat: {
+			"stat": {
 				Type:     schema.TypeMap,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeInt},
@@ -36,81 +37,61 @@ func resourceZNode() *schema.Resource {
 }
 
 func resourceZNodeCreate(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
-	diags := diag.Diagnostics{}
-
 	zkClient := prvClient.(*client.Client)
 
-	znodePath := rscData.Get(fieldPath).(string)
+	znodePath := rscData.Get("path").(string)
 
 	znode, err := zkClient.Create(znodePath, getFieldDataFromResourceData(rscData))
 	if err != nil {
-		return append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  fmt.Sprintf("Failed to create ZNode '%s': %v", znodePath, err),
-		})
+		return diag.Errorf("Failed to create ZNode '%s': %v", znodePath, err)
 	}
 
 	// Terraform will use the ZNode.Path as unique identifier for this Resource
 	rscData.SetId(znode.Path)
 	rscData.MarkNewResource()
 
-	return setResourceDataFromZNode(rscData, &znode, diags)
+	return setResourceDataFromZNode(rscData, znode, diag.Diagnostics{})
 }
 
 func resourceZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
-	diags := diag.Diagnostics{}
-
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Id()
 
 	znode, err := zkClient.Read(znodePath)
 	if err != nil {
-		return append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  fmt.Sprintf("Failed to read ZNode '%s': %v", znodePath, err),
-		})
+		return diag.Errorf("Failed to read ZNode '%s': %v", znodePath, err)
 	}
 
-	return setResourceDataFromZNode(rscData, &znode, diags)
+	return setResourceDataFromZNode(rscData, znode, diag.Diagnostics{})
 }
 
 func resourceZNodeUpdate(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
-	diags := diag.Diagnostics{}
-
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Id()
 
-	if rscData.HasChange(fieldData) {
+	if rscData.HasChange("data") {
 		znode, err := zkClient.Update(znodePath, getFieldDataFromResourceData(rscData))
 		if err != nil {
-			return append(diags, diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  fmt.Sprintf("Failed to update ZNode '%s': %v", znodePath, err),
-			})
+			return diag.Errorf("Failed to update ZNode '%s': %v", znodePath, err)
 		}
 
-		return setResourceDataFromZNode(rscData, &znode, diags)
+		return setResourceDataFromZNode(rscData, znode, diag.Diagnostics{})
 	}
 
-	return diags
+	return diag.Diagnostics{}
 }
 
 func resourceZNodeDelete(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
-	diags := diag.Diagnostics{}
-
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Id()
 
 	err := zkClient.Delete(znodePath)
 	if err != nil {
-		return append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  fmt.Sprintf("Failed to delete ZNode '%s': %v", znodePath, err),
-		})
+		return diag.Errorf("Failed to delete ZNode '%s': %v", znodePath, err)
 	}
 
-	return diags
+	return diag.Diagnostics{}
 }

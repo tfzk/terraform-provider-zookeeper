@@ -7,26 +7,16 @@ import (
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
 
-const (
-	typeZNode    = "zookeeper_znode"
-	typeSeqZNode = "zookeeper_sequential_znode"
-
-	fieldPath       = "path"
-	fieldPathPrefix = "path_prefix"
-	fieldData       = "data"
-	fieldStat       = "stat"
-)
-
 func setResourceDataFromZNode(rscData *schema.ResourceData, znode *client.ZNode, diags diag.Diagnostics) diag.Diagnostics {
-	if err := rscData.Set(fieldPath, znode.Path); err != nil {
+	if err := rscData.Set("path", znode.Path); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
-	if err := rscData.Set(fieldData, string(znode.Data)); err != nil {
+	if err := rscData.Set("data", string(znode.Data)); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
-	if err := rscData.Set(fieldStat, znode.StatAsMap()); err != nil {
+	if err := rscData.Set("stat", znode.StatAsMap()); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
@@ -34,7 +24,7 @@ func setResourceDataFromZNode(rscData *schema.ResourceData, znode *client.ZNode,
 }
 
 func getFieldDataFromResourceData(rscData *schema.ResourceData) []byte {
-	znodeDataRaw, exists := rscData.GetOk(fieldData)
+	znodeDataRaw, exists := rscData.GetOk("data")
 	if exists {
 		znodeDataStr := znodeDataRaw.(string)
 		return []byte(znodeDataStr)

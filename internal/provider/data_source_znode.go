@@ -2,7 +2,6 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -14,15 +13,15 @@ func datasourceZNode() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceZNodeRead,
 		Schema: map[string]*schema.Schema{
-			fieldPath: {
+			"path": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			fieldData: {
+			"data": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			fieldStat: {
+			"stat": {
 				Type:     schema.TypeMap,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeInt},
@@ -32,22 +31,17 @@ func datasourceZNode() *schema.Resource {
 }
 
 func dataSourceZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
-	diags := diag.Diagnostics{}
-
 	zkClient := prvClient.(*client.Client)
 
-	znodePath := rscData.Get(fieldPath).(string)
+	znodePath := rscData.Get("path").(string)
 
 	znode, err := zkClient.Read(znodePath)
 	if err != nil {
-		return append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  fmt.Sprintf("Unable read ZNode from '%s': %v", znodePath, err),
-		})
+		return diag.Errorf("Unable read ZNode from '%s': %v", znodePath, err)
 	}
 
 	// Terraform will use the ZNode.Path as unique identifier for this Data Source
 	rscData.SetId(znode.Path)
 
-	return setResourceDataFromZNode(rscData, &znode, diags)
+	return setResourceDataFromZNode(rscData, znode, diag.Diagnostics{})
 }

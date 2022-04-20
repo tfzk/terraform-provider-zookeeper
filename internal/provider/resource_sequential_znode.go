@@ -2,7 +2,6 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -17,20 +16,20 @@ func resourceSeqZNode() *schema.Resource {
 		UpdateContext: resourceSeqZNodeUpdate,
 		DeleteContext: resourceSeqZNodeDelete,
 		Schema: map[string]*schema.Schema{
-			fieldPathPrefix: {
+			"path_prefix": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			fieldData: {
+			"data": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			fieldPath: {
+			"path": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			fieldStat: {
+			"stat": {
 				Type:     schema.TypeMap,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeInt},
@@ -40,25 +39,20 @@ func resourceSeqZNode() *schema.Resource {
 }
 
 func resourceSeqZNodeCreate(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
-	diags := diag.Diagnostics{}
-
 	zkClient := prvClient.(*client.Client)
 
-	znodePathPrefix := rscData.Get(fieldPathPrefix).(string)
+	znodePathPrefix := rscData.Get("path_prefix").(string)
 
 	znode, err := zkClient.CreateSequential(znodePathPrefix, getFieldDataFromResourceData(rscData))
 	if err != nil {
-		return append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  fmt.Sprintf("Failed to create Sequential ZNode '%s': %v", znodePathPrefix, err),
-		})
+		return diag.Errorf("Failed to create Sequential ZNode '%s': %v", znodePathPrefix, err)
 	}
 
 	// Terraform will use the ZNode.Path as unique identifier for this Resource
 	rscData.SetId(znode.Path)
 	rscData.MarkNewResource()
 
-	return setResourceDataFromZNode(rscData, &znode, diags)
+	return setResourceDataFromZNode(rscData, znode, diag.Diagnostics{})
 }
 
 func resourceSeqZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {

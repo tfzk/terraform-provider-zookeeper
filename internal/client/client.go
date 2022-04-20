@@ -42,7 +42,7 @@ const (
 
 // NewClient constructs a new `Client` instance.
 func NewClient(servers string, sessionTimeoutSec int) (*Client, error) {
-	serversSplit := strings.Split(servers, ServersStringSeparator)
+	serversSplit := strings.Split(servers, serversStringSeparator)
 
 	conn, _, err := zk.Connect(zk.FormatServers(serversSplit), time.Duration(sessionTimeoutSec)*time.Second)
 	if err != nil {
@@ -57,12 +57,12 @@ func NewClient(servers string, sessionTimeoutSec int) (*Client, error) {
 // Create a ZNode at the given path.
 //
 // Note that any necessary ZNode parents will be created if absent.
-func (c *Client) Create(path string, data []byte) (ZNode, error) {
+func (c *Client) Create(path string, data []byte) (*ZNode, error) {
 	// TODO Make ACL configurable
 	acl := zk.WorldACL(zk.PermRead | zk.PermWrite | zk.PermCreate | zk.PermDelete)
 
-	if path[len(path)-1] == ZNodePathSeparator {
-		return ZNode{}, fmt.Errorf("non-sequential ZNode cannot have path '%s' because it ends in '%c'", path, ZNodePathSeparator)
+	if path[len(path)-1] == zNodePathSeparator {
+		return nil, fmt.Errorf("non-sequential ZNode cannot have path '%s' because it ends in '%c'", path, zNodePathSeparator)
 	}
 
 	return c.doCreate(path, data, 0, acl)
@@ -82,25 +82,25 @@ func (c *Client) Create(path string, data []byte) (ZNode, error) {
 //   created znode path -> `/this/is/a/path/0000000001`
 //
 // Note also that any necessary ZNode parents will be created if absent.
-func (c *Client) CreateSequential(path string, data []byte) (ZNode, error) {
+func (c *Client) CreateSequential(path string, data []byte) (*ZNode, error) {
 	// TODO Make ACL configurable
 	acl := zk.WorldACL(zk.PermRead | zk.PermWrite | zk.PermCreate | zk.PermDelete)
 
 	return c.doCreate(path, data, zk.FlagSequence, acl)
 }
 
-func (c *Client) doCreate(path string, data []byte, createFlags int32, acl []zk.ACL) (ZNode, error) {
+func (c *Client) doCreate(path string, data []byte, createFlags int32, acl []zk.ACL) (*ZNode, error) {
 	// Create any necessary parent for the ZNode we need to crete
 	parentZNodes := listParentsInOrder(path)
 	err := c.createEmptyZNodes(parentZNodes, 0, acl)
 	if err != nil {
-		return ZNode{}, err
+		return nil, err
 	}
 
 	// NOTE: Based on the `createFlags`, the path returned by `Create` can change (ex. sequential nodes)
 	createdPath, err := c.zkConn.Create(path, data, createFlags, acl)
 	if err != nil {
-		return ZNode{}, fmt.Errorf("failed to create ZNode '%s' (size: %d, createFlags: %d, acl: %v): %w", path, len(data), createFlags, acl, err)
+		return nil, fmt.Errorf("failed to create ZNode '%s' (size: %d, createFlags: %d, acl: %v): %w", path, len(data), createFlags, acl, err)
 	}
 
 	return c.Read(createdPath)
@@ -109,7 +109,7 @@ func (c *Client) doCreate(path string, data []byte, createFlags int32, acl []zk.
 func listParentsInOrder(path string) []string {
 	// Split the path one parent directory at a time
 	parentPaths := []string{filepath.Dir(path)}
-	for parentPaths[len(parentPaths)-1] != ZNodeRootPath {
+	for parentPaths[len(parentPaths)-1] != zNodeRootPath {
 		parentPaths = append(parentPaths, filepath.Dir(parentPaths[len(parentPaths)-1]))
 	}
 
@@ -140,13 +140,13 @@ func (c *Client) createEmptyZNodes(pathsInOrder []string, createFlags int32, acl
 }
 
 // Read the ZNode at the given path.
-func (c *Client) Read(path string) (ZNode, error) {
+func (c *Client) Read(path string) (*ZNode, error) {
 	data, stat, err := c.zkConn.Get(path)
 	if err != nil {
-		return ZNode{}, fmt.Errorf("failed to read ZNode '%s': %w", path, err)
+		return nil, fmt.Errorf("failed to read ZNode '%s': %w", path, err)
 	}
 
-	return ZNode{
+	return &ZNode{
 		Path: path,
 		Stat: stat,
 		Data: data,
@@ -156,19 +156,19 @@ func (c *Client) Read(path string) (ZNode, error) {
 // Update the ZNode at the given path, under the assumption that it is there.
 //
 // Will return an error if it doesn't already exist.
-func (c *Client) Update(path string, data []byte) (ZNode, error) {
+func (c *Client) Update(path string, data []byte) (*ZNode, error) {
 	exists, err := c.Exists(path)
 	if err != nil {
-		return ZNode{}, err
+		return nil, err
 	}
 
 	if !exists {
-		return ZNode{}, fmt.Errorf("failed to update ZNode '%s': does not exist", path)
+		return nil, fmt.Errorf("failed to update ZNode '%s': does not exist", path)
 	}
 
-	_, err = c.zkConn.Set(path, data, MatchAnyVersion)
+	_, err = c.zkConn.Set(path, data, matchAnyVersion)
 	if err != nil {
-		return ZNode{}, fmt.Errorf("failed to update ZNode '%s': %w", path, err)
+		return nil, fmt.Errorf("failed to update ZNode '%s': %w", path, err)
 	}
 
 	return c.Read(path)
@@ -184,14 +184,14 @@ func (c *Client) Delete(path string) error {
 	}
 
 	for _, child := range children {
-		childPath := fmt.Sprintf("%s%c%s", path, ZNodePathSeparator, child)
+		childPath := fmt.Sprintf("%s%c%s", path, zNodePathSeparator, child)
 		err = c.Delete(childPath)
 		if err != nil {
 			return fmt.Errorf("failed to delete child '%s' of ZNode '%s': %w", childPath, path, err)
 		}
 	}
 
-	err = c.zkConn.Delete(path, MatchAnyVersion)
+	err = c.zkConn.Delete(path, matchAnyVersion)
 	if err != nil {
 		return fmt.Errorf("failed to delete ZNode '%s': %w", path, err)
 	}

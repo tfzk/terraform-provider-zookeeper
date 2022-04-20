@@ -60,6 +60,13 @@ func resourceZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvCli
 
 	znode, err := zkClient.Read(znodePath)
 	if err != nil {
+		// If the ZNode is not found, it means it was changed outside of Terraform.
+		// We set the ID to blank, so it's state will be removed.
+		if errors.Is(err, zk.ErrNoNode) {
+			rscData.SetId("")
+			return diag.Diagnostics{}
+		}
+
 		return diag.Errorf("Failed to read ZNode '%s': %v", znodePath, err)
 	}
 

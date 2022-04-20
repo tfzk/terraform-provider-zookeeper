@@ -1,10 +1,7 @@
 terraform {
   required_providers {
     zookeeper = {
-      source  = "github.com/tfzk/zookeeper"
-      # NOTE: Make sure the pick the latest version when using the provider.
-      # Here we refer to the one installed via `Makefile` as part of the
-      # local development lifecycle.
+      source  = "tfzk/zookeeper"
       version = "0.0.0-dev"
     }
   }

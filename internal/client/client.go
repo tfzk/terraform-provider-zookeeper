@@ -30,14 +30,14 @@ type ZNode struct {
 }
 
 const (
-	ServersStringSeparator = ","
-	ZNodeRootPath          = "/"
-	ZNodePathSeparator     = '/'
+	serversStringSeparator = ","
+	zNodeRootPath          = "/"
+	zNodePathSeparator     = '/'
 
-	// MatchAnyVersion is used when submitting an update/delete request.
+	// matchAnyVersion is used when submitting an update/delete request.
 	// Providing `version = -1` means that the operation will match any
 	// version of the ZNode found.
-	MatchAnyVersion = -1
+	matchAnyVersion = -1
 )
 
 // NewClient constructs a new `Client` instance.

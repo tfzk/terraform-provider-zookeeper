@@ -15,6 +15,9 @@ func resourceSeqZNode() *schema.Resource {
 		ReadContext:   resourceSeqZNodeRead,
 		UpdateContext: resourceSeqZNodeUpdate,
 		DeleteContext: resourceSeqZNodeDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: resourceSeqZNodeImport,
+		},
 		Schema: map[string]*schema.Schema{
 			"path_prefix": {
 				Type:     schema.TypeString,
@@ -65,4 +68,14 @@ func resourceSeqZNodeUpdate(ctx context.Context, rscData *schema.ResourceData, p
 
 func resourceSeqZNodeDelete(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
 	return resourceZNodeDelete(ctx, rscData, prvClient)
+}
+
+func resourceSeqZNodeImport(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) ([]*schema.ResourceData, error) {
+	// Re-create the original `path_prefix` for the imported `sequential_znode`,
+	// by removing the sequential suffix from the `id` (i.e. `path`)
+	if err := rscData.Set("path_prefix", client.RemoveSequentialSuffix(rscData.Id())); err != nil {
+		return nil, err
+	}
+
+	return []*schema.ResourceData{rscData}, nil
 }

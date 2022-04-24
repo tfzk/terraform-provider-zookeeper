@@ -233,3 +233,11 @@ func (z *ZNode) StatAsMap() map[string]int64 {
 		"pzxid":          z.Stat.Pzxid,
 	}
 }
+
+// RemoveSequentialSuffix takes the path to a sequential ZNode, maybe created via CreateSequential,
+// and truncates the unique suffix.
+//
+// See: https://zookeeper.apache.org/doc/r3.6.3/zookeeperProgrammers.html#Sequence+Nodes+--+Unique+Naming
+func RemoveSequentialSuffix(path string) string {
+	return path[:len(path)-10]
+}

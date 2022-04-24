@@ -21,8 +21,8 @@ keep supporting users of legacy versions of Terraform.
 * [x] read ZNode
 * [x] update ZNode
 * [x] delete ZNode
-* [ ] import ZNode
-* [ ] import Sequential ZNode (? can it be done?)
+* [x] import ZNode
+* [x] import Sequential ZNode
 
 ## Project 1.0.0 must haves
 
@@ -44,7 +44,7 @@ TBD
 
 ### Requirements
 
-* [Go](https://go.dev/dl/) >= `1.17`
+* [Go](https://go.dev/dl/) >= `1.18`
 * [Docker](https://docs.docker.com/get-docker/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
 

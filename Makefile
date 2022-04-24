@@ -25,6 +25,6 @@ test:
 testacc:
 	ZOOKEEPER_SERVERS=$(ZOOKEEPER_SERVERS) \
 	TF_ACC=1 \
-		go test -v -cover -timeout 2m ./...
+		go test -v -cover -parallel=4 -timeout 2m ./...
 
 .PHONY: build install lint generate fmt test testacc

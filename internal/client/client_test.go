@@ -3,15 +3,15 @@ package client
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	testifyAssert "github.com/stretchr/testify/assert"
 )
 
 const (
 	TestZKEnsemble = "localhost:2181,localhost:2182,localhost:2183"
 )
 
-func initTest(t *testing.T) (*Client, *assert.Assertions) {
-	assert := assert.New(t)
+func initTest(t *testing.T) (*Client, *testifyAssert.Assertions) {
+	assert := testifyAssert.New(t)
 
 	client, err := NewClient(TestZKEnsemble, 60)
 	assert.NoError(err)

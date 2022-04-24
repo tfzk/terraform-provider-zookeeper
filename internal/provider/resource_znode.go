@@ -17,6 +17,9 @@ func resourceZNode() *schema.Resource {
 		ReadContext:   resourceZNodeRead,
 		UpdateContext: resourceZNodeUpdate,
 		DeleteContext: resourceZNodeDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"path": {
 				Type:     schema.TypeString,

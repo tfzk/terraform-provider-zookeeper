@@ -43,7 +43,7 @@ func checkPreconditions(t *testing.T) {
 	}
 }
 
-// getTestZKClient can be used during test to procure a client.Client
+// getTestZKClient can be used during test to procure a client.Client.
 func getTestZKClient() *client.Client {
 	zkClient, _ := client.NewClient(os.Getenv("ZOOKEEPER_SERVERS"), 10)
 	return zkClient

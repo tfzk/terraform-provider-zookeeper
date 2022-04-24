@@ -17,14 +17,14 @@ func New() (*schema.Provider, error) {
 				Optional:    true,
 				Sensitive:   false,
 				DefaultFunc: schema.EnvDefaultFunc("ZOOKEEPER_SERVERS", nil),
-				Description: "A string containing a comma separated list of 'host:port' pairs",
+				Description: "A comma separated list of 'host:port' pairs, pointing at ZooKeeper Server(s).",
 			},
 			"session_timeout": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Sensitive:   false,
-				DefaultFunc: schema.EnvDefaultFunc("ZOOKEEPER_SESSION", 10),
-				Description: "How many seconds a session is considered valid after losing connectivity",
+				DefaultFunc: schema.EnvDefaultFunc("ZOOKEEPER_SESSION", 30),
+				Description: "How many seconds a session is considered valid after losing connectivity.",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{

@@ -1,5 +1,5 @@
-# NOTE: This is valid only while the `tools/zk-local-ensemble` is up
-ZOOKEEPER_SERVERS="localhost:2181,localhost:2182,localhost:2183"
+# NOTE: This is valid only while the `make local.zk.up`
+ZOOKEEPER_SERVERS=localhost:2181,localhost:2182,localhost:2183
 
 default: build
 
@@ -20,11 +20,21 @@ fmt:
 	gofmt -s -w -e .
 
 test:
-	go test -v -cover -timeout=120s -parallel=4 ./...
+	go test -v -cover -timeout=2m -parallel=4 ./...
 
 testacc:
-	ZOOKEEPER_SERVERS=$(ZOOKEEPER_SERVERS) \
-	TF_ACC=1 \
-		go test -v -cover -parallel=4 -timeout 2m ./...
+	TF_ACC=1 go test -v -cover -timeout=2m -parallel=4 ./...
 
-.PHONY: build install lint generate fmt test testacc
+local.zk.up:
+	./scripts/zk-local-ensemble/up
+
+local.zk.down:
+	./scripts/zk-local-ensemble/down
+
+local.zk.restart:
+	./scripts/zk-local-ensemble/restart
+
+local.testacc:
+	ZOOKEEPER_SERVERS=$(ZOOKEEPER_SERVERS) make testacc
+
+.PHONY: build install lint generate fmt test testacc local.zk.up local.zk.down local.zk.restart local.testacc

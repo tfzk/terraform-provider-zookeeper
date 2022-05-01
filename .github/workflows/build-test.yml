@@ -49,42 +49,44 @@ jobs:
       - name: Build
         run: make build
 
-# TODO The following can be enabled once we wire in ZooKeeper as a service
-#  test:
-#    name: 'Acc. Tests (OS: ${{ matrix.os }} / TF: ${{ matrix.terraform }})'
-#    needs: build
-#    runs-on: ${{ matrix.os }}
-#    timeout-minutes: 15
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        os:
-#          - macos-latest
-#          - windows-latest
-#          - ubuntu-latest
-#        terraform:
-#          - '0.12.*'
-#          - '0.13.*'
-#          - '0.14.*'
-#          - '0.15.*'
-#          - '1.0.*'
-#          - '1.1.*'
-#    steps:
-#
-#      - name: Setup Go
-#        uses: actions/setup-go@v2
-#        with:
-#          go-version: '1.17'
-#          check-latest: true
-#
-#      - name: Check out code
-#        uses: actions/checkout@v3
-#
-#      - name: Setup Terraform ${{ matrix.terraform }}
-#        uses: hashicorp/setup-terraform@v2
-#        with:
-#          terraform_version: ${{ matrix.terraform }}
-#          terraform_wrapper: false
-#
-#      - name: Run acceptance test
-#        run: make testacc
+  test:
+    name: 'Acc. Tests (TF: ${{ matrix.terraform }})'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      zookeeper:
+        image: zookeeper:3.5
+        ports:
+          - 2181:2181
+    strategy:
+      fail-fast: false
+      matrix:
+        terraform:
+          - '0.12.*'
+          - '0.13.*'
+          - '0.14.*'
+          - '0.15.*'
+          - '1.0.*'
+          - '1.1.*'
+    steps:
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.17'
+          check-latest: true
+
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform ${{ matrix.terraform }}
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ matrix.terraform }}
+          terraform_wrapper: false
+
+      - name: Run acceptance test
+        env:
+          ZOOKEEPER_SERVERS: zookeeper:2181
+        run: make testacc

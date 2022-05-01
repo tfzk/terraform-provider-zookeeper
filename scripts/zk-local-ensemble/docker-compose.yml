@@ -3,13 +3,13 @@ version: '3.1'
 x-common: &x-common
   init: true
   restart: always
-  image: zookeeper:3.5.9
+  image: zookeeper:3.5
 
 x-environment: &x-environment
   ZOO_ADMINSERVER_ENABLED: "true"
   # List of 4LW commands we want to enable.
   # Full list: https://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_4lw
-  ZOO_4LW_COMMANDS_WHITELIST: "conf,cons,srvr,stat,mntr,envi"
+  ZOO_4LW_COMMANDS_WHITELIST: "conf,cons,srvr,stat,mntr,envi,ruok"
   # Set logging level to INFO and print it to stdout
   ZOO_LOG4J_PROP: "INFO, CONSOLE"
   # The ensemble is composed of 3 servers: see below for details on each one

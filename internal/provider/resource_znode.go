@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/go-zookeeper/zk"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
@@ -65,7 +64,7 @@ func resourceZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvCli
 	if err != nil {
 		// If the ZNode is not found, it means it was changed outside of Terraform.
 		// We set the ID to blank, so it's state will be removed.
-		if errors.Is(err, zk.ErrNoNode) {
+		if errors.Is(err, client.ErrorZNodeDoesNotExist) {
 			rscData.SetId("")
 			return diag.Diagnostics{}
 		}

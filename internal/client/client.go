@@ -3,8 +3,10 @@ package client
 import (
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -29,6 +31,15 @@ type ZNode struct {
 	Stat *zk.Stat
 	Data []byte
 }
+
+// Re-exporting errors from ZK library for better incapsulation
+var (
+	ErrorZNodeAlreadyExists = zk.ErrNodeExists
+	ErrorZNodeDoesNotExist  = zk.ErrNoNode
+	ErrorZNodeHasChildren   = zk.ErrNotEmpty
+	ErrorConnectionClosed   = zk.ErrConnectionClosed
+	ErrorInvalidArguments   = zk.ErrBadArguments
+)
 
 const (
 	serversStringSeparator = ","
@@ -175,7 +186,7 @@ func (c *Client) createEmptyZNodes(pathsInOrder []string, createFlags int32, acl
 		// a ZNode already existing.
 		if !exists {
 			_, err := c.zkConn.Create(path, nil, createFlags, acl)
-			if err != nil && !errors.Is(err, zk.ErrNodeExists) {
+			if err != nil && !errors.Is(err, ErrorZNodeAlreadyExists) {
 				return fmt.Errorf("failed to create parent ZNode '%s' (createFlags: %d, acl: %v): %w", path, createFlags, acl, err)
 			}
 		}

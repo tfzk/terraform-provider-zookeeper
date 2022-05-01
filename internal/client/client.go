@@ -32,7 +32,7 @@ type ZNode struct {
 	Data []byte
 }
 
-// Re-exporting errors from ZK library for better incapsulation
+// Re-exporting errors from ZK library for better encapsulation.
 var (
 	ErrorZNodeAlreadyExists = zk.ErrNodeExists
 	ErrorZNodeDoesNotExist  = zk.ErrNoNode

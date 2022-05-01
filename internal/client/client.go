@@ -39,9 +39,23 @@ const (
 	// Providing `version = -1` means that the operation will match any
 	// version of the ZNode found.
 	matchAnyVersion = -1
+
+	// EnvZooKeeperServer environment variable containing a comma separated
+	// list of 'host:port' pairs, pointing at ZooKeeper Server(s).
+	// This is used by NewClientFromEnv.
+	EnvZooKeeperServer = "ZOOKEEPER_SERVERS"
+
+	// EnvZooKeeperSessionSec environment variable defining how many seconds
+	// a session is considered valid after losing connectivity.
+	// This is used by NewClientFromEnv.
+	EnvZooKeeperSessionSec = "ZOOKEEPER_SESSION"
+
+	// DefaultZooKeeperSessionSec is the default amount of seconds configured for the
+	// Client timeout session, in case EnvZooKeeperSessionSec is not set.
+	DefaultZooKeeperSessionSec = 30
 )
 
-// NewClient constructs a new `Client` instance.
+// NewClient constructs a new Client instance.
 func NewClient(servers string, sessionTimeoutSec int) (*Client, error) {
 	serversSplit := strings.Split(servers, serversStringSeparator)
 
@@ -53,6 +67,28 @@ func NewClient(servers string, sessionTimeoutSec int) (*Client, error) {
 	return &Client{
 		zkConn: conn,
 	}, nil
+}
+
+// NewClientFromEnv constructs a new Client instance from environment variables.
+//
+// The only mandatory environment variable is EnvZooKeeperServer.
+func NewClientFromEnv() (*Client, error) {
+	zkServers, ok := os.LookupEnv(EnvZooKeeperServer)
+	if !ok {
+		return nil, fmt.Errorf("missing environment variable: %s", EnvZooKeeperServer)
+	}
+
+	zkSession, ok := os.LookupEnv(EnvZooKeeperSessionSec)
+	if !ok {
+		zkSession = strconv.FormatInt(DefaultZooKeeperSessionSec, 10)
+	}
+
+	zkSessionInt, err := strconv.Atoi(zkSession)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert '%s' to integer: %w", zkSession, err)
+	}
+
+	return NewClient(zkServers, zkSessionInt)
 }
 
 // Create a ZNode at the given path.

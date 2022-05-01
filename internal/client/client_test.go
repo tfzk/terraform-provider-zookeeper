@@ -6,14 +6,10 @@ import (
 	testifyAssert "github.com/stretchr/testify/assert"
 )
 
-const (
-	TestZKEnsemble = "localhost:2181,localhost:2182,localhost:2183"
-)
-
 func initTest(t *testing.T) (*Client, *testifyAssert.Assertions) {
 	assert := testifyAssert.New(t)
 
-	client, err := NewClient(TestZKEnsemble, 60)
+	client, err := NewClientFromEnv()
 	assert.NoError(err)
 
 	return client, assert

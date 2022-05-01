@@ -24,6 +24,12 @@ func TestAccDataSourceZNode(t *testing.T) {
 					}
 					data "zookeeper_znode" "dst" {
 						path = zookeeper_znode.src.path
+
+						# It's necessary to add 'depends_on' on data sources in Terraform 0.13
+						# because of this issue: https://github.com/hashicorp/terraform/issues/25961
+						depends_on = [
+							zookeeper_znode.src,
+						]
 					}`, srcPath,
 				),
 				Check: resource.ComposeTestCheckFunc(

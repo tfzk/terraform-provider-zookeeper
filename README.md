@@ -29,14 +29,14 @@ keep supporting users of legacy versions of Terraform.
 ## Project 1.0.0 must haves
 
 * [ ] Documentation
-  * [x] setup `tfplugindocs` for autogeneration
+  * [x] setup `tfplugindocs` for auto-generation
   * [ ] provide content etc.
 * [x] Build and Test automation
   * [x] `golangci-lint`
   * [x] verify that generated documentation is up-to-date
   * [x] builds cleanly
-  * [ ] Spin up ZooKeeper service (dependency for acceptance testing)
-  * [ ] Acceptance testing against all latest minor releases of Terraform >= 0.12
+  * [x] Spin up ZooKeeper service (dependency for acceptance testing)
+  * [x] Acceptance testing against all latest minor releases of Terraform >= 0.12
 * [ ] Release automation
   * [ ] Triggered by semver tag detected
   * [ ] Generates `CHANGELOG` entry automatically

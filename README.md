@@ -1,5 +1,7 @@
 # TFZK Terraform provider for ZooKeeper
 
+[![Build and Test](https://github.com/tfzk/terraform-provider-zookeeper/actions/workflows/build-test.yml/badge.svg)](https://github.com/tfzk/terraform-provider-zookeeper/actions/workflows/build-test.yml)
+
 A Terraform provider for [Apache ZooKeeper](https://zookeeper.apache.org/)
 that can be leveraged as part of a bigger infrastructure that depends on having data stored in ZooKeeper
 [ZNodes](https://zookeeper.apache.org/doc/r3.1.2/zookeeperProgrammers.html#sc_zkDataModel_znodes).

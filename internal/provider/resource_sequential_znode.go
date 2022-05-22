@@ -22,10 +22,20 @@ func resourceSeqZNode() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
+				Description: "Absolute path to the Sequential ZNode to create. " +
+					"ZooKeeper will append a monotonically increasing counter to the end of path. " +
+					"This counter is unique to the parent znode. " +
+					"The counter has a format of `%010d` (10 digits with `0` padding)." +
+					"Example: `<path-prefix>0000000001`.",
 			},
 			"data": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"data_base64"},
+				Description: "Content to store in the ZNode, as a UTF-8 string. " +
+					"Mutually exclusive with `data_base64`.",
+			},
 			"data_base64": {
 				Type:          schema.TypeString,
 				Optional:      true,
@@ -40,6 +50,11 @@ func resourceSeqZNode() *schema.Resource {
 			},
 			"stat": statSchema(),
 		},
+		Description: "Manages the lifecycle of a " +
+			"[ZooKeeper ZNode](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkDataModel_znodes). " +
+			"This resource manages **Persistent Sequential ZNodes**. " +
+			"The data can be provided either as UTF-8 string, or as Base64 encoded bytes. " +
+			"The ability to create ZNodes is determined by ZooKeeper ACL.",
 	}
 }
 

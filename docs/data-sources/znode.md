@@ -3,12 +3,12 @@
 page_title: "zookeeper_znode Data Source - terraform-provider-zookeeper"
 subcategory: ""
 description: |-
-  
+  Provides access to the content of a ZooKeeper ZNode https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkDataModel_znodes. The data is loaded both as UTF-8 string, as well as Base64 encoded bytes. The ability to access ZNodes is determined by ZooKeeper ACL.
 ---
 
 # zookeeper_znode (Data Source)
 
-
+Provides access to the content of a [ZooKeeper ZNode](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkDataModel_znodes). The data is loaded both as UTF-8 string, as well as Base64 encoded bytes. The ability to access ZNodes is determined by ZooKeeper ACL.
 
 
 
@@ -17,15 +17,30 @@ description: |-
 
 ### Required
 
-- `path` (String)
-
-### Optional
-
-- `id` (String) The ID of this resource.
+- `path` (String) Absolute path to the ZNode to read.
 
 ### Read-Only
 
-- `data` (String)
-- `stat` (Map of Number)
+- `data` (String) Content of the ZNode. Use this if content is a UTF-8 string.
+- `data_base64` (String) Content of the ZNode, encoded in Base64. Use this if content is binary (i.e. sequence of bytes).
+- `id` (String) The ID of this resource.
+- `stat` (List of Object) [ZooKeeper Stat Structure](https://zookeeper.apache.org/doc/r3.5.9/zookeeperProgrammers.html#sc_zkStatStructure) of the ZNode. (see [below for nested schema](#nestedatt--stat))
+
+<a id="nestedatt--stat"></a>
+### Nested Schema for `stat`
+
+Read-Only:
+
+- `aversion` (Number)
+- `ctime` (Number)
+- `cversion` (Number)
+- `czxid` (Number)
+- `data_length` (Number)
+- `ephemeral_owner` (Number)
+- `mtime` (Number)
+- `mzxid` (Number)
+- `num_children` (Number)
+- `pzxid` (Number)
+- `version` (Number)
 
 

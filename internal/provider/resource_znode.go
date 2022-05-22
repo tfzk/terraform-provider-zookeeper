@@ -20,13 +20,18 @@ func resourceZNode() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"path": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Absolute path to the ZNode to create.",
 			},
 			"data": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"data_base64"},
+				Description: "Content to store in the ZNode, as a UTF-8 string. " +
+					"Mutually exclusive with `data_base64`.",
 			},
 			"data_base64": {
 				Type:          schema.TypeString,
@@ -38,6 +43,11 @@ func resourceZNode() *schema.Resource {
 			},
 			"stat": statSchema(),
 		},
+		Description: "Manages the lifecycle of a " +
+			"[ZooKeeper ZNode](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkDataModel_znodes). " +
+			"This resource manages **Persistent ZNodes**. " +
+			"The data can be provided either as UTF-8 string, or as Base64 encoded bytes. " +
+			"The ability to create ZNodes is determined by ZooKeeper ACL.",
 	}
 }
 

@@ -3,12 +3,12 @@
 page_title: "zookeeper_sequential_znode Resource - terraform-provider-zookeeper"
 subcategory: ""
 description: |-
-  
+  Manages the lifecycle of a ZooKeeper ZNode https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkDataModel_znodes. This resource manages Persistent Sequential ZNodes. The data can be provided either as UTF-8 string, or as Base64 encoded bytes. The ability to create ZNodes is determined by ZooKeeper ACL.
 ---
 
 # zookeeper_sequential_znode (Resource)
 
-
+Manages the lifecycle of a [ZooKeeper ZNode](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkDataModel_znodes). This resource manages **Persistent Sequential ZNodes**. The data can be provided either as UTF-8 string, or as Base64 encoded bytes. The ability to create ZNodes is determined by ZooKeeper ACL.
 
 
 
@@ -17,16 +17,34 @@ description: |-
 
 ### Required
 
-- `path_prefix` (String)
+- `path_prefix` (String) Absolute path to the Sequential ZNode to create. ZooKeeper will append a monotonically increasing counter to the end of path. This counter is unique to the parent znode. The counter has a format of `%010d` (10 digits with `0` padding).Example: `<path-prefix>0000000001`.
 
 ### Optional
 
-- `data` (String)
-- `id` (String) The ID of this resource.
+- `data` (String) Content to store in the ZNode, as a UTF-8 string. Mutually exclusive with `data_base64`.
+- `data_base64` (String) Content to store in the ZNode, as Base64 encoded bytes. Mutually exclusive with `data`.
 
 ### Read-Only
 
+- `id` (String) The ID of this resource.
 - `path` (String)
-- `stat` (Map of Number)
+- `stat` (List of Object) [ZooKeeper Stat Structure](https://zookeeper.apache.org/doc/r3.5.9/zookeeperProgrammers.html#sc_zkStatStructure) of the ZNode. (see [below for nested schema](#nestedatt--stat))
+
+<a id="nestedatt--stat"></a>
+### Nested Schema for `stat`
+
+Read-Only:
+
+- `aversion` (Number)
+- `ctime` (Number)
+- `cversion` (Number)
+- `czxid` (Number)
+- `data_length` (Number)
+- `ephemeral_owner` (Number)
+- `mtime` (Number)
+- `mzxid` (Number)
+- `num_children` (Number)
+- `pzxid` (Number)
+- `version` (Number)
 
 

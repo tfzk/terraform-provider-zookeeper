@@ -5,7 +5,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
 
@@ -23,8 +22,11 @@ func datasourceZNode() *schema.Resource {
 			},
 			"stat": {
 				Type:     schema.TypeMap,
+			"data_base64": {
+				Type:     schema.TypeString,
 				Computed: true,
-				Elem:     &schema.Schema{Type: schema.TypeInt},
+				Description: "Content of the ZNode, encoded in Base64. " +
+					"Use this if content is binary (i.e. sequence of bytes).",
 			},
 		},
 	}
@@ -43,5 +45,5 @@ func dataSourceZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvC
 	// Terraform will use the ZNode.Path as unique identifier for this Data Source
 	rscData.SetId(znode.Path)
 
-	return setResourceDataFromZNode(rscData, znode, diag.Diagnostics{})
+	return setAttributesFromZNode(rscData, znode, diag.Diagnostics{})
 }

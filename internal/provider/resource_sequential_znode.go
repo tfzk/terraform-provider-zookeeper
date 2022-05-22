@@ -5,7 +5,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
 
@@ -27,6 +26,13 @@ func resourceSeqZNode() *schema.Resource {
 			"data": {
 				Type:     schema.TypeString,
 				Optional: true,
+			"data_base64": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"data"},
+				Description: "Content to store in the ZNode, as Base64 encoded bytes. " +
+					"Mutually exclusive with `data`.",
 			},
 			"path": {
 				Type:     schema.TypeString,
@@ -41,12 +47,17 @@ func resourceSeqZNode() *schema.Resource {
 	}
 }
 
-func resourceSeqZNodeCreate(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceSeqZNodeCreate(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
 	zkClient := prvClient.(*client.Client)
 
 	znodePathPrefix := rscData.Get("path_prefix").(string)
 
-	znode, err := zkClient.CreateSequential(znodePathPrefix, getFieldDataFromResourceData(rscData))
+	dataBytes, err := getDataBytesFromResourceData(rscData)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	znode, err := zkClient.CreateSequential(znodePathPrefix, dataBytes)
 	if err != nil {
 		return diag.Errorf("Failed to create Sequential ZNode '%s': %v", znodePathPrefix, err)
 	}
@@ -55,7 +66,7 @@ func resourceSeqZNodeCreate(ctx context.Context, rscData *schema.ResourceData, p
 	rscData.SetId(znode.Path)
 	rscData.MarkNewResource()
 
-	return setResourceDataFromZNode(rscData, znode, diag.Diagnostics{})
+	return setAttributesFromZNode(rscData, znode, diag.Diagnostics{})
 }
 
 func resourceSeqZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
@@ -70,7 +81,7 @@ func resourceSeqZNodeDelete(ctx context.Context, rscData *schema.ResourceData, p
 	return resourceZNodeDelete(ctx, rscData, prvClient)
 }
 
-func resourceSeqZNodeImport(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) ([]*schema.ResourceData, error) {
+func resourceSeqZNodeImport(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) ([]*schema.ResourceData, error) {
 	// Re-create the original `path_prefix` for the imported `sequential_znode`,
 	// by removing the sequential suffix from the `id` (i.e. `path`)
 	if err := rscData.Set("path_prefix", client.RemoveSequentialSuffix(rscData.Id())); err != nil {

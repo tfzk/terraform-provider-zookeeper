@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	testifyAssert "github.com/stretchr/testify/assert"
-
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
 

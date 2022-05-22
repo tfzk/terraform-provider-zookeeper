@@ -33,17 +33,29 @@ func resourceZNode() *schema.Resource {
 				Type:     schema.TypeMap,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeInt},
+			"data_base64": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"data"},
+				Description: "Content to store in the ZNode, as Base64 encoded bytes. " +
+					"Mutually exclusive with `data`.",
 			},
 		},
 	}
 }
 
-func resourceZNodeCreate(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceZNodeCreate(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Get("path").(string)
 
-	znode, err := zkClient.Create(znodePath, getFieldDataFromResourceData(rscData))
+	dataBytes, err := getDataBytesFromResourceData(rscData)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	znode, err := zkClient.Create(znodePath, dataBytes)
 	if err != nil {
 		return diag.Errorf("Failed to create ZNode '%s': %v", znodePath, err)
 	}
@@ -52,10 +64,10 @@ func resourceZNodeCreate(ctx context.Context, rscData *schema.ResourceData, prvC
 	rscData.SetId(znode.Path)
 	rscData.MarkNewResource()
 
-	return setResourceDataFromZNode(rscData, znode, diag.Diagnostics{})
+	return setAttributesFromZNode(rscData, znode, diag.Diagnostics{})
 }
 
-func resourceZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceZNodeRead(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Id()
@@ -72,27 +84,32 @@ func resourceZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvCli
 		return diag.Errorf("Failed to read ZNode '%s': %v", znodePath, err)
 	}
 
-	return setResourceDataFromZNode(rscData, znode, diag.Diagnostics{})
+	return setAttributesFromZNode(rscData, znode, diag.Diagnostics{})
 }
 
-func resourceZNodeUpdate(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceZNodeUpdate(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Id()
 
-	if rscData.HasChange("data") {
-		znode, err := zkClient.Update(znodePath, getFieldDataFromResourceData(rscData))
+	if rscData.HasChanges("data", "data_base64") {
+		dataBytes, err := getDataBytesFromResourceData(rscData)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+
+		znode, err := zkClient.Update(znodePath, dataBytes)
 		if err != nil {
 			return diag.Errorf("Failed to update ZNode '%s': %v", znodePath, err)
 		}
 
-		return setResourceDataFromZNode(rscData, znode, diag.Diagnostics{})
+		return setAttributesFromZNode(rscData, znode, diag.Diagnostics{})
 	}
 
 	return diag.Diagnostics{}
 }
 
-func resourceZNodeDelete(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceZNodeDelete(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Id()

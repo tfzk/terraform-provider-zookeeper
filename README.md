@@ -25,6 +25,7 @@ keep supporting users of legacy versions of Terraform.
 * [x] delete ZNode
 * [x] import ZNode
 * [x] import Sequential ZNode
+* [x] support for binary data in Base64 format
 
 ## Project 1.0.0 must haves
 

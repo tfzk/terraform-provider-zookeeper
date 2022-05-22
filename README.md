@@ -31,7 +31,10 @@ keep supporting users of legacy versions of Terraform.
 
 * [ ] Documentation
   * [x] setup `tfplugindocs` for auto-generation
-  * [ ] provide content etc.
+  * [x] attribute descriptions
+  * [ ] examples
+  * [ ] provider index document
+  * [ ] section about `stat`, referenced by attributes in resources
 * [x] Build and Test automation
   * [x] `golangci-lint`
   * [x] verify that generated documentation is up-to-date

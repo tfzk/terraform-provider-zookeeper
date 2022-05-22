@@ -264,23 +264,6 @@ func (c *Client) Exists(path string) (bool, error) {
 	return exists, nil
 }
 
-// StatAsMap is an helper that returns the zk.Stat contained to ZNode.
-func (z *ZNode) StatAsMap() map[string]int64 {
-	return map[string]int64{
-		"czxid":          z.Stat.Czxid,
-		"mzxid":          z.Stat.Mzxid,
-		"ctime":          z.Stat.Ctime,
-		"mtime":          z.Stat.Mtime,
-		"version":        int64(z.Stat.Version),
-		"cversion":       int64(z.Stat.Cversion),
-		"aversion":       int64(z.Stat.Aversion),
-		"ephemeralOwner": z.Stat.EphemeralOwner,
-		"dataLength":     int64(z.Stat.DataLength),
-		"numChildren":    int64(z.Stat.NumChildren),
-		"pzxid":          z.Stat.Pzxid,
-	}
-}
-
 // RemoveSequentialSuffix takes the path to a sequential ZNode, maybe created via CreateSequential,
 // and truncates the unique suffix.
 //

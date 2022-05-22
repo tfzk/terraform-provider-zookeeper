@@ -38,11 +38,7 @@ func resourceSeqZNode() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"stat": {
-				Type:     schema.TypeMap,
-				Computed: true,
-				Elem:     &schema.Schema{Type: schema.TypeInt},
-			},
+			"stat": statSchema(),
 		},
 	}
 }

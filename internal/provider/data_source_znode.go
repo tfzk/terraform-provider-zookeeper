@@ -20,19 +20,18 @@ func datasourceZNode() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"stat": {
-				Type:     schema.TypeMap,
 			"data_base64": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: "Content of the ZNode, encoded in Base64. " +
 					"Use this if content is binary (i.e. sequence of bytes).",
 			},
+			"stat": statSchema(),
 		},
 	}
 }
 
-func dataSourceZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func dataSourceZNodeRead(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Get("path").(string)

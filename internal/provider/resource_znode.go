@@ -6,7 +6,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
 
@@ -29,10 +28,6 @@ func resourceZNode() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"stat": {
-				Type:     schema.TypeMap,
-				Computed: true,
-				Elem:     &schema.Schema{Type: schema.TypeInt},
 			"data_base64": {
 				Type:          schema.TypeString,
 				Optional:      true,
@@ -41,6 +36,7 @@ func resourceZNode() *schema.Resource {
 				Description: "Content to store in the ZNode, as Base64 encoded bytes. " +
 					"Mutually exclusive with `data`.",
 			},
+			"stat": statSchema(),
 		},
 	}
 }

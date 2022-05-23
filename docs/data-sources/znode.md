@@ -24,7 +24,7 @@ Provides access to the content of a [ZooKeeper ZNode](https://zookeeper.apache.o
 - `data` (String) Content of the ZNode. Use this if content is a UTF-8 string.
 - `data_base64` (String) Content of the ZNode, encoded in Base64. Use this if content is binary (i.e. sequence of bytes).
 - `id` (String) The ID of this resource.
-- `stat` (List of Object) [ZooKeeper Stat Structure](https://zookeeper.apache.org/doc/r3.5.9/zookeeperProgrammers.html#sc_zkStatStructure) of the ZNode. (see [below for nested schema](#nestedatt--stat))
+- `stat` (List of Object) [ZooKeeper Stat Structure](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkStatStructure) of the ZNode. More details about `stat` can be found [here](../../docs#the-stat-structure). (see [below for nested schema](#nestedatt--stat))
 
 <a id="nestedatt--stat"></a>
 ### Nested Schema for `stat`

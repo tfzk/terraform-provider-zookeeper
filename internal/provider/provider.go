@@ -23,7 +23,8 @@ func New() (*schema.Provider, error) {
 				Optional:    true,
 				Sensitive:   false,
 				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperSessionSec, client.DefaultZooKeeperSessionSec),
-				Description: "How many seconds a session is considered valid after losing connectivity.",
+				Description: "How many seconds a session is considered valid after losing connectivity. " +
+					"More information about ZooKeeper sessions can be found [here](#zookeeper-sessions).",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -37,7 +38,7 @@ func New() (*schema.Provider, error) {
 	}, nil
 }
 
-func configureProviderContext(ctx context.Context, rscData *schema.ResourceData) (interface{}, diag.Diagnostics) {
+func configureProviderContext(_ context.Context, rscData *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	servers := rscData.Get("servers").(string)
 	sessionTimeout := rscData.Get("session_timeout").(int)
 

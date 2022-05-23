@@ -28,7 +28,7 @@ Manages the lifecycle of a [ZooKeeper ZNode](https://zookeeper.apache.org/doc/cu
 
 - `id` (String) The ID of this resource.
 - `path` (String)
-- `stat` (List of Object) [ZooKeeper Stat Structure](https://zookeeper.apache.org/doc/r3.5.9/zookeeperProgrammers.html#sc_zkStatStructure) of the ZNode. (see [below for nested schema](#nestedatt--stat))
+- `stat` (List of Object) [ZooKeeper Stat Structure](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkStatStructure) of the ZNode. More details about `stat` can be found [here](../../docs#the-stat-structure). (see [below for nested schema](#nestedatt--stat))
 
 <a id="nestedatt--stat"></a>
 ### Nested Schema for `stat`

@@ -97,7 +97,8 @@ func statSchema() *schema.Schema {
 				},
 			},
 		},
-		Description: "[ZooKeeper Stat Structure](https://zookeeper.apache.org/doc/r3.5.9/zookeeperProgrammers.html#sc_zkStatStructure) of the ZNode.",
+		Description: "[ZooKeeper Stat Structure](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkStatStructure) of the ZNode. " +
+			"More details about `stat` can be found [here](../../docs#the-stat-structure).",
 	}
 }
 

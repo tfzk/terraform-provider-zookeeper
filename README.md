@@ -29,10 +29,10 @@ keep supporting users of legacy versions of Terraform.
 
 ## Project 1.0.0 must haves
 
-* [ ] Documentation
+* [x] Documentation
   * [x] setup `tfplugindocs` for auto-generation
   * [x] attribute descriptions
-  * [ ] examples
+  * [x] examples
   * [x] provider index document
   * [x] section about `stat`, referenced by attributes in resources
 * [x] Build and Test automation

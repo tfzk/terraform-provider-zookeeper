@@ -1,9 +1,19 @@
-# TFZK Terraform provider for ZooKeeper
+# TFZK: Terraform provider for ZooKeeper
 
 [![Build and Test](https://github.com/tfzk/terraform-provider-zookeeper/actions/workflows/build-test.yml/badge.svg)](https://github.com/tfzk/terraform-provider-zookeeper/actions/workflows/build-test.yml)
 
-A Terraform provider for [Apache ZooKeeper](https://zookeeper.apache.org/)
-that can be leveraged as part of a bigger infrastructure that depends on having data stored in ZooKeeper
+A Terraform provider for [Apache ZooKeeper](https://zookeeper.apache.org/).
+
+To get started, go on [`terraform-provider-zookeeper` registry page](https://registry.terraform.io/providers/tfzk/zookeeper).
+
+This provider focuses on _Data Management_ for ZooKeeper:
+it offers a _CRUD_ for **Persistent ZNodes** and **Persistent Sequential ZNodes**.
+
+For example, it can be leveraged as part of a bigger infrastructure, where sharing data across multiple
+live services via ZooKeeper is desirable. Good examples can be _runtime configuration data_ or
+_large architectures topology data_ and so forth.
+
+Data can be stored both as UTF-8 and binary (via Base64 encoding) inside ZooKeeper
 [ZNodes](https://zookeeper.apache.org/doc/r3.1.2/zookeeperProgrammers.html#sc_zkDataModel_znodes).
 
 **NOTE:** This provider is built on top of
@@ -42,9 +52,8 @@ keep supporting users of legacy versions of Terraform.
   * [x] Spin up ZooKeeper service (dependency for acceptance testing)
   * [x] Acceptance testing against all latest minor releases of Terraform >= 0.12
 * [ ] Release automation
-  * [ ] Triggered by semver tag detected
-  * [ ] Generates `CHANGELOG` entry automatically
-  * [ ] Publishes to registry.terraform.com
+  * [x] Release triggered every time a tag `v*` is detected
+  * [ ] Publish to [registry.terraform.com](https://registry.terraform.io/providers/tfzk/zookeeper)
 
 ## Development
 

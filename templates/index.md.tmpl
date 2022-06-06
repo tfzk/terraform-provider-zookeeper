@@ -7,10 +7,10 @@ description: |-
 
 # ZooKeeper Provider
 
-This provider supports managing _persistent_ resources like ZNodes and Sequential ZNodes
+This provider supports managing _persistent_ resources like **ZNodes** and **Sequential ZNodes**
 in [ZooKeeper](https://zookeeper.apache.org/doc/current/index.html).
 
-<blockquote style="font-style: italic; padding: 1em; background: #efefef; box-shadow: 3px 3px #ddd;">
+<blockquote style="font-style: italic; padding: 1em; background: #efefef; box-shadow: 3px 3px #ddd; font-size: 0.9em; text-align: justify; font-family: serif;">
 ZooKeeper is a high-performance coordination service for distributed applications.
 It exposes common services - such as naming, configuration management, synchronization, and group services - 
 in a simple interface so you don't have to write them from scratch. 
@@ -21,7 +21,7 @@ ZooKeeper offers many features that are designed for distributed computing, whil
 they are running (live). But everything is built around the concept of 
 [ZNode](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkDataModel_znodes).
 
-<blockquote style="font-style: italic; padding: 1em; background: #efefef; box-shadow: 3px 3px #ddd;">
+<blockquote style="font-style: italic; padding: 1em; background: #efefef; box-shadow: 3px 3px #ddd; font-size: 0.9em; text-align: justify; font-family: serif;">
 Every node in a ZooKeeper tree is referred to as a znode.
 Znodes maintain a stat structure that includes version numbers for data changes, acl changes.
 The stat structure also has timestamps. The version number, together with the timestamp,
@@ -36,7 +36,8 @@ offers:
 * Persistent ZNodes
 * Persistent Sequential ZNodes
 
-Ephemeral ZNodes, Watchers and other "live" features can't be handled by a Terraform provider. 
+_Ephemeral ZNodes_, _Watchers_ and other _"live"_ features can't be handled by a Terraform provider,
+as they require a persistent connection: they are more targeted at runtime services and applications.
 
 ## Ideal use cases for this provider
 
@@ -57,7 +58,7 @@ Ephemeral ZNodes, Watchers and other "live" features can't be handled by a Terra
 
 From the [official documentation](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#ch_zkSessions):
 
-<blockquote style="font-style: italic; padding: 1em; background: #efefef; box-shadow: 3px 3px #ddd;">
+<blockquote style="font-style: italic; padding: 1em; background: #efefef; box-shadow: 3px 3px #ddd; font-size: 0.9em; text-align: justify; font-family: serif;">
 A ZooKeeper client establishes a session with the ZooKeeper service by creating a handle to
 the service using a language binding.
 Once created, the handle starts off in the CONNECTING state and the client library tries to connect
@@ -74,7 +75,7 @@ you shouldn't need to change the `session_timeout`, but it's good to have the op
 
 Additionally:
 
-<blockquote style="font-style: italic; padding: 1em; background: #efefef; box-shadow: 3px 3px #ddd;">
+<blockquote style="font-style: italic; padding: 1em; background: #efefef; box-shadow: 3px 3px #ddd; font-size: 0.9em; text-align: justify; font-family: serif;">
 To create a client session the application code must provide a connection string containing a
 comma separated list of host:port pairs, each corresponding to a ZooKeeper server 
 (e.g. "127.0.0.1:4545" or "127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002").

@@ -20,15 +20,18 @@ Manages the lifecycle of a [ZooKeeper ZNode](https://zookeeper.apache.org/doc/cu
 #  /sequential/nodes/go/in/here/0000000002
 #  /sequential/nodes/go/in/here/0000000003
 #
-# NOTE: the order they appear in the config (i.e. `seqA`, `seqB`, `seqC`)
-# does NOT guarantee they will be respectively named
-# `0000000001`, `0000000002`, `0000000003`.
+# NOTE: the order they appear in the config (i.e. `seqA`,
+# `seqB`, `seqC`) does NOT guarantee they will be
+# respectively named `0000000001`, `0000000002`, `0000000003`.
 #
-# Their creation is parallelized by Terraform, so ZooKeeper will give each
-# a unique name but not in the order we see here.
+# Their creation is parallelized by Terraform,
+# so ZooKeeper will give each a unique name,
+# but not necessarily in the order we see here.
 #
-# Consider using [`depends_on`](https://www.terraform.io/language/meta-arguments/depends_on)
-# if you want to gain control of this, OR consider using `zookeeper_znode`s instead.
+# Consider using `depends_on`
+# (https://www.terraform.io/language/meta-arguments/depends_on)
+# if you want to impose a specific creation order,
+# OR consider using `zookeeper_znode`s instead.
 
 resource "zookeeper_znode" "dir" {
   path = "/sequential/nodes/go/in/here"
@@ -55,7 +58,7 @@ resource "zookeeper_sequential_znode" "seqC" {
 
 ### Required
 
-- `path_prefix` (String) Absolute path to the Sequential ZNode to create. ZooKeeper will append a monotonically increasing counter to the end of path. This counter is unique to the parent znode. The counter has a format of `%010d` (10 digits with `0` padding).Example: `<path-prefix>0000000001`.
+- `path_prefix` (String) Absolute path to the Sequential ZNode to create. ZooKeeper will append a monotonically increasing counter to the end of path. This counter is unique to the parent znode, and its format is `%010d` (10 digits with `0` padding).For example, the first sequential node created with a given `path_prefix` will be: `<path-prefix>0000000001`.
 
 ### Optional
 
@@ -65,7 +68,7 @@ resource "zookeeper_sequential_znode" "seqC" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-- `path` (String)
+- `path` (String) Absolute path to the Sequential ZNode, once it is created. The prefix of this will match `path_prefix`.
 - `stat` (List of Object) [ZooKeeper Stat Structure](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkStatStructure) of the ZNode. More details about `stat` can be found [here](../../docs#the-stat-structure). (see [below for nested schema](#nestedatt--stat))
 
 <a id="nestedatt--stat"></a>

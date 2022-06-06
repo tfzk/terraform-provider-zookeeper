@@ -5,15 +5,18 @@
 #  /sequential/nodes/go/in/here/0000000002
 #  /sequential/nodes/go/in/here/0000000003
 #
-# NOTE: the order they appear in the config (i.e. `seqA`, `seqB`, `seqC`)
-# does NOT guarantee they will be respectively named
-# `0000000001`, `0000000002`, `0000000003`.
+# NOTE: the order they appear in the config (i.e. `seqA`,
+# `seqB`, `seqC`) does NOT guarantee they will be
+# respectively named `0000000001`, `0000000002`, `0000000003`.
 #
-# Their creation is parallelized by Terraform, so ZooKeeper will give each
-# a unique name but not in the order we see here.
+# Their creation is parallelized by Terraform,
+# so ZooKeeper will give each a unique name,
+# but not necessarily in the order we see here.
 #
-# Consider using [`depends_on`](https://www.terraform.io/language/meta-arguments/depends_on)
-# if you want to gain control of this, OR consider using `zookeeper_znode`s instead.
+# Consider using `depends_on`
+# (https://www.terraform.io/language/meta-arguments/depends_on)
+# if you want to impose a specific creation order,
+# OR consider using `zookeeper_znode`s instead.
 
 resource "zookeeper_znode" "dir" {
   path = "/sequential/nodes/go/in/here"

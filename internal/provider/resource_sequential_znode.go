@@ -24,9 +24,10 @@ func resourceSeqZNode() *schema.Resource {
 				ForceNew: true,
 				Description: "Absolute path to the Sequential ZNode to create. " +
 					"ZooKeeper will append a monotonically increasing counter to the end of path. " +
-					"This counter is unique to the parent znode. " +
-					"The counter has a format of `%010d` (10 digits with `0` padding)." +
-					"Example: `<path-prefix>0000000001`.",
+					"This counter is unique to the parent znode, and its format is " +
+					"`%010d` (10 digits with `0` padding)." +
+					"For example, the first sequential node created with a given " +
+					"`path_prefix` will be: `<path-prefix>0000000001`.",
 			},
 			"data": {
 				Type:          schema.TypeString,
@@ -47,6 +48,8 @@ func resourceSeqZNode() *schema.Resource {
 			"path": {
 				Type:     schema.TypeString,
 				Computed: true,
+				Description: "Absolute path to the Sequential ZNode, once it is created. " +
+					"The prefix of this will match `path_prefix`.",
 			},
 			"stat": statSchema(),
 		},

@@ -4,14 +4,42 @@ linters:
 
   # Additional linters enabled
   enable:
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - contextcheck
+    - cyclop
+    - decorder
+    - dogsled
     - durationcheck
+    - errname
+    - errorlint
+    - exhaustive
     - exportloopref
+    - gci
+    - gochecknoglobals
+    - goconst
+    - gocritic
     - godot
     - gofmt
+    - gomoddirectives
+    - goprintffuncname
+    - gosec
+    - ifshort
+    - importas
     - makezero
     - misspell
+    - nakedret
     - nilerr
+    - nilnil
+    - nosprintfhostport
+    - prealloc
     - predeclared
+    - revive
     - tenv
+    - testpackage
     - unconvert
     - unparam
+    - wastedassign
+    - whitespace
+    - wrapcheck

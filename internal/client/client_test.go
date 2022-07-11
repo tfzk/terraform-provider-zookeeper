@@ -1,15 +1,16 @@
-package client
+package client_test
 
 import (
 	"testing"
 
 	testifyAssert "github.com/stretchr/testify/assert"
+	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
 
-func initTest(t *testing.T) (*Client, *testifyAssert.Assertions) {
+func initTest(t *testing.T) (*client.Client, *testifyAssert.Assertions) {
 	assert := testifyAssert.New(t)
 
-	client, err := NewClientFromEnv()
+	client, err := client.NewClientFromEnv()
 	assert.NoError(err)
 
 	return client, assert

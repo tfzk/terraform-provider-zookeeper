@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -95,11 +96,11 @@ func resourceSeqZNodeDelete(ctx context.Context, rscData *schema.ResourceData, p
 	return resourceZNodeDelete(ctx, rscData, prvClient)
 }
 
-func resourceSeqZNodeImport(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) ([]*schema.ResourceData, error) {
+func resourceSeqZNodeImport(_ context.Context, rscData *schema.ResourceData, _ interface{}) ([]*schema.ResourceData, error) {
 	// Re-create the original `path_prefix` for the imported `sequential_znode`,
 	// by removing the sequential suffix from the `id` (i.e. `path`)
 	if err := rscData.Set("path_prefix", client.RemoveSequentialSuffix(rscData.Id())); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to import Sequential ZNode: %w", err)
 	}
 
 	return []*schema.ResourceData{rscData}, nil

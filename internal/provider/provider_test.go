@@ -1,4 +1,4 @@
-package provider
+package provider_test
 
 import (
 	"fmt"
@@ -9,12 +9,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	testifyAssert "github.com/stretchr/testify/assert"
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
+	"github.com/tfzk/terraform-provider-zookeeper/internal/provider"
 )
 
 func TestProvider(t *testing.T) {
 	assert := testifyAssert.New(t)
 
-	provider, err := New()
+	provider, err := provider.New()
 	assert.NoError(err)
 
 	assert.NoError(provider.InternalValidate())
@@ -29,9 +30,7 @@ func TestProvider(t *testing.T) {
 // the provider and `terraform init` should be executed.
 func providerFactoriesMap() map[string]func() (*schema.Provider, error) {
 	return map[string]func() (*schema.Provider, error){
-		"zookeeper": func() (*schema.Provider, error) {
-			return New()
-		},
+		"zookeeper": provider.New,
 	}
 }
 

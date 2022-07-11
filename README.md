@@ -4,7 +4,8 @@
 
 A Terraform provider for [Apache ZooKeeper](https://zookeeper.apache.org/).
 
-To get started, go on [`terraform-provider-zookeeper` registry page](https://registry.terraform.io/providers/tfzk/zookeeper).
+To get started, go
+on [`terraform-provider-zookeeper` registry page](https://registry.terraform.io/providers/tfzk/zookeeper).
 
 This provider focuses on _Data Management_ for ZooKeeper:
 it offers a _CRUD_ for **Persistent ZNodes** and **Persistent Sequential ZNodes**.
@@ -16,11 +17,16 @@ _large architectures topology data_ and so forth.
 Data can be stored both as UTF-8 and binary (via Base64 encoding) inside ZooKeeper
 [ZNodes](https://zookeeper.apache.org/doc/r3.1.2/zookeeperProgrammers.html#sc_zkDataModel_znodes).
 
-**NOTE:** This provider is built on top of
-[Terraform Plugin SDKv2](https://www.terraform.io/plugin/sdkv2/sdkv2-intro),
-and as such can be used with versions of Terraform `>= 0.12` (legacy).
-It will work just fine with Terraform `>= 1.0`, but it's purpose is to
-keep supporting users of legacy versions of Terraform.
+## Compatibility
+
+Compatibility table between this provider,
+the [Registry Protocol](https://www.terraform.io/internals/provider-registry-protocol)
+version it implements, and Terraform:
+
+| Terraform | TLS Provider  | Registry Protocol |
+|:---------:|:-------------:|:-----------------:|
+| `>= 0.12` |   `>= 1.x`    |        `5`        |
+| `<= 0.11` | `unsupported` |      `none`       |
 
 ## Provider features
 
@@ -36,24 +42,6 @@ keep supporting users of legacy versions of Terraform.
 * [x] import ZNode
 * [x] import Sequential ZNode
 * [x] support for binary data in Base64 format
-
-## Project 1.0.0 must haves
-
-* [x] Documentation
-  * [x] setup `tfplugindocs` for auto-generation
-  * [x] attribute descriptions
-  * [x] examples
-  * [x] provider index document
-  * [x] section about `stat`, referenced by attributes in resources
-* [x] Build and Test automation
-  * [x] `golangci-lint`
-  * [x] verify that generated documentation is up-to-date
-  * [x] builds cleanly
-  * [x] Spin up ZooKeeper service (dependency for acceptance testing)
-  * [x] Acceptance testing against all latest minor releases of Terraform >= 0.12
-* [ ] Release automation
-  * [x] Release triggered every time a tag `v*` is detected
-  * [ ] Publish to [registry.terraform.com](https://registry.terraform.io/providers/tfzk/zookeeper)
 
 ## Development
 

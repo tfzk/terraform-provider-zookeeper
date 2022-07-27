@@ -1,3 +1,9 @@
+## 1.0.1 (July 27, 2022)
+
+NOTES:
+
+* No new feature: cutting a release because all major dependencies have received an update since release `v1.0.0`.
+
 ## 1.0.0 (July 11, 2022)
 
 NEW FEATURES:

@@ -3,6 +3,7 @@
 NOTES:
 
 * No new feature: cutting a release because all major dependencies have received an update since release `v1.0.0`.
+* Updated GH Action that imports the GPG key during release: [hashicorp/ghaction-import-gpg](https://github.com/hashicorp/ghaction-import-gpg#warning-this-action-as-been-deprecated) was deprecated.
 
 ## 1.0.0 (July 11, 2022)
 

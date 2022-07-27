@@ -24,10 +24,9 @@ Compatibility table between this provider,
 the [Registry Protocol](https://www.terraform.io/internals/provider-registry-protocol)
 version it implements, and Terraform:
 
-| Terraform | TLS Provider  | Registry Protocol |
-|:---------:|:-------------:|:-----------------:|
-| `>= 0.12` |   `>= 1.x`    |        `5`        |
-| `<= 0.11` | `unsupported` |      `none`       |
+| Provider | Registry Protocol | Terraform |
+|:--------:|:-----------------:|:---------:|
+| `>= 1.x` |        `5`        | `>= 0.12` |
 
 ## Provider features
 

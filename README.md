@@ -1,6 +1,7 @@
 # TFZK: Terraform provider for ZooKeeper
 
 [![Build and Test](https://github.com/tfzk/terraform-provider-zookeeper/actions/workflows/build-test.yml/badge.svg)](https://github.com/tfzk/terraform-provider-zookeeper/actions/workflows/build-test.yml)
+[![Terraform Provider ZooKeeper Documentation](https://img.shields.io/badge/terraform-%235835CC.svg?style=flat&logo=terraform&logoColor=white&label=docs&labelColor=305)](https://registry.terraform.io/providers/tfzk/zookeeper/latest/docs)
 
 A Terraform provider for [Apache ZooKeeper](https://zookeeper.apache.org/).
 

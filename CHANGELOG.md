@@ -1,8 +1,8 @@
-## 1.0.2 (UNRELEASED)
+## 1.0.2 (August 22, 2022)
 
 NOTES:
 
-* No new feature: cutting a release because all major dependencies have received an update since release `v1.0.1`.
+* No new feature: updated [core dependencies](https://github.com/tfzk/terraform-provider-zookeeper/commit/f350b6cd70455c105636bd08f6169fd3743f0e36) (since `v1.0.1`), and moved build to [Golang `v1.18`](https://github.com/tfzk/terraform-provider-zookeeper/commit/f7451189924cc642adac9939f7d11f5610cc69db).
 
 ## 1.0.1 (July 27, 2022)
 

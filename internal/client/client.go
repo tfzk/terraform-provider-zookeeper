@@ -126,8 +126,8 @@ func (c *Client) Create(path string, data []byte) (*ZNode, error) {
 // Note that if the `path` ends in `/`, the ZNode name will be just the counter
 // described above. For example:
 //
-//   input path         -> `/this/is/a/path/`
-//   created znode path -> `/this/is/a/path/0000000001`
+//   - input path         -> `/this/is/a/path/`
+//   - created znode path -> `/this/is/a/path/0000000001`
 //
 // Note also that any necessary ZNode parents will be created if absent.
 func (c *Client) CreateSequential(path string, data []byte) (*ZNode, error) {

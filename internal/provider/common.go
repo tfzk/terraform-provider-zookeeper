@@ -31,9 +31,7 @@ func setAttributesFromZNode(rscData *schema.ResourceData, znode *client.ZNode, d
 }
 
 // statSchema provides the *schema.Schema to represent the ZNode Stat Structure.
-// For more info:
-//
-//  https://zookeeper.apache.org/doc/r3.5.9/zookeeperProgrammers.html#sc_zkStatStructure
+// For more info: https://zookeeper.apache.org/doc/r3.5.9/zookeeperProgrammers.html#sc_zkStatStructure.
 func statSchema() *schema.Schema {
 	return &schema.Schema{
 		Type:     schema.TypeList,

@@ -45,22 +45,30 @@ version it implements, and Terraform:
 
 ## Development
 
-TBD
-
 ### Requirements
 
-* [Go](https://go.dev/dl/) >= `1.17`
+* [Go](https://go.dev/dl/) >= `1.18`
 * [Docker](https://docs.docker.com/get-docker/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
 
-### Ensemble to run tests against
+### Run acceptance tests locally
 
-To run tests, you will need a ZooKeeper Ensemble running.
+To run acceptance tests, you will need a ZooKeeper Ensemble running:
 
+```shell
+$ make local.zk.up
+
+$ make local.testacc
+
+# ... do your development / fixing ...
+
+$ make local.zk.down
+```
 In `tools/zk-local-ensemble` we provide a `docker-compose.yml` that can spin
 up an ensemble made of 3 servers, running on `localhost` ports `2181, 2182 and 2183`.
+Everything can be controlled via the `make local.*` commands provided.
 
-Please take a look at the `Makefile` to understand how those are then passed to
+If you are curious, please take a look at the `Makefile` to understand how those are then passed to
 go during (Acceptance) Tests.
 
 ## License

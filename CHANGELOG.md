@@ -1,3 +1,9 @@
+## 1.0.3 (November 27, 2022)
+
+NOTES:
+
+* No new feature: updated dependencies (since `v1.0.2`).
+
 ## 1.0.2 (August 22, 2022)
 
 NOTES:

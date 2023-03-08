@@ -50,6 +50,7 @@ version it implements, and Terraform:
 * [Go](https://go.dev/dl/) >= `1.18`
 * [Docker](https://docs.docker.com/get-docker/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
+* [golangci-lint](https://golangci-lint.run/)
 
 ### Run acceptance tests locally
 

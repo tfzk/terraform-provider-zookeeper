@@ -3,6 +3,7 @@
 NOTES:
 
 * No new feature: updated dependencies (since `v1.0.3`).
+* CI: Expanded testing matrix to include Terraform versions `1.2.*` to `1.4.*`.
 
 ## 1.0.3 (November 27, 2022)
 

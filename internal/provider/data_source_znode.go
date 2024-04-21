@@ -31,7 +31,7 @@ func datasourceZNode() *schema.Resource {
 			"stat": statSchema(),
 		},
 		Description: "Provides access to the content of a " +
-			"[ZooKeeper ZNode](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkDataModel_znodes). " +
+			zNodeLinkForDesc + ". " +
 			"The data is loaded both as UTF-8 string, as well as Base64 encoded bytes. " +
 			"The ability to access ZNodes is determined by ZooKeeper ACL.",
 	}

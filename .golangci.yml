@@ -7,7 +7,7 @@ linters:
     - asciicheck
     - bidichk
     - bodyclose
-    # - contextcheck #< TODO Re-enable when https://github.com/golangci/golangci-lint/issues/2649 is resolved
+    - contextcheck
     - cyclop
     - decorder
     - dogsled
@@ -39,6 +39,6 @@ linters:
     - testpackage
     - unconvert
     - unparam
-    # - wastedassign #< TODO Re-enable when https://github.com/golangci/golangci-lint/issues/2649 is resolved
+    - wastedassign
     - whitespace
     - wrapcheck

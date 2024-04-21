@@ -9,6 +9,10 @@ import (
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
 
+const (
+	zNodeLinkForDesc = "[ZooKeeper ZNode](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkDataModel_znodes)"
+)
+
 // setAttributesFromZNode takes a *client.ZNode and populates the *schema.ResourceData with its content.
 func setAttributesFromZNode(rscData *schema.ResourceData, znode *client.ZNode, diags diag.Diagnostics) diag.Diagnostics {
 	if err := rscData.Set("path", znode.Path); err != nil {

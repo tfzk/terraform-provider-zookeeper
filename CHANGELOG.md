@@ -1,3 +1,10 @@
+## 1.1.0 (April 21, 2024)
+
+NOTES:
+
+* Re-enabled golangci-lint linters, now that they are fully supported again:
+  * `contextcheck` ([repo](https://github.com/kkHAIKE/contextcheck))
+  * `wastedassign` ([repo](https://github.com/sanposhiho/wastedassign))
 ## 1.0.4 (March 8, 2023)
 
 NOTES:

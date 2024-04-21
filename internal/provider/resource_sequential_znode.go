@@ -55,7 +55,7 @@ func resourceSeqZNode() *schema.Resource {
 			"stat": statSchema(),
 		},
 		Description: "Manages the lifecycle of a " +
-			"[ZooKeeper ZNode](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkDataModel_znodes). " +
+			zNodeLinkForDesc + ". " +
 			"This resource manages **Persistent Sequential ZNodes**. " +
 			"The data can be provided either as UTF-8 string, or as Base64 encoded bytes. " +
 			"The ability to create ZNodes is determined by ZooKeeper ACL.",

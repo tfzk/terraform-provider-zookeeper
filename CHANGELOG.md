@@ -6,6 +6,7 @@ NOTES:
   * `contextcheck` ([repo](https://github.com/kkHAIKE/contextcheck))
   * `wastedassign` ([repo](https://github.com/sanposhiho/wastedassign))
 * Updated all dependencies to latest
+* Moved build to [Golang `v1.22`](https://go.dev/blog/go1.22)
 ## 1.0.4 (March 8, 2023)
 
 NOTES:

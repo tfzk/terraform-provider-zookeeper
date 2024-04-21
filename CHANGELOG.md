@@ -1,5 +1,9 @@
 ## 1.1.0 (April 21, 2024)
 
+IMPROVEMENTS:
+
+* Enabling CI testing for versions `1.5`, `1.6`, `1.7` and `1.8` of Terraform
+
 NOTES:
 
 * Re-enabled [golangci-lint](https://golangci-lint.run/) linters, now that they are fully supported again:

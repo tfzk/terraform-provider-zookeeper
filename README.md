@@ -47,7 +47,7 @@ version it implements, and Terraform:
 
 ### Requirements
 
-* [Go](https://go.dev/dl/) >= `1.18`
+* [Go](https://go.dev/dl/) >= `1.22`
 * [Docker](https://docs.docker.com/get-docker/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
 * [golangci-lint](https://golangci-lint.run/)

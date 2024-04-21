@@ -9,32 +9,45 @@ build:
 install: build
 	go install -v ./...
 
-# See https://golangci-lint.run/
+# Executes golangci-lint.
+# See: https://golangci-lint.run/.
 lint:
 	golangci-lint run
 
+# Generates the documentation that eventually gets published here:
+# https://registry.terraform.io/providers/tfzk/zookeeper/latest/docs.
 generate:
 	go generate ./...
 
+# Formats the codebase.
 fmt:
 	gofmt -s -w -e .
+
+# Updates all dependencies, recursively.
+deps.update:
+	go get -u ./...
+	go mod tidy
 
 test:
 	go test -v -cover -timeout=2m -parallel=4 ./...
 
 testacc:
-	TF_ACC=1 go test -v -cover -timeout=2m -parallel=4 ./...
+	TF_ACC=1 make test
 
+# Stands up a ZooKeeper Ensemble, for testing.
 local.zk.up:
 	./scripts/zk-local-ensemble/up
 
+# Shuts down the ZooKeeper Ensemble.
 local.zk.down:
 	./scripts/zk-local-ensemble/down
 
+# Restarts the ZooKeeper Ensemble.
 local.zk.restart:
 	./scripts/zk-local-ensemble/restart
 
+# Runs Acceptance Tests against the ZooKeeper Ensemble running locally.
 local.testacc:
 	ZOOKEEPER_SERVERS=$(ZOOKEEPER_SERVERS) make testacc
 
-.PHONY: build install lint generate fmt test testacc local.zk.up local.zk.down local.zk.restart local.testacc
+.PHONY: build install lint generate fmt deps.update test testacc local.zk.up local.zk.down local.zk.restart local.testacc

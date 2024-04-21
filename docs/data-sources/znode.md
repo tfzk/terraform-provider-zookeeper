@@ -65,5 +65,3 @@ Read-Only:
 - `num_children` (Number)
 - `pzxid` (Number)
 - `version` (Number)
-
-

@@ -14,7 +14,7 @@ NOTES:
 * Updated all GitHub Actions used in this repository:
   * [actions/checkout](https://github.com/actions/checkout) to `v4`
   * [actions/setup-go](https://github.com/actions/setup-go) to `v5`
-  * [golangci/golangci-lint-action](https://github.com/golangci/golangci-lint-action) `to `v4
+  * [golangci/golangci-lint-action](https://github.com/golangci/golangci-lint-action) to `v4`
   * [hashicorp/setup-terraform](https://github.com/hashicorp/setup-terraform) to `v3`
   * [crazy-max/ghaction-import-gpg](https://github.com/crazy-max/ghaction-import-gpg) to `v6`
   * [goreleaser/goreleaser-action](https://github.com/goreleaser/goreleaser-action) to `v5`

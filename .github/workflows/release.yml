@@ -21,13 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Checkout
+      - name: Check out code
         uses: actions/checkout@v4
-      
-      - name: Unshallow
-        run: git fetch --prune --unshallow
-      
-      - name: Set up Go
+
+      - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'

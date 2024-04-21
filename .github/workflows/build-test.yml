@@ -24,15 +24,15 @@ jobs:
     timeout-minutes: 5
     steps:
 
+      - name: Check out code
+        uses: actions/checkout@v4
+
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
           cache: true
           check-latest: true
-
-      - name: Check out code
-        uses: actions/checkout@v4
 
       - name: Run linters
         uses: golangci/golangci-lint-action@v4
@@ -78,15 +78,15 @@ jobs:
           - '1.8.*'
     steps:
 
+      - name: Check out code
+        uses: actions/checkout@v4
+
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
           cache: true
           check-latest: true
-
-      - name: Check out code
-        uses: actions/checkout@v4
 
       - name: Setup Terraform ${{ matrix.terraform }}
         uses: hashicorp/setup-terraform@v3

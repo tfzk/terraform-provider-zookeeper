@@ -23,7 +23,8 @@ func TestAccDataSourceZNode(t *testing.T) {
 						data = "Forza Napoli!"
 					}
 					data "zookeeper_znode" "dst" {
-						path = zookeeper_znode.src.path
+						depends_on = [zookeeper_znode.src]
+						path 	   = zookeeper_znode.src.path
 					}`, srcPath,
 				),
 				Check: resource.ComposeAggregateTestCheckFunc(

@@ -26,6 +26,18 @@ func New() (*schema.Provider, error) {
 				Description: "How many seconds a session is considered valid after losing connectivity. " +
 					"More information about ZooKeeper sessions can be found [here](#zookeeper-sessions).",
 			},
+			"username": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				Description: "Username for digest authentication",
+			},
+			"password": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				Description: "Password for digest authentication",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"zookeeper_znode":            resourceZNode(),
@@ -41,9 +53,11 @@ func New() (*schema.Provider, error) {
 func configureProviderContext(_ context.Context, rscData *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	servers := rscData.Get("servers").(string)
 	sessionTimeout := rscData.Get("session_timeout").(int)
+	username := rscData.Get("username").(string)
+	password := rscData.Get("password").(string)
 
 	if servers != "" {
-		c, err := client.NewClient(servers, sessionTimeout)
+		c, err := client.NewClient(servers, sessionTimeout, username, password)
 
 		if err != nil {
 			// Report inability to connect internal Client

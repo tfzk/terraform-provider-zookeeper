@@ -67,12 +67,21 @@ const (
 )
 
 // NewClient constructs a new Client instance.
-func NewClient(servers string, sessionTimeoutSec int) (*Client, error) {
+func NewClient(servers string, sessionTimeoutSec int, username string, password string) (*Client, error) {
 	serversSplit := strings.Split(servers, serversStringSeparator)
 
 	conn, _, err := zk.Connect(zk.FormatServers(serversSplit), time.Duration(sessionTimeoutSec)*time.Second)
 	if err != nil {
 		return nil, fmt.Errorf("unable to connect to ZooKeeper: %w", err)
+	}
+
+	if username != "" && password != "" {
+		auth := "digest"
+		credentials := fmt.Sprintf("%s:%s", username, password)
+		err = conn.AddAuth(auth, []byte(credentials))
+		if err != nil {
+			return nil, fmt.Errorf("unable to add digest auth: %w", err)
+		}
 	}
 
 	return &Client{
@@ -99,7 +108,7 @@ func NewClientFromEnv() (*Client, error) {
 		return nil, fmt.Errorf("failed to convert '%s' to integer: %w", zkSession, err)
 	}
 
-	return NewClient(zkServers, zkSessionInt)
+	return NewClient(zkServers, zkSessionInt, "", "")
 }
 
 // Create a ZNode at the given path.

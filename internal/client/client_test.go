@@ -1,6 +1,7 @@
 package client_test
 
 import (
+	"github.com/go-zookeeper/zk"
 	"testing"
 
 	testifyAssert "github.com/stretchr/testify/assert"
@@ -25,7 +26,7 @@ func TestClassicCRUD(t *testing.T) {
 	assert.False(znodeExists)
 
 	// create
-	znode, err := client.Create("/test/ClassicCRUD", []byte("one"))
+	znode, err := client.Create("/test/ClassicCRUD", []byte("one"), zk.WorldACL(zk.PermAll))
 	assert.NoError(err)
 	assert.Equal("/test/ClassicCRUD", znode.Path)
 	assert.Equal([]byte("one"), znode.Data)
@@ -42,7 +43,7 @@ func TestClassicCRUD(t *testing.T) {
 	assert.Equal([]byte("one"), znode.Data)
 
 	// update
-	znode, err = client.Update("/test/ClassicCRUD", []byte("two"))
+	znode, err = client.Update("/test/ClassicCRUD", []byte("two"), zk.WorldACL(zk.PermAll))
 	assert.NoError(err)
 	assert.Equal("/test/ClassicCRUD", znode.Path)
 	assert.Equal([]byte("two"), znode.Data)
@@ -69,11 +70,11 @@ func TestClassicCRUD(t *testing.T) {
 func TestCreateSequential(t *testing.T) {
 	client, assert := initTest(t)
 
-	noPrefixSeqZNode, err := client.CreateSequential("/test/CreateSequential/", []byte("seq"))
+	noPrefixSeqZNode, err := client.CreateSequential("/test/CreateSequential/", []byte("seq"), zk.WorldACL(zk.PermAll))
 	assert.NoError(err)
 	assert.Equal("/test/CreateSequential/0000000000", noPrefixSeqZNode.Path)
 
-	prefixSeqZNode, err := client.CreateSequential("/test/CreateSequentialWithPrefix/prefix-", []byte("seq"))
+	prefixSeqZNode, err := client.CreateSequential("/test/CreateSequentialWithPrefix/prefix-", []byte("seq"), zk.WorldACL(zk.PermAll))
 	assert.NoError(err)
 	assert.Equal("/test/CreateSequentialWithPrefix/prefix-0000000000", prefixSeqZNode.Path)
 
@@ -85,7 +86,7 @@ func TestCreateSequential(t *testing.T) {
 func TestFailureWhenCreatingForNonSequentialZNodeEndingInSlash(t *testing.T) {
 	client, assert := initTest(t)
 
-	_, err := client.Create("/test/willFail/", nil)
+	_, err := client.Create("/test/willFail/", nil, zk.WorldACL(zk.PermAll))
 	assert.Error(err)
 	assert.Equal("non-sequential ZNode cannot have path '/test/willFail/' because it ends in '/'", err.Error())
 }
@@ -93,11 +94,11 @@ func TestFailureWhenCreatingForNonSequentialZNodeEndingInSlash(t *testing.T) {
 func TestFailureWhenCreatingWhenZNodeAlreadyExists(t *testing.T) {
 	client, assert := initTest(t)
 
-	_, err := client.Create("/test/node", nil)
+	_, err := client.Create("/test/node", nil, zk.WorldACL(zk.PermAll))
 	assert.NoError(err)
-	_, err = client.Create("/test/node", nil)
+	_, err = client.Create("/test/node", nil, zk.WorldACL(zk.PermAll))
 	assert.Error(err)
-	assert.Equal("failed to create ZNode '/test/node' (size: 0, createFlags: 0, acl: [{15 world anyone}]): zk: node already exists", err.Error())
+	assert.Equal("failed to create ZNode '/test/node' (size: 0, createFlags: 0, acl: [{31 world anyone}]): zk: node already exists", err.Error())
 
 	err = client.Delete("/test")
 	assert.NoError(err)
@@ -110,7 +111,7 @@ func TestFailureWithNonExistingZNodes(t *testing.T) {
 	assert.Error(err)
 	assert.Equal("failed to read ZNode '/does-not-exist': zk: node does not exist", err.Error())
 
-	_, err = client.Update("/also-does-not-exist", nil)
+	_, err = client.Update("/also-does-not-exist", nil, zk.WorldACL(zk.PermAll))
 	assert.Error(err)
 	assert.Equal("failed to update ZNode '/also-does-not-exist': does not exist", err.Error())
 }

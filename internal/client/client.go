@@ -30,6 +30,7 @@ type ZNode struct {
 	Path string
 	Stat *zk.Stat
 	Data []byte
+	ACL  []zk.ACL
 }
 
 // Re-exporting errors from ZK library for better encapsulation.
@@ -114,10 +115,7 @@ func NewClientFromEnv() (*Client, error) {
 // Create a ZNode at the given path.
 //
 // Note that any necessary ZNode parents will be created if absent.
-func (c *Client) Create(path string, data []byte) (*ZNode, error) {
-	// TODO Make ACL configurable
-	acl := zk.WorldACL(zk.PermRead | zk.PermWrite | zk.PermCreate | zk.PermDelete)
-
+func (c *Client) Create(path string, data []byte, acl []zk.ACL) (*ZNode, error) {
 	if path[len(path)-1] == zNodePathSeparator {
 		return nil, fmt.Errorf("non-sequential ZNode cannot have path '%s' because it ends in '%c'", path, zNodePathSeparator)
 	}
@@ -139,10 +137,7 @@ func (c *Client) Create(path string, data []byte) (*ZNode, error) {
 //   - created znode path -> `/this/is/a/path/0000000001`
 //
 // Note also that any necessary ZNode parents will be created if absent.
-func (c *Client) CreateSequential(path string, data []byte) (*ZNode, error) {
-	// TODO Make ACL configurable
-	acl := zk.WorldACL(zk.PermRead | zk.PermWrite | zk.PermCreate | zk.PermDelete)
-
+func (c *Client) CreateSequential(path string, data []byte, acl []zk.ACL) (*ZNode, error) {
 	return c.doCreate(path, data, zk.FlagSequence, acl)
 }
 
@@ -211,17 +206,23 @@ func (c *Client) Read(path string) (*ZNode, error) {
 		return nil, fmt.Errorf("failed to read ZNode '%s': %w", path, err)
 	}
 
+	acls, _, err := c.zkConn.GetACL(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch ACLs for ZNode '%s': %w", path, err)
+	}
+
 	return &ZNode{
 		Path: path,
 		Stat: stat,
 		Data: data,
+		ACL:  acls,
 	}, nil
 }
 
 // Update the ZNode at the given path, under the assumption that it is there.
 //
 // Will return an error if it doesn't already exist.
-func (c *Client) Update(path string, data []byte) (*ZNode, error) {
+func (c *Client) Update(path string, data []byte, acl []zk.ACL) (*ZNode, error) {
 	exists, err := c.Exists(path)
 	if err != nil {
 		return nil, err
@@ -229,6 +230,11 @@ func (c *Client) Update(path string, data []byte) (*ZNode, error) {
 
 	if !exists {
 		return nil, fmt.Errorf("failed to update ZNode '%s': does not exist", path)
+	}
+
+	_, err = c.zkConn.SetACL(path, acl, matchAnyVersion)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update ZNode '%s' ACL: %w", path, err)
 	}
 
 	_, err = c.zkConn.Set(path, data, matchAnyVersion)

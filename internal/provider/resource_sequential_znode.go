@@ -53,6 +53,34 @@ func resourceSeqZNode() *schema.Resource {
 					"The prefix of this will match `path_prefix`.",
 			},
 			"stat": statSchema(),
+			"acl": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "List of ACL entries for the ZNode.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"scheme": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: "The ACL scheme, such as 'world', 'digest', " +
+								"'ip', 'x509'.",
+						},
+						"id": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: "The ID for the ACL entry. For example, " +
+								"user:hash in 'digest' scheme.",
+						},
+						"permissions": {
+							Type:     schema.TypeInt,
+							Required: true,
+							Description: "The permissions for the ACL entry, " +
+								"represented as an integer bitmask.",
+						},
+					},
+				},
+			},
 		},
 		Description: "Manages the lifecycle of a " +
 			zNodeLinkForDesc + ". " +
@@ -72,7 +100,12 @@ func resourceSeqZNodeCreate(_ context.Context, rscData *schema.ResourceData, prv
 		return diag.FromErr(err)
 	}
 
-	znode, err := zkClient.CreateSequential(znodePathPrefix, dataBytes)
+	acls, err := parseACLsFromResourceData(rscData)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	znode, err := zkClient.CreateSequential(znodePathPrefix, dataBytes, acls)
 	if err != nil {
 		return diag.Errorf("Failed to create Sequential ZNode '%s': %v", znodePathPrefix, err)
 	}

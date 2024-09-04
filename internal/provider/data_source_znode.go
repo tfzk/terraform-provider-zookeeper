@@ -29,6 +29,34 @@ func datasourceZNode() *schema.Resource {
 					"Use this if content is binary (i.e. sequence of bytes).",
 			},
 			"stat": statSchema(),
+			"acl": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "List of ACL entries for the ZNode.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"scheme": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: "The ACL scheme, such as 'world', 'digest', " +
+								"'ip', 'x509'.",
+						},
+						"id": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: "The ID for the ACL entry. For example, " +
+								"user:hash in 'digest' scheme.",
+						},
+						"permissions": {
+							Type:     schema.TypeInt,
+							Required: true,
+							Description: "The permissions for the ACL entry, " +
+								"represented as an integer bitmask.",
+						},
+					},
+				},
+			},
 		},
 		Description: "Provides access to the content of a " +
 			zNodeLinkForDesc + ". " +

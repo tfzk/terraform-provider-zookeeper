@@ -3,7 +3,6 @@ package provider
 import (
 	"context"
 	"errors"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
@@ -42,6 +41,34 @@ func resourceZNode() *schema.Resource {
 					"Mutually exclusive with `data`.",
 			},
 			"stat": statSchema(),
+			"acl": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "List of ACL entries for the ZNode.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"scheme": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: "The ACL scheme, such as 'world', 'digest', " +
+								"'ip', 'x509'.",
+						},
+						"id": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: "The ID for the ACL entry. For example, " +
+								"user:hash in 'digest' scheme.",
+						},
+						"permissions": {
+							Type:     schema.TypeInt,
+							Required: true,
+							Description: "The permissions for the ACL entry, " +
+								"represented as an integer bitmask.",
+						},
+					},
+				},
+			},
 		},
 		Description: "Manages the lifecycle of a " +
 			zNodeLinkForDesc + ". " +
@@ -61,7 +88,12 @@ func resourceZNodeCreate(_ context.Context, rscData *schema.ResourceData, prvCli
 		return diag.FromErr(err)
 	}
 
-	znode, err := zkClient.Create(znodePath, dataBytes)
+	acls, err := parseACLsFromResourceData(rscData)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	znode, err := zkClient.Create(znodePath, dataBytes, acls)
 	if err != nil {
 		return diag.Errorf("Failed to create ZNode '%s': %v", znodePath, err)
 	}
@@ -98,13 +130,18 @@ func resourceZNodeUpdate(_ context.Context, rscData *schema.ResourceData, prvCli
 
 	znodePath := rscData.Id()
 
-	if rscData.HasChanges("data", "data_base64") {
+	if rscData.HasChanges("data", "data_base64", "acl") {
 		dataBytes, err := getDataBytesFromResourceData(rscData)
 		if err != nil {
 			return diag.FromErr(err)
 		}
 
-		znode, err := zkClient.Update(znodePath, dataBytes)
+		acls, err := parseACLsFromResourceData(rscData)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+
+		znode, err := zkClient.Update(znodePath, dataBytes, acls)
 		if err != nil {
 			return diag.Errorf("Failed to update ZNode '%s': %v", znodePath, err)
 		}

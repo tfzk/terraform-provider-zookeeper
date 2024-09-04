@@ -3,6 +3,7 @@ package provider
 import (
 	"encoding/base64"
 	"fmt"
+	"github.com/go-zookeeper/zk"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -28,6 +29,21 @@ func setAttributesFromZNode(rscData *schema.ResourceData, znode *client.ZNode, d
 	}
 
 	if err := rscData.Set("stat", []interface{}{zNodeStatToMap(znode)}); err != nil {
+		diags = append(diags, diag.FromErr(err)...)
+	}
+
+	// Convert ACLs from []zk.ACL to []map[string]interface{}
+	var aclConfigs []map[string]interface{}
+	for _, acl := range znode.ACL {
+		aclConfig := map[string]interface{}{
+			"scheme":      acl.Scheme,
+			"id":          acl.ID,
+			"permissions": acl.Perms,
+		}
+		aclConfigs = append(aclConfigs, aclConfig)
+	}
+
+	if err := rscData.Set("acl", aclConfigs); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
@@ -140,4 +156,28 @@ func getDataBytesFromResourceData(rscData *schema.ResourceData) ([]byte, error) 
 	}
 
 	return nil, nil
+}
+
+func parseACLsFromResourceData(rscData *schema.ResourceData) ([]zk.ACL, error) {
+	aclConfigs := rscData.Get("acl").([]interface{})
+	var acls []zk.ACL
+
+	for _, aclConfig := range aclConfigs {
+		aclMap := aclConfig.(map[string]interface{})
+		scheme := aclMap["scheme"].(string)
+		id := aclMap["id"].(string)
+		permissions := aclMap["permissions"].(int)
+
+		acls = append(acls, zk.ACL{
+			Scheme: scheme,
+			ID:     id,
+			Perms:  int32(permissions),
+		})
+	}
+
+	if len(acls) == 0 {
+		acls = zk.WorldACL(zk.PermAll)
+	}
+
+	return acls, nil
 }

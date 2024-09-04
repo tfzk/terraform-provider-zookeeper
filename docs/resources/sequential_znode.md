@@ -62,6 +62,7 @@ resource "zookeeper_sequential_znode" "seqC" {
 
 ### Optional
 
+- `acl` (Block List) List of ACL entries for the ZNode. (see [below for nested schema](#nestedblock--acl))
 - `data` (String) Content to store in the ZNode, as a UTF-8 string. Mutually exclusive with `data_base64`.
 - `data_base64` (String) Content to store in the ZNode, as Base64 encoded bytes. Mutually exclusive with `data`.
 
@@ -70,6 +71,16 @@ resource "zookeeper_sequential_znode" "seqC" {
 - `id` (String) The ID of this resource.
 - `path` (String) Absolute path to the Sequential ZNode, once it is created. The prefix of this will match `path_prefix`.
 - `stat` (List of Object) [ZooKeeper Stat Structure](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkStatStructure) of the ZNode. More details about `stat` can be found [here](../../docs#the-stat-structure). (see [below for nested schema](#nestedatt--stat))
+
+<a id="nestedblock--acl"></a>
+### Nested Schema for `acl`
+
+Required:
+
+- `id` (String) The ID for the ACL entry. For example, user:hash in 'digest' scheme.
+- `permissions` (Number) The permissions for the ACL entry, represented as an integer bitmask.
+- `scheme` (String) The ACL scheme, such as 'world', 'digest', 'ip', 'x509'.
+
 
 <a id="nestedatt--stat"></a>
 ### Nested Schema for `stat`

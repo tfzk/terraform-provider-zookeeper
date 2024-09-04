@@ -44,10 +44,21 @@ output "best_team_znode_data_base64" {
 
 ### Read-Only
 
+- `acl` (List of Object) List of ACL entries for the ZNode. (see [below for nested schema](#nestedatt--acl))
 - `data` (String) Content of the ZNode. Use this if content is a UTF-8 string.
 - `data_base64` (String) Content of the ZNode, encoded in Base64. Use this if content is binary (i.e. sequence of bytes).
 - `id` (String) The ID of this resource.
 - `stat` (List of Object) [ZooKeeper Stat Structure](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkStatStructure) of the ZNode. More details about `stat` can be found [here](../../docs#the-stat-structure). (see [below for nested schema](#nestedatt--stat))
+
+<a id="nestedatt--acl"></a>
+### Nested Schema for `acl`
+
+Read-Only:
+
+- `id` (String)
+- `permissions` (Number)
+- `scheme` (String)
+
 
 <a id="nestedatt--stat"></a>
 ### Nested Schema for `stat`

@@ -31,7 +31,6 @@ func datasourceZNode() *schema.Resource {
 			"stat": statSchema(),
 			"acl": {
 				Type:        schema.TypeList,
-				Optional:    true,
 				Computed:    true,
 				Description: "List of ACL entries for the ZNode.",
 				Elem: &schema.Resource{

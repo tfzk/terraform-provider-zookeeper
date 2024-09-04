@@ -60,8 +60,10 @@ provider "zookeeper" {
 
 ### Optional
 
+- `password` (String, Sensitive) Password for digest authentication
 - `servers` (String) A comma separated list of 'host:port' pairs, pointing at ZooKeeper Server(s).
 - `session_timeout` (Number) How many seconds a session is considered valid after losing connectivity. More information about ZooKeeper sessions can be found [here](#zookeeper-sessions).
+- `username` (String, Sensitive) Username for digest authentication
 
 ## Important aspects about ZooKeeper and this provider
 

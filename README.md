@@ -31,8 +31,8 @@ version it implements, and Terraform:
 ## Provider features
 
 * [x] support for ZK standard multi-server connection string
-* [ ] support for ZK authentication
-* [ ] support for ZK ACLs
+* [x] support for ZK authentication
+* [x] support for ZK ACLs
 * [x] "session timeout" configuration
 * [x] create ZNode
 * [x] create Sequential ZNode

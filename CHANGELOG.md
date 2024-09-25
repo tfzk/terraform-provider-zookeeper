@@ -5,6 +5,7 @@ IMPROVEMENTS:
 NOTES:
 
 * Moved build to [Golang `v1.23`](https://go.dev/blog/go1.23)
+* Updated all dependencies to latest
 * Updated [golangci-lint](https://golangci-lint.run/) linters
   * Removed `exportloopref`
   * Added `copyloopvar`

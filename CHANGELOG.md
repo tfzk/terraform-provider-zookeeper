@@ -4,6 +4,10 @@ IMPROVEMENTS:
 
 NOTES:
 
+* Updated all GitHub Actions used in this repository:
+  * [golangci/golangci-lint-action](https://github.com/golangci/golangci-lint-action) to `v6`
+  * [goreleaser/goreleaser-action](https://github.com/goreleaser/goreleaser-action) to `v6`
+
 ## 1.1.0 (April 21, 2024)
 
 IMPROVEMENTS:

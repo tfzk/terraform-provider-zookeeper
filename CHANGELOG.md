@@ -4,6 +4,7 @@ IMPROVEMENTS:
 
 NOTES:
 
+* Moved build to [Golang `v1.23`](https://go.dev/blog/go1.23)
 * Updated all GitHub Actions used in this repository:
   * [golangci/golangci-lint-action](https://github.com/golangci/golangci-lint-action) to `v6`
   * [goreleaser/goreleaser-action](https://github.com/goreleaser/goreleaser-action) to `v6`

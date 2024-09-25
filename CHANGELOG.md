@@ -2,6 +2,8 @@
 
 IMPROVEMENTS:
 
+* Enabling CI testing for versions `1.9` of Terraform
+
 NOTES:
 
 * Moved build to [Golang `v1.23`](https://go.dev/blog/go1.23)

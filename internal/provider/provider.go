@@ -30,13 +30,15 @@ func New() (*schema.Provider, error) {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				Description: "Username for digest authentication",
+				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperUsername, nil),
+				Description: "Username for digest authentication. Can be set via `ZOOKEEPER_USERNAME` environment variable.",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				Description: "Password for digest authentication",
+				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperPassword, nil),
+				Description: "Password for digest authentication. Can be set via `ZOOKEEPER_PASSWORD` environment variable.",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{

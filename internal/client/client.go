@@ -65,6 +65,10 @@ const (
 	// DefaultZooKeeperSessionSec is the default amount of seconds configured for the
 	// Client timeout session, in case EnvZooKeeperSessionSec is not set.
 	DefaultZooKeeperSessionSec = 30
+
+	// Environment variables to provide digest auth credentials.
+	EnvZooKeeperUsername = "ZOOKEEPER_USERNAME"
+	EnvZooKeeperPassword = "ZOOKEEPER_PASSWORD"
 )
 
 // NewClient constructs a new Client instance.
@@ -76,7 +80,11 @@ func NewClient(servers string, sessionTimeoutSec int, username string, password 
 		return nil, fmt.Errorf("unable to connect to ZooKeeper: %w", err)
 	}
 
-	if username != "" && password != "" {
+	if (username == "") != (password == "") {
+		return nil, fmt.Errorf("both username and password must be specified together")
+	}
+
+	if username != "" {
 		auth := "digest"
 		credentials := fmt.Sprintf("%s:%s", username, password)
 		err = conn.AddAuth(auth, []byte(credentials))
@@ -109,7 +117,10 @@ func NewClientFromEnv() (*Client, error) {
 		return nil, fmt.Errorf("failed to convert '%s' to integer: %w", zkSession, err)
 	}
 
-	return NewClient(zkServers, zkSessionInt, "", "")
+	zkUsername, _ := os.LookupEnv(EnvZooKeeperUsername)
+	zkPassword, _ := os.LookupEnv(EnvZooKeeperPassword)
+
+	return NewClient(zkServers, zkSessionInt, zkUsername, zkPassword)
 }
 
 // Create a ZNode at the given path.

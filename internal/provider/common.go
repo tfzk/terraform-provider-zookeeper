@@ -3,8 +3,9 @@ package provider
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/go-zookeeper/zk"
+	"math"
 
+	"github.com/go-zookeeper/zk"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
@@ -33,7 +34,7 @@ func setAttributesFromZNode(rscData *schema.ResourceData, znode *client.ZNode, d
 	}
 
 	// Convert ACLs from []zk.ACL to []map[string]interface{}
-	var aclConfigs []map[string]interface{}
+	aclConfigs := make([]map[string]interface{}, 0, len(znode.ACL))
 	for _, acl := range znode.ACL {
 		aclConfig := map[string]interface{}{
 			"scheme":      acl.Scheme,
@@ -160,18 +161,25 @@ func getDataBytesFromResourceData(rscData *schema.ResourceData) ([]byte, error) 
 
 func parseACLsFromResourceData(rscData *schema.ResourceData) ([]zk.ACL, error) {
 	aclConfigs := rscData.Get("acl").([]interface{})
-	var acls []zk.ACL
+	acls := make([]zk.ACL, 0, len(aclConfigs))
 
 	for _, aclConfig := range aclConfigs {
 		aclMap := aclConfig.(map[string]interface{})
 		scheme := aclMap["scheme"].(string)
 		id := aclMap["id"].(string)
-		permissions := aclMap["permissions"].(int)
+		permissionsValue, ok := aclMap["permissions"].(int)
+		if !ok {
+			return nil, fmt.Errorf("acl permissions value is not an integer")
+		}
+		if permissionsValue < math.MinInt32 || permissionsValue > math.MaxInt32 {
+			return nil, fmt.Errorf("acl permissions value %d is out of int32 range", permissionsValue)
+		}
+		permissions := int32(permissionsValue)
 
 		acls = append(acls, zk.ACL{
 			Scheme: scheme,
 			ID:     id,
-			Perms:  int32(permissions),
+			Perms:  permissions,
 		})
 	}
 

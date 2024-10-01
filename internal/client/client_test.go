@@ -1,9 +1,9 @@
 package client_test
 
 import (
-	"github.com/go-zookeeper/zk"
 	"testing"
 
+	"github.com/go-zookeeper/zk"
 	testifyAssert "github.com/stretchr/testify/assert"
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
@@ -80,6 +80,71 @@ func TestCreateSequential(t *testing.T) {
 
 	// delete, recursively
 	err = client.Delete("/test")
+	assert.NoError(err)
+}
+
+func TestDigestAuthenticationSuccess(t *testing.T) {
+	t.Setenv(client.EnvZooKeeperUsername, "username")
+	t.Setenv(client.EnvZooKeeperPassword, "password")
+	client, assert := initTest(t)
+
+	// Create a ZNode accessible only by the given user
+	acl := zk.DigestACL(zk.PermAll, "username", "password")
+	znode, err := client.Create("/auth-test/DigestAuthentication", []byte("data"), acl)
+	assert.NoError(err)
+	assert.Equal("/auth-test/DigestAuthentication", znode.Path)
+	assert.Equal([]byte("data"), znode.Data)
+	assert.Equal(acl, znode.ACL)
+
+	// Make sure it's accessible
+	znode, err = client.Read("/auth-test/DigestAuthentication")
+	assert.NoError(err)
+	assert.Equal("/auth-test/DigestAuthentication", znode.Path)
+	assert.Equal([]byte("data"), znode.Data)
+	assert.Equal(acl, znode.ACL)
+
+	// Cleanup
+	err = client.Delete("/auth-test/DigestAuthentication")
+	assert.NoError(err)
+	err = client.Delete("/auth-test")
+	assert.NoError(err)
+}
+
+func TestFailureWhenReadingZNodeWithIncorrectAuth(t *testing.T) {
+	// Create client authenticated as foo user
+	t.Setenv(client.EnvZooKeeperUsername, "foo")
+	t.Setenv(client.EnvZooKeeperPassword, "password")
+	fooClient, assert := initTest(t)
+
+	// Create a ZNode accessible only by foo user
+	acl := zk.DigestACL(zk.PermAll, "foo", "password")
+	znode, err := fooClient.Create("/auth-fail-test/AccessibleOnlyByFoo", []byte("data"), acl)
+	assert.NoError(err)
+	assert.Equal("/auth-fail-test/AccessibleOnlyByFoo", znode.Path)
+	assert.Equal([]byte("data"), znode.Data)
+	assert.Equal(acl, znode.ACL)
+
+	// Make sure it's accessible by foo user
+	znode, err = fooClient.Read("/auth-fail-test/AccessibleOnlyByFoo")
+	assert.NoError(err)
+	assert.Equal("/auth-fail-test/AccessibleOnlyByFoo", znode.Path)
+	assert.Equal([]byte("data"), znode.Data)
+	assert.Equal(acl, znode.ACL)
+
+	// Create client authenticated as bar user
+	t.Setenv(client.EnvZooKeeperUsername, "bar")
+	t.Setenv(client.EnvZooKeeperPassword, "password")
+	barClient, err := client.NewClientFromEnv()
+	assert.NoError(err)
+
+	// The node should be inaccessible by bar user
+	_, err = barClient.Read("/auth-fail-test/AccessibleOnlyByFoo")
+	assert.EqualError(err, "failed to read ZNode '/auth-fail-test/AccessibleOnlyByFoo': zk: not authenticated")
+
+	// Cleanup
+	err = fooClient.Delete("/auth-fail-test/AccessibleOnlyByFoo")
+	assert.NoError(err)
+	err = fooClient.Delete("/auth-fail-test")
 	assert.NoError(err)
 }
 

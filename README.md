@@ -28,6 +28,12 @@ version it implements, and Terraform:
 |:--------:|:-----------------:|:---------:|
 | `>= 1.x` |        `5`        | `>= 0.12` |
 
+### CI Testing
+
+This provider is tested against Terraform versions from `0.12` to `1.9`.
+See the [Build and Test](https://github.com/tfzk/terraform-provider-zookeeper/blob/main/.github/workflows/build-test.yml)
+workflow.
+
 ## Provider features
 
 * [x] support for ZK standard multi-server connection string
@@ -47,7 +53,7 @@ version it implements, and Terraform:
 
 ### Requirements
 
-* [Go](https://go.dev/dl/) >= `1.22`
+* [Go](https://go.dev/dl/) >= `1.23`
 * [Docker](https://docs.docker.com/get-docker/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
 * [golangci-lint](https://golangci-lint.run/)

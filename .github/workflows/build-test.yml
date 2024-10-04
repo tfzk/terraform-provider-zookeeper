@@ -51,15 +51,11 @@ jobs:
         run: make build
 
   test:
-    name: 'Acc. Tests (TF: ${{ matrix.terraform }})'
+    name: 'Acc. Tests (TF: ${{ matrix.terraform }} / ZK: ${{ matrix.zookeeper }})'
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    services:
-      zookeeper:
-        image: zookeeper:3.5
-        ports:
-          - 2181:2181
+
     strategy:
       fail-fast: false
       matrix:
@@ -77,6 +73,19 @@ jobs:
           - '1.7.*'
           - '1.8.*'
           - '1.9.*'
+        zookeeper:
+          - '3.5'
+          - '3.6'
+          - '3.7'
+          - '3.8'
+          - '3.9'
+
+    services:
+      zookeeper:
+        image: zookeeper:${{ matrix.zookeeper }}
+        ports:
+          - 2181:2181
+
     steps:
 
       - name: Check out code
@@ -97,5 +106,6 @@ jobs:
 
       - name: Run acceptance test
         env:
-          ZOOKEEPER_SERVERS: zookeeper:2181
-        run: make testacc
+          ZOOKEEPER_SERVERS: localhost:2181
+          TF_ACC: 1
+        run: make test

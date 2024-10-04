@@ -23,7 +23,8 @@ func TestAccDataSourceZNode(t *testing.T) {
 						data = "Forza Napoli!"
 					}
 					data "zookeeper_znode" "dst" {
-						path = zookeeper_znode.src.path
+						depends_on = [zookeeper_znode.src]
+						path 	   = zookeeper_znode.src.path
 					}`, srcPath,
 				),
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -58,6 +59,13 @@ func TestAccDataSourceZNode(t *testing.T) {
 
 					resource.TestCheckResourceAttrPair("data.zookeeper_znode.dst", "stat.0.num_children", "zookeeper_znode.src", "stat.0.num_children"),
 					resource.TestCheckResourceAttr("data.zookeeper_znode.dst", "stat.0.num_children", "0"),
+
+					resource.TestCheckResourceAttrPair("data.zookeeper_znode.dst", "acl.0.scheme", "zookeeper_znode.src", "acl.0.scheme"),
+					resource.TestCheckResourceAttr("data.zookeeper_znode.dst", "acl.0.scheme", "world"),
+					resource.TestCheckResourceAttrPair("data.zookeeper_znode.dst", "acl.0.id", "zookeeper_znode.src", "acl.0.id"),
+					resource.TestCheckResourceAttr("data.zookeeper_znode.dst", "acl.0.id", "anyone"),
+					resource.TestCheckResourceAttrPair("data.zookeeper_znode.dst", "acl.0.permissions", "zookeeper_znode.src", "acl.0.permissions"),
+					resource.TestCheckResourceAttr("data.zookeeper_znode.dst", "acl.0.permissions", "31"),
 				),
 			},
 		},

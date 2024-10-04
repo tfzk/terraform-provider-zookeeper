@@ -3,6 +3,8 @@
 IMPROVEMENTS:
 
 * Enabling CI testing for versions `1.9` of Terraform
+* Added support for digest authentication in provider configuration
+* Added support for ZNode ACL management in `zookeeper_znode` and `zookeeper_sequential_znode` resources
 
 NOTES:
 

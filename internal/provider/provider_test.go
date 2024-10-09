@@ -62,5 +62,6 @@ func confirmAllZNodeDestroyed(s *terraform.State) error {
 		}
 	}
 
+	zkClient.Close()
 	return nil
 }

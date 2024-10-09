@@ -23,7 +23,6 @@ func TestAccDataSourceZNode(t *testing.T) {
 						data = "Forza Napoli!"
 					}
 					data "zookeeper_znode" "dst" {
-						depends_on = [zookeeper_znode.src]
 						path 	   = zookeeper_znode.src.path
 					}`, srcPath,
 				),

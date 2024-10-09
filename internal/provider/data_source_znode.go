@@ -37,19 +37,19 @@ func datasourceZNode() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"scheme": {
 							Type:     schema.TypeString,
-							Required: true,
+							Computed: true,
 							Description: "The ACL scheme, such as 'world', 'digest', " +
 								"'ip', 'x509'.",
 						},
 						"id": {
 							Type:     schema.TypeString,
-							Required: true,
+							Computed: true,
 							Description: "The ID for the ACL entry. For example, " +
 								"user:hash in 'digest' scheme.",
 						},
 						"permissions": {
 							Type:     schema.TypeInt,
-							Required: true,
+							Computed: true,
 							Description: "The permissions for the ACL entry, " +
 								"represented as an integer bitmask.",
 						},

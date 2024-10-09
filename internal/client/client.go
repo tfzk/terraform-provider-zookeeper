@@ -256,6 +256,11 @@ func (c *Client) Update(path string, data []byte, acl []zk.ACL) (*ZNode, error) 
 	return c.Read(path)
 }
 
+// Close the connection.
+func (c *Client) Close() {
+	c.zkConn.Close()
+}
+
 // Delete the given ZNode.
 //
 // Note that will also delete any child ZNode, recursively.

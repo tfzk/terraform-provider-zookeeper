@@ -132,3 +132,62 @@ func TestAccResourceZNode_Base64(t *testing.T) {
 		},
 	})
 }
+
+func TestAccResourceZNode_DefaultACL(t *testing.T) {
+	path := "/" + acctest.RandString(10)
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:          func() { checkPreconditions(t) },
+		ProviderFactories: providerFactoriesMap(),
+		CheckDestroy:      confirmAllZNodeDestroyed,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(`
+					resource "zookeeper_znode" "test_default_acl" {
+						path = "%s"
+						data = "Default ACL Test"
+					}`, path),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("zookeeper_znode.test_default_acl", "path", path),
+					resource.TestCheckResourceAttr("zookeeper_znode.test_default_acl", "data", "Default ACL Test"),
+					resource.TestCheckResourceAttr("zookeeper_znode.test_default_acl", "acl.#", "1"),
+					resource.TestCheckResourceAttr("zookeeper_znode.test_default_acl", "acl.0.scheme", "world"),
+					resource.TestCheckResourceAttr("zookeeper_znode.test_default_acl", "acl.0.id", "anyone"),
+					resource.TestCheckResourceAttr("zookeeper_znode.test_default_acl", "acl.0.permissions", "31"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccResourceZNode_WithACL(t *testing.T) {
+	path := "/" + acctest.RandString(10)
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:          func() { checkPreconditions(t) },
+		ProviderFactories: providerFactoriesMap(),
+		CheckDestroy:      confirmAllZNodeDestroyed,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(`
+					resource "zookeeper_znode" "test_acl" {
+						path = "%s"
+						data = "ACL Test"
+						acl {
+							scheme      = "world"
+							id          = "anyone"
+							permissions = 31
+						}
+					}`, path),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("zookeeper_znode.test_acl", "path", path),
+					resource.TestCheckResourceAttr("zookeeper_znode.test_acl", "data", "ACL Test"),
+					resource.TestCheckResourceAttr("zookeeper_znode.test_acl", "acl.#", "1"),
+					resource.TestCheckResourceAttr("zookeeper_znode.test_acl", "acl.0.scheme", "world"),
+					resource.TestCheckResourceAttr("zookeeper_znode.test_acl", "acl.0.id", "anyone"),
+					resource.TestCheckResourceAttr("zookeeper_znode.test_acl", "acl.0.permissions", "31"),
+				),
+			},
+		},
+	})
+}

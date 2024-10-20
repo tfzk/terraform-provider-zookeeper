@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
 
@@ -16,7 +17,8 @@ func New() (*schema.Provider, error) {
 				Optional:    true,
 				Sensitive:   false,
 				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperServer, nil),
-				Description: "A comma separated list of 'host:port' pairs, pointing at ZooKeeper Server(s).",
+				Description: "A comma separated list of 'host:port' pairs, pointing at ZooKeeper Server(s). " +
+					"Can be set via `ZOOKEEPER_SERVERS` environment variable.",
 			},
 			"session_timeout": {
 				Type:        schema.TypeInt,
@@ -24,21 +26,24 @@ func New() (*schema.Provider, error) {
 				Sensitive:   false,
 				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperSessionSec, client.DefaultZooKeeperSessionSec),
 				Description: "How many seconds a session is considered valid after losing connectivity. " +
-					"More information about ZooKeeper sessions can be found [here](#zookeeper-sessions).",
+					"More information about ZooKeeper sessions can be found [here](#zookeeper-sessions). " +
+					"Can be set via `ZOOKEEPER_SESSION` environment variable.",
 			},
 			"username": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperUsername, nil),
-				Description: "Username for digest authentication. Can be set via `ZOOKEEPER_USERNAME` environment variable.",
+				Description: "Username for digest authentication. " +
+					"Can be set via `ZOOKEEPER_USERNAME` environment variable.",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperPassword, nil),
-				Description: "Password for digest authentication. Can be set via `ZOOKEEPER_PASSWORD` environment variable.",
+				Description: "Password for digest authentication. " +
+					"Can be set via `ZOOKEEPER_PASSWORD` environment variable.",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{

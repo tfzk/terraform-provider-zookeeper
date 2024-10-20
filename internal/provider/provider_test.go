@@ -37,13 +37,13 @@ func providerFactoriesMap() map[string]func() (*schema.Provider, error) {
 // checkPreconditions should be used with the field `PreCheck` of resource.TestCase.
 func checkPreconditions(t *testing.T) {
 	if v := os.Getenv(client.EnvZooKeeperServer); v == "" {
-		t.Fatalf("Environnment variable '%s' must be set for acceptance tests", client.EnvZooKeeperServer)
+		t.Fatalf("Environment variable '%s' must be set for acceptance tests", client.EnvZooKeeperServer)
 	}
 }
 
 // getTestZKClient can be used during test to procure a client.Client.
 func getTestZKClient() *client.Client {
-	zkClient, _ := client.NewClientFromEnv()
+	zkClient, _ := client.DefaultPool().GetClientFromEnv()
 	return zkClient
 }
 
@@ -62,6 +62,5 @@ func confirmAllZNodeDestroyed(s *terraform.State) error {
 		}
 	}
 
-	zkClient.Close()
 	return nil
 }

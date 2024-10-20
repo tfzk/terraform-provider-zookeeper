@@ -11,7 +11,7 @@ import (
 func initTest(t *testing.T) (*client.Client, *testifyAssert.Assertions) {
 	assert := testifyAssert.New(t)
 
-	client, err := client.NewClientFromEnv()
+	client, err := client.DefaultPool().GetClientFromEnv()
 	assert.NoError(err)
 
 	return client, assert
@@ -134,7 +134,7 @@ func TestFailureWhenReadingZNodeWithIncorrectAuth(t *testing.T) {
 	// Create client authenticated as bar user
 	t.Setenv(client.EnvZooKeeperUsername, "bar")
 	t.Setenv(client.EnvZooKeeperPassword, "password")
-	barClient, err := client.NewClientFromEnv()
+	barClient, err := client.DefaultPool().GetClientFromEnv()
 	assert.NoError(err)
 
 	// The node should be inaccessible by bar user

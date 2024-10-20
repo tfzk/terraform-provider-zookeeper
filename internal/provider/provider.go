@@ -64,7 +64,7 @@ func configureProviderContext(_ context.Context, rscData *schema.ResourceData) (
 	password := rscData.Get("password").(string)
 
 	if servers != "" {
-		c, err := client.NewClient(servers, sessionTimeout, username, password)
+		c, err := client.DefaultPool().GetClient(servers, sessionTimeout, username, password)
 
 		if err != nil {
 			// Report inability to connect internal Client

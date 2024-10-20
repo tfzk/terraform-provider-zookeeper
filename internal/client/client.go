@@ -3,10 +3,8 @@ package client
 import (
 	"errors"
 	"fmt"
-	"os"
 	"path/filepath"
 	"sort"
-	"strconv"
 	"strings"
 	"time"
 
@@ -83,6 +81,7 @@ func NewClient(servers string, sessionTimeoutSec int, username string, password 
 	if err != nil {
 		return nil, fmt.Errorf("unable to connect to ZooKeeper: %w", err)
 	}
+	fmt.Printf("[DEBUG] Connected to ZooKeeper servers %s\n", serversSplit)
 
 	if (username == "") != (password == "") {
 		return nil, fmt.Errorf("both username and password must be specified together")
@@ -100,31 +99,6 @@ func NewClient(servers string, sessionTimeoutSec int, username string, password 
 	return &Client{
 		zkConn: conn,
 	}, nil
-}
-
-// NewClientFromEnv constructs a new Client instance from environment variables.
-//
-// The only mandatory environment variable is EnvZooKeeperServer.
-func NewClientFromEnv() (*Client, error) {
-	zkServers, ok := os.LookupEnv(EnvZooKeeperServer)
-	if !ok {
-		return nil, fmt.Errorf("missing environment variable: %s", EnvZooKeeperServer)
-	}
-
-	zkSession, ok := os.LookupEnv(EnvZooKeeperSessionSec)
-	if !ok {
-		zkSession = strconv.FormatInt(DefaultZooKeeperSessionSec, 10)
-	}
-
-	zkSessionInt, err := strconv.Atoi(zkSession)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert '%s' to integer: %w", zkSession, err)
-	}
-
-	zkUsername, _ := os.LookupEnv(EnvZooKeeperUsername)
-	zkPassword, _ := os.LookupEnv(EnvZooKeeperPassword)
-
-	return NewClient(zkServers, zkSessionInt, zkUsername, zkPassword)
 }
 
 // Create a ZNode at the given path.
@@ -258,11 +232,6 @@ func (c *Client) Update(path string, data []byte, acl []zk.ACL) (*ZNode, error) 
 	}
 
 	return c.Read(path)
-}
-
-// Close the connection.
-func (c *Client) Close() {
-	c.zkConn.Close()
 }
 
 // Delete the given ZNode.

@@ -66,8 +66,12 @@ const (
 	// Client timeout session, in case EnvZooKeeperSessionSec is not set.
 	DefaultZooKeeperSessionSec = 30
 
-	// Environment variables to provide digest auth credentials.
+	// EnvZooKeeperUsername environment variable providing the username part of a digest auth credentials.
+	// This is used by NewClientFromEnv.
 	EnvZooKeeperUsername = "ZOOKEEPER_USERNAME"
+
+	// EnvZooKeeperPassword environment variable providing the password part of a digest auth credentials.
+	// This is used by NewClientFromEnv.
 	EnvZooKeeperPassword = "ZOOKEEPER_PASSWORD"
 )
 

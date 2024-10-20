@@ -1,5 +1,5 @@
 # NOTE: This is valid only while the `make local.zk.up`
-ZOOKEEPER_SERVERS=localhost:2181,localhost:2182,localhost:2183
+LOCAL_ZOOKEEPER_SERVERS=localhost:2181,localhost:2182,localhost:2183
 
 default: build
 
@@ -31,9 +31,6 @@ deps.update:
 test:
 	go test -v -cover -timeout=2m -parallel=4 ./...
 
-testacc:
-	TF_ACC=1 make test
-
 # Stands up a ZooKeeper Ensemble, for testing.
 local.zk.up:
 	./scripts/zk-local-ensemble/up
@@ -47,7 +44,7 @@ local.zk.restart:
 	./scripts/zk-local-ensemble/restart
 
 # Runs Acceptance Tests against the ZooKeeper Ensemble running locally.
-local.testacc:
-	ZOOKEEPER_SERVERS=$(ZOOKEEPER_SERVERS) make testacc
+local.test:
+	ZOOKEEPER_SERVERS=$(LOCAL_ZOOKEEPER_SERVERS) TF_ACC=1 make test
 
 .PHONY: build install lint generate fmt deps.update test testacc local.zk.up local.zk.down local.zk.restart local.testacc

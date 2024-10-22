@@ -3,6 +3,7 @@ package provider_test
 import (
 	"fmt"
 	"os"
+	"sync"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -21,6 +22,12 @@ func TestProvider(t *testing.T) {
 	assert.NoError(provider.InternalValidate())
 }
 
+//nolint:gochecknoglobals
+var providersMapMutex sync.Mutex
+
+//nolint:gochecknoglobals
+var providersMap = make(map[string]*schema.Provider)
+
 // providerFactoriesMap associates to each Provider factory instance, a name.
 //
 // WARN: This is important as this will be the name the provider will be expected
@@ -29,8 +36,26 @@ func TestProvider(t *testing.T) {
 // terraform, used during acceptance tests, will error complaining it can't find
 // the provider and `terraform init` should be executed.
 func providerFactoriesMap() map[string]func() (*schema.Provider, error) {
+	const providerName = "zookeeper"
+
 	return map[string]func() (*schema.Provider, error){
-		"zookeeper": provider.New,
+		providerName: func() (*schema.Provider, error) {
+			providersMapMutex.Lock()
+			defer providersMapMutex.Unlock()
+
+			// Return previously-initialized copy of the provider
+			if zkProv, found := providersMap[providerName]; found {
+				return zkProv, nil
+			}
+
+			// Create new copy of the provider and store it, before returning it
+			zkProv, err := provider.New()
+			if err != nil {
+				return nil, fmt.Errorf("could not create provider %s: %w", providerName, err)
+			}
+			providersMap[providerName] = zkProv
+			return zkProv, nil
+		},
 	}
 }
 

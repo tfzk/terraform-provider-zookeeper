@@ -3,8 +3,10 @@ package client
 import (
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -99,6 +101,38 @@ func NewClient(servers string, sessionTimeoutSec int, username string, password 
 	return &Client{
 		zkConn: conn,
 	}, nil
+}
+
+// NewClientFromEnv constructs a Client instance from environment variables.
+//
+// The only mandatory environment variable is EnvZooKeeperServer.
+func NewClientFromEnv() (*Client, error) {
+	zkServers, ok := os.LookupEnv(EnvZooKeeperServer)
+	if !ok {
+		return nil, fmt.Errorf("missing environment variable: %s", EnvZooKeeperServer)
+	}
+
+	zkSession, ok := os.LookupEnv(EnvZooKeeperSessionSec)
+	if !ok {
+		zkSession = strconv.FormatInt(DefaultZooKeeperSessionSec, 10)
+	}
+
+	zkSessionInt, err := strconv.Atoi(zkSession)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert '%s' to integer: %w", zkSession, err)
+	}
+
+	zkUsername, _ := os.LookupEnv(EnvZooKeeperUsername)
+	zkPassword, _ := os.LookupEnv(EnvZooKeeperPassword)
+
+	fmt.Println("[DEBUG] Creating Client from Environment Variables")
+	return NewClient(zkServers, zkSessionInt, zkUsername, zkPassword)
+}
+
+// Close the Client underlying connection.
+func (c *Client) Close() {
+	fmt.Println("[DEBUG] Closing underlying ZooKeeper connection")
+	c.zkConn.Close()
 }
 
 // Create a ZNode at the given path.

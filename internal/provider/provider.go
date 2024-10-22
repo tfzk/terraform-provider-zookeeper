@@ -9,6 +9,9 @@ import (
 )
 
 func New() (*schema.Provider, error) {
+	// Hold a pool of Client, so a Client connecting to the same ZooKeeper can be shared between resources.
+	clientPool := client.NewPool()
+
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"servers": {
@@ -52,27 +55,28 @@ func New() (*schema.Provider, error) {
 		DataSourcesMap: map[string]*schema.Resource{
 			"zookeeper_znode": datasourceZNode(),
 		},
-		ConfigureContextFunc: configureProviderContext,
+		ConfigureContextFunc: func(_ context.Context, rscData *schema.ResourceData) (interface{}, diag.Diagnostics) {
+			// Retrieve the given configuration
+			servers := rscData.Get("servers").(string)
+			sessionTimeout := rscData.Get("session_timeout").(int)
+			username := rscData.Get("username").(string)
+			password := rscData.Get("password").(string)
+
+			if servers != "" {
+				// NOTE: Client Pool above is in a closure here
+				// because we don't have a way to add fields to the Provider.
+				c, err := clientPool.GetClient(servers, sessionTimeout, username, password)
+
+				if err != nil {
+					// Report inability to connect internal Client
+					return nil, diag.Errorf("Unable creating ZooKeeper client against '%s': %v", servers, err)
+				}
+
+				return c, diag.Diagnostics{}
+			}
+
+			// Report missing mandatory arguments
+			return nil, diag.Errorf("Provider requires at least the '%s' argument", "servers")
+		},
 	}, nil
-}
-
-func configureProviderContext(_ context.Context, rscData *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	servers := rscData.Get("servers").(string)
-	sessionTimeout := rscData.Get("session_timeout").(int)
-	username := rscData.Get("username").(string)
-	password := rscData.Get("password").(string)
-
-	if servers != "" {
-		c, err := client.DefaultPool().GetClient(servers, sessionTimeout, username, password)
-
-		if err != nil {
-			// Report inability to connect internal Client
-			return nil, diag.Errorf("Unable creating ZooKeeper client against '%s': %v", servers, err)
-		}
-
-		return c, diag.Diagnostics{}
-	}
-
-	// Report missing mandatory arguments
-	return nil, diag.Errorf("Provider requires at least the '%s' argument", "servers")
 }

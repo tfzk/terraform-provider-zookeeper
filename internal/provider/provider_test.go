@@ -15,22 +15,26 @@ import (
 func TestProvider(t *testing.T) {
 	assert := testifyAssert.New(t)
 
-	provider, err := provider.New()
+	p, err := provider.New()
 	assert.NoError(err)
 
-	assert.NoError(provider.InternalValidate())
+	assert.NoError(p.InternalValidate())
 }
 
-// providerFactoriesMap associates to each Provider factory instance, a name.
-//
-// WARN: This is important as this will be the name the provider will be expected
-// to have when executing the acceptance tests.
-// Fail to match the provider expected name will mean that the underlying binary
-// terraform, used during acceptance tests, will error complaining it can't find
-// the provider and `terraform init` should be executed.
+//nolint:unparam
 func providerFactoriesMap() map[string]func() (*schema.Provider, error) {
+	// Instantiate the provider in advance...
+	p, err := provider.New()
+	if err != nil {
+		panic(fmt.Errorf("failed to instantiate provider: %w", err))
+	}
+
+	// ... then return it within the factory method.
+	// This avoids the tests creating a new provider (and new connections) every single time.
 	return map[string]func() (*schema.Provider, error){
-		"zookeeper": provider.New,
+		"zookeeper": func() (*schema.Provider, error) {
+			return p, nil
+		},
 	}
 }
 
@@ -40,8 +44,6 @@ func checkPreconditions(t *testing.T) {
 		t.Fatalf("Environment variable '%s' must be set for acceptance tests", client.EnvZooKeeperServer)
 	}
 }
-
-// getTestZKClient can be used during test to procure a client.Client.
 
 // confirmAllZNodeDestroyed should be used with the field `CheckDestroy` of resource.TestCase.
 func confirmAllZNodeDestroyed(s *terraform.State) error {

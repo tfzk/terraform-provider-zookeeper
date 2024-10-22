@@ -18,8 +18,9 @@ func NewPool() *Pool {
 	}
 }
 
-// GetClient retrieves (or creates) a Client.
-func (p *Pool) GetClient(servers string, sessionTimeoutSec int, username string, password string) (*Client, error) {
+// GetOrCreateClient retrieves (or creates) a Client.
+// A new client is created for each unique set of construction parameters.
+func (p *Pool) GetOrCreateClient(servers string, sessionTimeoutSec int, username string, password string) (*Client, error) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 

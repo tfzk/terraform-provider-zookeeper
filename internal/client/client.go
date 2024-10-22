@@ -129,12 +129,6 @@ func NewClientFromEnv() (*Client, error) {
 	return NewClient(zkServers, zkSessionInt, zkUsername, zkPassword)
 }
 
-// Close the Client underlying connection.
-func (c *Client) Close() {
-	fmt.Println("[DEBUG] Closing underlying ZooKeeper connection")
-	c.zkConn.Close()
-}
-
 // Create a ZNode at the given path.
 //
 // Note that any necessary ZNode parents will be created if absent.
@@ -266,6 +260,12 @@ func (c *Client) Update(path string, data []byte, acl []zk.ACL) (*ZNode, error) 
 	}
 
 	return c.Read(path)
+}
+
+// Close the Client underlying connection.
+func (c *Client) Close() {
+	fmt.Println("[DEBUG] Closing underlying ZooKeeper connection")
+	c.zkConn.Close()
 }
 
 // Delete the given ZNode.

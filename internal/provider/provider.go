@@ -9,7 +9,8 @@ import (
 )
 
 func New() (*schema.Provider, error) {
-	// Hold a pool of Client, so a Client connecting to the same ZooKeeper can be shared between resources.
+	// Hold a Clients Pool, so connection to the same ZooKeeper can be shared between resources.
+	// The client is safe for concurrent usage.
 	clientPool := client.NewPool()
 
 	return &schema.Provider{
@@ -65,7 +66,7 @@ func New() (*schema.Provider, error) {
 			if servers != "" {
 				// NOTE: Client Pool above is in a closure here
 				// because we don't have a way to add fields to the Provider.
-				c, err := clientPool.GetClient(servers, sessionTimeout, username, password)
+				c, err := clientPool.GetOrCreateClient(servers, sessionTimeout, username, password)
 
 				if err != nil {
 					// Report inability to connect internal Client

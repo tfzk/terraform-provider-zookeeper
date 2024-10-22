@@ -30,9 +30,11 @@ version it implements, and Terraform:
 
 ### CI Testing
 
-This provider is tested against Terraform versions from `0.12` to `1.9`.
+The provider test suite is run against all Terraform versions from `0.12` to `1.9`,
+as well as all ZooKeeper versions from `3.5` to `3.9`. 
+
 See the [Build and Test](https://github.com/tfzk/terraform-provider-zookeeper/blob/main/.github/workflows/build-test.yml)
-workflow.
+workflow for details.
 
 ## Provider features
 
@@ -65,7 +67,7 @@ To run acceptance tests, you will need a ZooKeeper Ensemble running:
 ```shell
 $ make local.zk.up
 
-$ make local.testacc
+$ make local.test
 
 # ... do your development / fixing ...
 

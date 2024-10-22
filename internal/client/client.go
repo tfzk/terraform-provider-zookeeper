@@ -66,8 +66,12 @@ const (
 	// Client timeout session, in case EnvZooKeeperSessionSec is not set.
 	DefaultZooKeeperSessionSec = 30
 
-	// Environment variables to provide digest auth credentials.
+	// EnvZooKeeperUsername environment variable providing the username part of a digest auth credentials.
+	// This is used by NewClientFromEnv.
 	EnvZooKeeperUsername = "ZOOKEEPER_USERNAME"
+
+	// EnvZooKeeperPassword environment variable providing the password part of a digest auth credentials.
+	// This is used by NewClientFromEnv.
 	EnvZooKeeperPassword = "ZOOKEEPER_PASSWORD"
 )
 
@@ -79,6 +83,7 @@ func NewClient(servers string, sessionTimeoutSec int, username string, password 
 	if err != nil {
 		return nil, fmt.Errorf("unable to connect to ZooKeeper: %w", err)
 	}
+	fmt.Printf("[DEBUG] Connected to ZooKeeper servers %s\n", serversSplit)
 
 	if (username == "") != (password == "") {
 		return nil, fmt.Errorf("both username and password must be specified together")
@@ -98,7 +103,7 @@ func NewClient(servers string, sessionTimeoutSec int, username string, password 
 	}, nil
 }
 
-// NewClientFromEnv constructs a new Client instance from environment variables.
+// NewClientFromEnv constructs a Client instance from environment variables.
 //
 // The only mandatory environment variable is EnvZooKeeperServer.
 func NewClientFromEnv() (*Client, error) {
@@ -120,7 +125,14 @@ func NewClientFromEnv() (*Client, error) {
 	zkUsername, _ := os.LookupEnv(EnvZooKeeperUsername)
 	zkPassword, _ := os.LookupEnv(EnvZooKeeperPassword)
 
+	fmt.Println("[DEBUG] Creating Client from Environment Variables")
 	return NewClient(zkServers, zkSessionInt, zkUsername, zkPassword)
+}
+
+// Close the Client underlying connection.
+func (c *Client) Close() {
+	fmt.Println("[DEBUG] Closing underlying ZooKeeper connection")
+	c.zkConn.Close()
 }
 
 // Create a ZNode at the given path.
@@ -254,11 +266,6 @@ func (c *Client) Update(path string, data []byte, acl []zk.ACL) (*ZNode, error) 
 	}
 
 	return c.Read(path)
-}
-
-// Close the connection.
-func (c *Client) Close() {
-	c.zkConn.Close()
 }
 
 // Delete the given ZNode.

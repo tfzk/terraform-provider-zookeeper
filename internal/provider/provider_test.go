@@ -3,6 +3,7 @@ package provider_test
 import (
 	"fmt"
 	"os"
+	"sync"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -21,6 +22,12 @@ func TestProvider(t *testing.T) {
 	assert.NoError(provider.InternalValidate())
 }
 
+//nolint:gochecknoglobals
+var providersMapMutex sync.Mutex
+
+//nolint:gochecknoglobals
+var providersMap = make(map[string]*schema.Provider)
+
 // providerFactoriesMap associates to each Provider factory instance, a name.
 //
 // WARN: This is important as this will be the name the provider will be expected
@@ -29,30 +36,49 @@ func TestProvider(t *testing.T) {
 // terraform, used during acceptance tests, will error complaining it can't find
 // the provider and `terraform init` should be executed.
 func providerFactoriesMap() map[string]func() (*schema.Provider, error) {
+	const providerName = "zookeeper"
+
 	return map[string]func() (*schema.Provider, error){
-		"zookeeper": provider.New,
+		providerName: func() (*schema.Provider, error) {
+			providersMapMutex.Lock()
+			defer providersMapMutex.Unlock()
+
+			// Return previously-initialized copy of the provider
+			if zkProv, found := providersMap[providerName]; found {
+				return zkProv, nil
+			}
+
+			// Create new copy of the provider and store it, before returning it
+			zkProv, err := provider.New()
+			if err != nil {
+				return nil, fmt.Errorf("could not create provider %s: %w", providerName, err)
+			}
+			providersMap[providerName] = zkProv
+			return zkProv, nil
+		},
 	}
 }
 
 // checkPreconditions should be used with the field `PreCheck` of resource.TestCase.
 func checkPreconditions(t *testing.T) {
 	if v := os.Getenv(client.EnvZooKeeperServer); v == "" {
-		t.Fatalf("Environnment variable '%s' must be set for acceptance tests", client.EnvZooKeeperServer)
+		t.Fatalf("Environment variable '%s' must be set for acceptance tests", client.EnvZooKeeperServer)
 	}
 }
 
 // getTestZKClient can be used during test to procure a client.Client.
-func getTestZKClient() *client.Client {
-	zkClient, _ := client.NewClientFromEnv()
-	return zkClient
-}
 
 // confirmAllZNodeDestroyed should be used with the field `CheckDestroy` of resource.TestCase.
 func confirmAllZNodeDestroyed(s *terraform.State) error {
-	zkClient := getTestZKClient()
+	fmt.Println("[DEBUG] Confirming all ZNodes have been removed")
+	zkClient, err := client.NewClientFromEnv()
+	if err != nil {
+		return fmt.Errorf("failed to create new Client: %w", err)
+	}
+	defer zkClient.Close()
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "zookeeper_znode" {
+		if rs.Type != "zookeeper_znode" && rs.Type != "zookeeper_sequential_znode" {
 			continue
 		}
 
@@ -62,6 +88,5 @@ func confirmAllZNodeDestroyed(s *terraform.State) error {
 		}
 	}
 
-	zkClient.Close()
 	return nil
 }

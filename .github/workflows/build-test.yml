@@ -85,6 +85,8 @@ jobs:
         image: zookeeper:${{ matrix.zookeeper }}
         ports:
           - 2181:2181
+        env:
+          ZOO_MAX_CLIENT_CNXNS: 200
 
     steps:
 

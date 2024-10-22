@@ -11,7 +11,7 @@ import (
 func initTest(t *testing.T) (*client.Client, *testifyAssert.Assertions) {
 	assert := testifyAssert.New(t)
 
-	client, err := client.DefaultPool().GetClientFromEnv()
+	client, err := client.NewClientFromEnv()
 	assert.NoError(err)
 
 	return client, assert
@@ -19,6 +19,7 @@ func initTest(t *testing.T) (*client.Client, *testifyAssert.Assertions) {
 
 func TestClassicCRUD(t *testing.T) {
 	client, assert := initTest(t)
+	defer client.Close()
 
 	// confirm not exists yet
 	znodeExists, err := client.Exists("/test/ClassicCRUD")
@@ -69,6 +70,7 @@ func TestClassicCRUD(t *testing.T) {
 
 func TestCreateSequential(t *testing.T) {
 	client, assert := initTest(t)
+	defer client.Close()
 
 	noPrefixSeqZNode, err := client.CreateSequential("/test/CreateSequential/", []byte("seq"), zk.WorldACL(zk.PermAll))
 	assert.NoError(err)
@@ -87,6 +89,7 @@ func TestDigestAuthenticationSuccess(t *testing.T) {
 	t.Setenv(client.EnvZooKeeperUsername, "username")
 	t.Setenv(client.EnvZooKeeperPassword, "password")
 	client, assert := initTest(t)
+	defer client.Close()
 
 	// Create a ZNode accessible only by the given user
 	acl := zk.DigestACL(zk.PermAll, "username", "password")
@@ -115,6 +118,7 @@ func TestFailureWhenReadingZNodeWithIncorrectAuth(t *testing.T) {
 	t.Setenv(client.EnvZooKeeperUsername, "foo")
 	t.Setenv(client.EnvZooKeeperPassword, "password")
 	fooClient, assert := initTest(t)
+	defer fooClient.Close()
 
 	// Create a ZNode accessible only by foo user
 	acl := zk.DigestACL(zk.PermAll, "foo", "password")
@@ -134,8 +138,9 @@ func TestFailureWhenReadingZNodeWithIncorrectAuth(t *testing.T) {
 	// Create client authenticated as bar user
 	t.Setenv(client.EnvZooKeeperUsername, "bar")
 	t.Setenv(client.EnvZooKeeperPassword, "password")
-	barClient, err := client.DefaultPool().GetClientFromEnv()
+	barClient, err := client.NewClientFromEnv()
 	assert.NoError(err)
+	defer barClient.Close()
 
 	// The node should be inaccessible by bar user
 	_, err = barClient.Read("/auth-fail-test/AccessibleOnlyByFoo")
@@ -150,6 +155,7 @@ func TestFailureWhenReadingZNodeWithIncorrectAuth(t *testing.T) {
 
 func TestFailureWhenCreatingForNonSequentialZNodeEndingInSlash(t *testing.T) {
 	client, assert := initTest(t)
+	defer client.Close()
 
 	_, err := client.Create("/test/willFail/", nil, zk.WorldACL(zk.PermAll))
 	assert.Error(err)
@@ -158,6 +164,7 @@ func TestFailureWhenCreatingForNonSequentialZNodeEndingInSlash(t *testing.T) {
 
 func TestFailureWhenCreatingWhenZNodeAlreadyExists(t *testing.T) {
 	client, assert := initTest(t)
+	defer client.Close()
 
 	_, err := client.Create("/test/node", nil, zk.WorldACL(zk.PermAll))
 	assert.NoError(err)
@@ -171,6 +178,7 @@ func TestFailureWhenCreatingWhenZNodeAlreadyExists(t *testing.T) {
 
 func TestFailureWithNonExistingZNodes(t *testing.T) {
 	client, assert := initTest(t)
+	defer client.Close()
 
 	_, err := client.Read("/does-not-exist")
 	assert.Error(err)

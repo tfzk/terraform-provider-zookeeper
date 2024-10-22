@@ -42,17 +42,18 @@ func checkPreconditions(t *testing.T) {
 }
 
 // getTestZKClient can be used during test to procure a client.Client.
-func getTestZKClient() *client.Client {
-	zkClient, _ := client.DefaultPool().GetClientFromEnv()
-	return zkClient
-}
 
 // confirmAllZNodeDestroyed should be used with the field `CheckDestroy` of resource.TestCase.
 func confirmAllZNodeDestroyed(s *terraform.State) error {
-	zkClient := getTestZKClient()
+	fmt.Println("[DEBUG] Confirming all ZNodes have been removed")
+	zkClient, err := client.NewClientFromEnv()
+	if err != nil {
+		return fmt.Errorf("failed to create new Client: %w", err)
+	}
+	defer zkClient.Close()
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "zookeeper_znode" {
+		if rs.Type != "zookeeper_znode" && rs.Type != "zookeeper_sequential_znode" {
 			continue
 		}
 

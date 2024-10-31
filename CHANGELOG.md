@@ -1,14 +1,17 @@
-## NEXT (MONTH DAY, 2024)
+## 1.2.0 (October 31, 2024)
 
 NEW FEATURES:
 
-* Added support for digest authentication in provider configuration
-* Added support for ZNode ACL management in `zookeeper_znode` and `zookeeper_sequential_znode` resources
+* Added support for digest authentication in provider configuration (thanks to [@abarabash-sift](https://github.com/abarabash-sift))
+* Added support for ZNode ACL management in `zookeeper_znode` and `zookeeper_sequential_znode` resources (thanks to [@abarabash-sift](https://github.com/abarabash-sift))
 
 IMPROVEMENTS:
 
 * Enabling CI testing for versions `1.9` of Terraform
 * Enabling CI testing for version `3.6`, `3.7`, `3.8` and `3.9` of ZooKeeper
+* Introduced internal pooling of Clients, reducing amount of ZooKeeper connections necessary to operate
+* Minor re-touches to documentation
+* Tweaked tests to better handle the closure of Clients after use, reducing amount of concurrent ZooKeeper connections
 
 NOTES:
 

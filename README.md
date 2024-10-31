@@ -73,7 +73,7 @@ $ make local.test
 
 $ make local.zk.down
 ```
-In `tools/zk-local-ensemble` we provide a `docker-compose.yml` that can spin
+In `scripts/zk-local-ensemble` we provide a `docker-compose.yml` that can spin
 up an ensemble made of 3 servers, running on `localhost` ports `2181, 2182 and 2183`.
 Everything can be controlled via the `make local.*` commands provided.
 

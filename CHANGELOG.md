@@ -1,3 +1,9 @@
+## 1.2.1 (November 24, 2024)
+
+NOTES:
+
+* Updated repository Go version to `1.23.3`
+
 ## 1.2.0 (October 31, 2024)
 
 NEW FEATURES:

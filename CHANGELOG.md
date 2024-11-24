@@ -4,6 +4,29 @@ NOTES:
 
 * Updated repository Go version to `1.23.3`
 * Updated all dependencies to latest
+* Updated [golangci-lint](https://golangci-lint.run/) linters
+  * Added `asasalint`
+  * Added `canonicalheader`
+  * Added `containedctx`
+  * Added `dupl`
+  * Added `dupword`
+  * Added `err113`
+  * Added `errchkjson`
+  * Added `fatcontext`
+  * Added `gocognit`
+  * Added `gomodguard`
+  * Added `noctx`
+  * Added `nolintlint`
+  * Added `perfsprint`
+  * Added `reassign`
+  * Added `sqlclosecheck`
+  * Added `tagalign`
+  * Added `tagliatelle`
+  * Added `testifylint`
+  * Added `thelper`
+  * Added `tparallel`
+  * Added `usestdlibvars`
+* Because of `err113` linter, created a couple of error types
 
 ## 1.2.0 (October 31, 2024)
 

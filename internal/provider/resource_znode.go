@@ -115,7 +115,7 @@ func resourceZNodeRead(_ context.Context, rscData *schema.ResourceData, prvClien
 	if err != nil {
 		// If the ZNode is not found, it means it was changed outside of Terraform.
 		// We set the ID to blank, so it's state will be removed.
-		if errors.Is(err, client.ErrorZNodeDoesNotExist) {
+		if errors.Is(err, client.ErrZNodeDoesNotExist) {
 			rscData.SetId("")
 			return diag.Diagnostics{}
 		}

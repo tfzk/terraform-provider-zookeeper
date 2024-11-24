@@ -35,11 +35,16 @@ type ZNode struct {
 
 // Re-exporting errors from ZK library for better encapsulation.
 var (
-	ErrorZNodeAlreadyExists = zk.ErrNodeExists
-	ErrorZNodeDoesNotExist  = zk.ErrNoNode
-	ErrorZNodeHasChildren   = zk.ErrNotEmpty
-	ErrorConnectionClosed   = zk.ErrConnectionClosed
-	ErrorInvalidArguments   = zk.ErrBadArguments
+	ErrZNodeAlreadyExists = zk.ErrNodeExists
+	ErrZNodeDoesNotExist  = zk.ErrNoNode
+	ErrZNodeHasChildren   = zk.ErrNotEmpty
+	ErrConnectionClosed   = zk.ErrConnectionClosed
+	ErrInvalidArguments   = zk.ErrBadArguments
+)
+
+var (
+	// ErrUserPassBothOrNone returned when only one of username and password is specified: either both or none is allowed.
+	ErrUserPassBothOrNone = errors.New("both username and password must be specified together")
 )
 
 const (
@@ -86,7 +91,7 @@ func NewClient(servers string, sessionTimeoutSec int, username string, password 
 	fmt.Printf("[DEBUG] Connected to ZooKeeper servers %s\n", serversSplit)
 
 	if (username == "") != (password == "") {
-		return nil, fmt.Errorf("both username and password must be specified together")
+		return nil, ErrUserPassBothOrNone
 	}
 
 	if username != "" {
@@ -109,7 +114,7 @@ func NewClient(servers string, sessionTimeoutSec int, username string, password 
 func NewClientFromEnv() (*Client, error) {
 	zkServers, ok := os.LookupEnv(EnvZooKeeperServer)
 	if !ok {
-		return nil, fmt.Errorf("missing environment variable: %s", EnvZooKeeperServer)
+		return nil, NewMissingEnvVarError(EnvZooKeeperServer)
 	}
 
 	zkSession, ok := os.LookupEnv(EnvZooKeeperSessionSec)
@@ -134,7 +139,7 @@ func NewClientFromEnv() (*Client, error) {
 // Note that any necessary ZNode parents will be created if absent.
 func (c *Client) Create(path string, data []byte, acl []zk.ACL) (*ZNode, error) {
 	if path[len(path)-1] == zNodePathSeparator {
-		return nil, fmt.Errorf("non-sequential ZNode cannot have path '%s' because it ends in '%c'", path, zNodePathSeparator)
+		return nil, NewNonSeqZNodeCannotEndWithPathSeparatorError(path)
 	}
 
 	return c.doCreate(path, data, 0, acl)
@@ -207,7 +212,7 @@ func (c *Client) createEmptyZNodes(pathsInOrder []string, createFlags int32, acl
 		// a ZNode already existing.
 		if !exists {
 			_, err := c.zkConn.Create(path, nil, createFlags, acl)
-			if err != nil && !errors.Is(err, ErrorZNodeAlreadyExists) {
+			if err != nil && !errors.Is(err, ErrZNodeAlreadyExists) {
 				return fmt.Errorf("failed to create parent ZNode '%s' (createFlags: %d, acl: %v): %w", path, createFlags, acl, err)
 			}
 		}
@@ -246,7 +251,7 @@ func (c *Client) Update(path string, data []byte, acl []zk.ACL) (*ZNode, error) 
 	}
 
 	if !exists {
-		return nil, fmt.Errorf("failed to update ZNode '%s': does not exist", path)
+		return nil, NewCannotUpdateDoesNotExistError(path)
 	}
 
 	_, err = c.zkConn.SetACL(path, acl, matchAnyVersion)

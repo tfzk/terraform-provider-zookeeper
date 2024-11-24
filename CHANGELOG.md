@@ -3,6 +3,7 @@
 NOTES:
 
 * Updated repository Go version to `1.23.3`
+* Updated all dependencies to latest
 
 ## 1.2.0 (October 31, 2024)
 

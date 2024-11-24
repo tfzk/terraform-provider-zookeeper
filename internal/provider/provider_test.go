@@ -40,12 +40,15 @@ func providerFactoriesMap() map[string]func() (*schema.Provider, error) {
 
 // checkPreconditions should be used with the field `PreCheck` of resource.TestCase.
 func checkPreconditions(t *testing.T) {
+	t.Helper()
 	if v := os.Getenv(client.EnvZooKeeperServer); v == "" {
 		t.Fatalf("Environment variable '%s' must be set for acceptance tests", client.EnvZooKeeperServer)
 	}
 }
 
 // confirmAllZNodeDestroyed should be used with the field `CheckDestroy` of resource.TestCase.
+//
+//nolint:err113
 func confirmAllZNodeDestroyed(s *terraform.State) error {
 	fmt.Println("[DEBUG] Confirming all ZNodes have been removed")
 	zkClient, err := client.NewClientFromEnv()

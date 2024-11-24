@@ -14,6 +14,9 @@ install: build
 lint:
 	golangci-lint run
 
+lint-fix:
+	golangci-lint run --fix
+
 # Generates the documentation that eventually gets published here:
 # https://registry.terraform.io/providers/tfzk/zookeeper/latest/docs.
 generate:

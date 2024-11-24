@@ -2,6 +2,7 @@ package provider
 
 import (
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"math"
 
@@ -9,6 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
+)
+
+var (
+	ErrACLPermNotAnInt = errors.New("acl permissions value is not an integer")
 )
 
 const (
@@ -169,10 +174,10 @@ func parseACLsFromResourceData(rscData *schema.ResourceData) ([]zk.ACL, error) {
 		id := aclMap["id"].(string)
 		permissionsValue, ok := aclMap["permissions"].(int)
 		if !ok {
-			return nil, fmt.Errorf("acl permissions value is not an integer")
+			return nil, ErrACLPermNotAnInt
 		}
 		if permissionsValue < math.MinInt32 || permissionsValue > math.MaxInt32 {
-			return nil, fmt.Errorf("acl permissions value %d is out of int32 range", permissionsValue)
+			return nil, NewACLPermissionsValueOutOfRangeError(permissionsValue)
 		}
 		permissions := int32(permissionsValue)
 

@@ -1,3 +1,11 @@
+## 1.2.2 (December 12, 2024)
+
+NOTES:
+
+* Updated repository Go version to `1.23.4` 
+* Updated all dependencies to latest
+  * Addresses advisory [CVE-2024-45337](https://github.com/advisories/GHSA-v778-237x-gjrc)
+
 ## 1.2.1 (November 24, 2024)
 
 NOTES:

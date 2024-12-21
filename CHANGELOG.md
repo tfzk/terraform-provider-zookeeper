@@ -1,3 +1,9 @@
+## 1.2.3 (December 21, 2024)
+
+NOTES:
+
+* Updated all dependencies to latest
+
 ## 1.2.2 (December 12, 2024)
 
 NOTES:

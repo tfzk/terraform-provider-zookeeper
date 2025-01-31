@@ -2,6 +2,8 @@ module github.com/tfzk/terraform-provider-zookeeper
 
 go 1.23
 
+toolchain go1.23.5
+
 require (
 	github.com/go-zookeeper/zk v1.0.4
 	github.com/hashicorp/terraform-plugin-docs v0.20.1

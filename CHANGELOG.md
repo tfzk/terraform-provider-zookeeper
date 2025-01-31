@@ -1,3 +1,11 @@
+## NEXT (DATE)
+
+NOTES:
+
+* Updated repository Go version to `1.23.5`
+  * Adding `toolchain` hint in `go.mod`
+* Updated all dependencies to latest
+
 ## 1.2.3 (December 21, 2024)
 
 NOTES:

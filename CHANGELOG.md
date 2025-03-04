@@ -2,7 +2,7 @@
 
 NOTES:
 
-* Updated repository Go version to `1.23.5`
+* Updated repository Go version to `1.24.0`
   * Adding `toolchain` hint in `go.mod`
 * Updated all dependencies to latest
 

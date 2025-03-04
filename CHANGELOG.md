@@ -1,4 +1,4 @@
-## NEXT (DATE)
+## 1.2.4 (March 04, 2025)
 
 IMPROVEMENTS:
 

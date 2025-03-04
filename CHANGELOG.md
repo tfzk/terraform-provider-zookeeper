@@ -1,5 +1,9 @@
 ## NEXT (DATE)
 
+IMPROVEMENTS:
+
+* Enabling CI testing for versions `1.10` and `1.11` of Terraform
+
 NOTES:
 
 * Updated repository Go version to `1.24.0`

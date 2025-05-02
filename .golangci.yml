@@ -1,8 +1,13 @@
-linters:
-  # Default linters enabled
-  # See: https://golangci-lint.run/usage/linters/#enabled-by-default-linters
+version: "2"
 
-  # Additional linters enabled
+linters:
+  # Default set of linters.
+  # The value can be: `standard`, `all`, `none`, or `fast`.
+  # Default: standard
+  default: standard
+
+  # Enable specific linter.
+  # https://golangci-lint.run/usage/linters/#enabled-by-default
   enable:
     - asasalint
     - asciicheck
@@ -24,13 +29,11 @@ linters:
     - errorlint
     - exhaustive
     - fatcontext
-    - gci
     - gochecknoglobals
     - gocognit
     - goconst
     - gocritic
     - godot
-    - gofmt
     - gomoddirectives
     - gomodguard
     - goprintffuncname
@@ -63,3 +66,32 @@ linters:
     - wastedassign
     - whitespace
     - wrapcheck
+
+formatters:
+  # Enable specific formatter.
+  # Default: [] (uses standard Go formatting)
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+    - golines
+
+run:
+  # Allow multiple parallel golangci-lint instances running.
+  # If false, golangci-lint acquires file lock on start.
+  # Default: false
+  allow-parallel-runners: true
+
+  # If set, we pass it to "go list -mod={option}". From "go help modules":
+  # If invoked with -mod=readonly, the go command is disallowed from the implicit
+  # automatic updating of go.mod described above. Instead, it fails when any changes
+  # to go.mod are needed. This setting is most useful to check that go.mod does
+  # not need updates, such as in a continuous integration and testing system.
+  # If invoked with -mod=vendor, the go command assumes that the vendor
+  # directory holds the correct copies of dependencies and ignores
+  # the dependency descriptions in go.mod.
+  #
+  # Allowed values: readonly|vendor|mod
+  # Default: ""
+  modules-download-mode: readonly

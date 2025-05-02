@@ -1,3 +1,9 @@
+## 1.2.6 (WIP)
+
+NOTES:
+
+* Updated repository Go version to `1.24.2`
+  * Adding `toolchain` hint in `go.mod`
 ## 1.2.5 (March 14, 2025)
 
 NOTES:

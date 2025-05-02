@@ -4,6 +4,10 @@ NOTES:
 
 * Updated repository Go version to `1.24.2`
   * Adding `toolchain` hint in `go.mod`
+* Updated all dependencies to latest
+* Updated repository `golangci-lint` version to `v2` (`2.1.5`)
+  * Now used for both linting _and_ formatting
+  * Also now using `golangci/golangci-lint-action@v7`
 ## 1.2.5 (March 14, 2025)
 
 NOTES:

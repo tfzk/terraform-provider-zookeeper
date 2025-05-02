@@ -9,7 +9,9 @@ import (
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
 
-func initTest(t *testing.T) (*client.Client, *testifyAssert.Assertions, *testifyRequire.Assertions) {
+func initTest(
+	t *testing.T,
+) (*client.Client, *testifyAssert.Assertions, *testifyRequire.Assertions) {
 	t.Helper()
 	assert := testifyAssert.New(t)
 	require := testifyRequire.New(t)
@@ -76,11 +78,19 @@ func TestCreateSequential(t *testing.T) {
 	client, assert, require := initTest(t)
 	defer client.Close()
 
-	noPrefixSeqZNode, err := client.CreateSequential("/test/CreateSequential/", []byte("seq"), zk.WorldACL(zk.PermAll))
+	noPrefixSeqZNode, err := client.CreateSequential(
+		"/test/CreateSequential/",
+		[]byte("seq"),
+		zk.WorldACL(zk.PermAll),
+	)
 	require.NoError(err)
 	assert.Equal("/test/CreateSequential/0000000000", noPrefixSeqZNode.Path)
 
-	prefixSeqZNode, err := client.CreateSequential("/test/CreateSequentialWithPrefix/prefix-", []byte("seq"), zk.WorldACL(zk.PermAll))
+	prefixSeqZNode, err := client.CreateSequential(
+		"/test/CreateSequentialWithPrefix/prefix-",
+		[]byte("seq"),
+		zk.WorldACL(zk.PermAll),
+	)
 	require.NoError(err)
 	assert.Equal("/test/CreateSequentialWithPrefix/prefix-0000000000", prefixSeqZNode.Path)
 
@@ -148,7 +158,10 @@ func TestFailureWhenReadingZNodeWithIncorrectAuth(t *testing.T) {
 
 	// The node should be inaccessible by bar user
 	_, err = barClient.Read("/auth-fail-test/AccessibleOnlyByFoo")
-	require.EqualError(err, "failed to read ZNode '/auth-fail-test/AccessibleOnlyByFoo': zk: not authenticated")
+	require.EqualError(
+		err,
+		"failed to read ZNode '/auth-fail-test/AccessibleOnlyByFoo': zk: not authenticated",
+	)
 
 	// Cleanup
 	err = fooClient.Delete("/auth-fail-test/AccessibleOnlyByFoo")
@@ -163,7 +176,10 @@ func TestFailureWhenCreatingForNonSequentialZNodeEndingInSlash(t *testing.T) {
 
 	_, err := client.Create("/test/willFail/", nil, zk.WorldACL(zk.PermAll))
 	require.Error(err)
-	assert.Equal("non-sequential ZNode cannot have path '/test/willFail/' because it ends in '/'", err.Error())
+	assert.Equal(
+		"non-sequential ZNode cannot have path '/test/willFail/' because it ends in '/'",
+		err.Error(),
+	)
 }
 
 func TestFailureWhenCreatingWhenZNodeAlreadyExists(t *testing.T) {
@@ -174,7 +190,10 @@ func TestFailureWhenCreatingWhenZNodeAlreadyExists(t *testing.T) {
 	require.NoError(err)
 	_, err = client.Create("/test/node", nil, zk.WorldACL(zk.PermAll))
 	require.Error(err)
-	assert.Equal("failed to create ZNode '/test/node' (size: 0, createFlags: 0, acl: [{31 world anyone}]): zk: node already exists", err.Error())
+	assert.Equal(
+		"failed to create ZNode '/test/node' (size: 0, createFlags: 0, acl: [{31 world anyone}]): zk: node already exists",
+		err.Error(),
+	)
 
 	err = client.Delete("/test")
 	require.NoError(err)

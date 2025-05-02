@@ -1,3 +1,4 @@
+// Package client provides a wrapper around the go-zookeeper library.
 package client
 
 import (
@@ -33,7 +34,7 @@ type ZNode struct {
 	ACL  []zk.ACL
 }
 
-// Re-exporting errors from ZK library for better encapsulation.
+// Re-exporting errors from the ZK library for better encapsulation.
 var (
 	ErrZNodeAlreadyExists = zk.ErrNodeExists
 	ErrZNodeDoesNotExist  = zk.ErrNoNode
@@ -42,10 +43,8 @@ var (
 	ErrInvalidArguments   = zk.ErrBadArguments
 )
 
-var (
-	// ErrUserPassBothOrNone returned when only one of username and password is specified: either both or none is allowed.
-	ErrUserPassBothOrNone = errors.New("both username and password must be specified together")
-)
+// ErrUserPassBothOrNone returned when only one of username and password is specified: either both or none is allowed.
+var ErrUserPassBothOrNone = errors.New("both username and password must be specified together")
 
 const (
 	serversStringSeparator = ","
@@ -81,10 +80,18 @@ const (
 )
 
 // NewClient constructs a new Client instance.
-func NewClient(servers string, sessionTimeoutSec int, username string, password string) (*Client, error) {
+func NewClient(
+	servers string,
+	sessionTimeoutSec int,
+	username string,
+	password string,
+) (*Client, error) {
 	serversSplit := strings.Split(servers, serversStringSeparator)
 
-	conn, _, err := zk.Connect(zk.FormatServers(serversSplit), time.Duration(sessionTimeoutSec)*time.Second)
+	conn, _, err := zk.Connect(
+		zk.FormatServers(serversSplit),
+		time.Duration(sessionTimeoutSec)*time.Second,
+	)
 	if err != nil {
 		return nil, fmt.Errorf("unable to connect to ZooKeeper: %w", err)
 	}
@@ -163,7 +170,12 @@ func (c *Client) CreateSequential(path string, data []byte, acl []zk.ACL) (*ZNod
 	return c.doCreate(path, data, zk.FlagSequence, acl)
 }
 
-func (c *Client) doCreate(path string, data []byte, createFlags int32, acl []zk.ACL) (*ZNode, error) {
+func (c *Client) doCreate(
+	path string,
+	data []byte,
+	createFlags int32,
+	acl []zk.ACL,
+) (*ZNode, error) {
 	// Create any necessary parent for the ZNode we need to crete
 	parentZNodes := listParentsInOrder(path)
 	err := c.createEmptyZNodes(parentZNodes, 0, acl)
@@ -174,7 +186,14 @@ func (c *Client) doCreate(path string, data []byte, createFlags int32, acl []zk.
 	// NOTE: Based on the `createFlags`, the path returned by `Create` can change (ex. sequential nodes)
 	createdPath, err := c.zkConn.Create(path, data, createFlags, acl)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create ZNode '%s' (size: %d, createFlags: %d, acl: %v): %w", path, len(data), createFlags, acl, err)
+		return nil, fmt.Errorf(
+			"failed to create ZNode '%s' (size: %d, createFlags: %d, acl: %v): %w",
+			path,
+			len(data),
+			createFlags,
+			acl,
+			err,
+		)
 	}
 
 	return c.Read(createdPath)
@@ -213,7 +232,13 @@ func (c *Client) createEmptyZNodes(pathsInOrder []string, createFlags int32, acl
 		if !exists {
 			_, err := c.zkConn.Create(path, nil, createFlags, acl)
 			if err != nil && !errors.Is(err, ErrZNodeAlreadyExists) {
-				return fmt.Errorf("failed to create parent ZNode '%s' (createFlags: %d, acl: %v): %w", path, createFlags, acl, err)
+				return fmt.Errorf(
+					"failed to create parent ZNode '%s' (createFlags: %d, acl: %v): %w",
+					path,
+					createFlags,
+					acl,
+					err,
+				)
 			}
 		}
 	}

@@ -12,6 +12,7 @@ type Pool struct {
 	pool map[string]*Client
 }
 
+// NewPool creates a new Pool.
 func NewPool() *Pool {
 	return &Pool{
 		pool: make(map[string]*Client),
@@ -20,7 +21,12 @@ func NewPool() *Pool {
 
 // GetOrCreateClient retrieves (or creates) a Client.
 // A new client is created for each unique set of construction parameters.
-func (p *Pool) GetOrCreateClient(servers string, sessionTimeoutSec int, username string, password string) (*Client, error) {
+func (p *Pool) GetOrCreateClient(
+	servers string,
+	sessionTimeoutSec int,
+	username string,
+	password string,
+) (*Client, error) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 

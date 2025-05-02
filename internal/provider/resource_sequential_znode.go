@@ -90,7 +90,11 @@ func resourceSeqZNode() *schema.Resource {
 	}
 }
 
-func resourceSeqZNodeCreate(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceSeqZNodeCreate(
+	_ context.Context,
+	rscData *schema.ResourceData,
+	prvClient interface{},
+) diag.Diagnostics {
 	zkClient := prvClient.(*client.Client)
 
 	znodePathPrefix := rscData.Get("path_prefix").(string)
@@ -117,19 +121,35 @@ func resourceSeqZNodeCreate(_ context.Context, rscData *schema.ResourceData, prv
 	return setAttributesFromZNode(rscData, znode, diag.Diagnostics{})
 }
 
-func resourceSeqZNodeRead(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceSeqZNodeRead(
+	ctx context.Context,
+	rscData *schema.ResourceData,
+	prvClient interface{},
+) diag.Diagnostics {
 	return resourceZNodeRead(ctx, rscData, prvClient)
 }
 
-func resourceSeqZNodeUpdate(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceSeqZNodeUpdate(
+	ctx context.Context,
+	rscData *schema.ResourceData,
+	prvClient interface{},
+) diag.Diagnostics {
 	return resourceZNodeUpdate(ctx, rscData, prvClient)
 }
 
-func resourceSeqZNodeDelete(ctx context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceSeqZNodeDelete(
+	ctx context.Context,
+	rscData *schema.ResourceData,
+	prvClient interface{},
+) diag.Diagnostics {
 	return resourceZNodeDelete(ctx, rscData, prvClient)
 }
 
-func resourceSeqZNodeImport(_ context.Context, rscData *schema.ResourceData, _ interface{}) ([]*schema.ResourceData, error) {
+func resourceSeqZNodeImport(
+	_ context.Context,
+	rscData *schema.ResourceData,
+	_ interface{},
+) ([]*schema.ResourceData, error) {
 	// Re-create the original `path_prefix` for the imported `sequential_znode`,
 	// by removing the sequential suffix from the `id` (i.e. `path`)
 	if err := rscData.Set("path_prefix", client.RemoveSequentialSuffix(rscData.Id())); err != nil {

@@ -24,7 +24,7 @@ generate:
 
 # Formats the codebase.
 fmt:
-	gofmt -s -w -e .
+	golangci-lint fmt
 
 # Updates all dependencies, recursively.
 deps.update:

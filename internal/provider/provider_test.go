@@ -42,7 +42,10 @@ func providerFactoriesMap() map[string]func() (*schema.Provider, error) {
 func checkPreconditions(t *testing.T) {
 	t.Helper()
 	if v := os.Getenv(client.EnvZooKeeperServer); v == "" {
-		t.Fatalf("Environment variable '%s' must be set for acceptance tests", client.EnvZooKeeperServer)
+		t.Fatalf(
+			"Environment variable '%s' must be set for acceptance tests",
+			client.EnvZooKeeperServer,
+		)
 	}
 }
 

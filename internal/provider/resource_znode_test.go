@@ -30,14 +30,36 @@ func TestAccResourceZNode(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					// Parent checks
 					resource.TestCheckResourceAttr("zookeeper_znode.parent", "path", parentPath),
-					resource.TestCheckResourceAttrPair("zookeeper_znode.parent", "path", "zookeeper_znode.parent", "id"),
+					resource.TestCheckResourceAttrPair(
+						"zookeeper_znode.parent",
+						"path",
+						"zookeeper_znode.parent",
+						"id",
+					),
 					resource.TestCheckResourceAttr("zookeeper_znode.parent", "data", "parent data"),
-					resource.TestCheckResourceAttr("zookeeper_znode.parent", "data_base64", "cGFyZW50IGRhdGE="),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.parent",
+						"data_base64",
+						"cGFyZW50IGRhdGE=",
+					),
 					// Child checks
-					resource.TestCheckResourceAttr("zookeeper_znode.child", "path", parentPath+"/child"),
-					resource.TestCheckResourceAttrPair("zookeeper_znode.child", "path", "zookeeper_znode.child", "id"),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.child",
+						"path",
+						parentPath+"/child",
+					),
+					resource.TestCheckResourceAttrPair(
+						"zookeeper_znode.child",
+						"path",
+						"zookeeper_znode.child",
+						"id",
+					),
 					resource.TestCheckResourceAttr("zookeeper_znode.child", "data", "child data"),
-					resource.TestCheckResourceAttr("zookeeper_znode.child", "data_base64", "Y2hpbGQgZGF0YQ=="),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.child",
+						"data_base64",
+						"Y2hpbGQgZGF0YQ==",
+					),
 				),
 			},
 			{
@@ -55,7 +77,13 @@ func TestAccResourceZNode(t *testing.T) {
 }
 
 func TestAccResourceZNode_MultipleSharedPath(t *testing.T) {
-	sharedPath := "/" + acctest.RandString(5) + "/" + acctest.RandString(5) + "/" + acctest.RandString(5)
+	sharedPath := "/" + acctest.RandString(
+		5,
+	) + "/" + acctest.RandString(
+		5,
+	) + "/" + acctest.RandString(
+		5,
+	)
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { checkPreconditions(t) },
@@ -113,10 +141,24 @@ func TestAccResourceZNode_Base64(t *testing.T) {
 					}`, sharedPath,
 				),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttrPair("zookeeper_znode.src", "data", "zookeeper_znode.dst", "data"),
+					resource.TestCheckResourceAttrPair(
+						"zookeeper_znode.src",
+						"data",
+						"zookeeper_znode.dst",
+						"data",
+					),
 					resource.TestCheckResourceAttr("zookeeper_znode.dst", "data", "Forza Napoli!"),
-					resource.TestCheckResourceAttrPair("zookeeper_znode.src", "data_base64", "zookeeper_znode.dst", "data_base64"),
-					resource.TestCheckResourceAttr("zookeeper_znode.dst", "data_base64", "Rm9yemEgTmFwb2xpIQ=="),
+					resource.TestCheckResourceAttrPair(
+						"zookeeper_znode.src",
+						"data_base64",
+						"zookeeper_znode.dst",
+						"data_base64",
+					),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.dst",
+						"data_base64",
+						"Rm9yemEgTmFwb2xpIQ==",
+					),
 				),
 			},
 			{
@@ -148,12 +190,36 @@ func TestAccResourceZNode_DefaultACL(t *testing.T) {
 						data = "Default ACL Test"
 					}`, path),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("zookeeper_znode.test_default_acl", "path", path),
-					resource.TestCheckResourceAttr("zookeeper_znode.test_default_acl", "data", "Default ACL Test"),
-					resource.TestCheckResourceAttr("zookeeper_znode.test_default_acl", "acl.#", "1"),
-					resource.TestCheckResourceAttr("zookeeper_znode.test_default_acl", "acl.0.scheme", "world"),
-					resource.TestCheckResourceAttr("zookeeper_znode.test_default_acl", "acl.0.id", "anyone"),
-					resource.TestCheckResourceAttr("zookeeper_znode.test_default_acl", "acl.0.permissions", "31"),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.test_default_acl",
+						"path",
+						path,
+					),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.test_default_acl",
+						"data",
+						"Default ACL Test",
+					),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.test_default_acl",
+						"acl.#",
+						"1",
+					),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.test_default_acl",
+						"acl.0.scheme",
+						"world",
+					),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.test_default_acl",
+						"acl.0.id",
+						"anyone",
+					),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.test_default_acl",
+						"acl.0.permissions",
+						"31",
+					),
 				),
 			},
 		},
@@ -183,9 +249,21 @@ func TestAccResourceZNode_WithACL(t *testing.T) {
 					resource.TestCheckResourceAttr("zookeeper_znode.test_acl", "path", path),
 					resource.TestCheckResourceAttr("zookeeper_znode.test_acl", "data", "ACL Test"),
 					resource.TestCheckResourceAttr("zookeeper_znode.test_acl", "acl.#", "1"),
-					resource.TestCheckResourceAttr("zookeeper_znode.test_acl", "acl.0.scheme", "world"),
-					resource.TestCheckResourceAttr("zookeeper_znode.test_acl", "acl.0.id", "anyone"),
-					resource.TestCheckResourceAttr("zookeeper_znode.test_acl", "acl.0.permissions", "31"),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.test_acl",
+						"acl.0.scheme",
+						"world",
+					),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.test_acl",
+						"acl.0.id",
+						"anyone",
+					),
+					resource.TestCheckResourceAttr(
+						"zookeeper_znode.test_acl",
+						"acl.0.permissions",
+						"31",
+					),
 				),
 			},
 		},

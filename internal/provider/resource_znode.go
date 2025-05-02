@@ -79,7 +79,11 @@ func resourceZNode() *schema.Resource {
 	}
 }
 
-func resourceZNodeCreate(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceZNodeCreate(
+	_ context.Context,
+	rscData *schema.ResourceData,
+	prvClient interface{},
+) diag.Diagnostics {
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Get("path").(string)
@@ -106,7 +110,11 @@ func resourceZNodeCreate(_ context.Context, rscData *schema.ResourceData, prvCli
 	return setAttributesFromZNode(rscData, znode, diag.Diagnostics{})
 }
 
-func resourceZNodeRead(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceZNodeRead(
+	_ context.Context,
+	rscData *schema.ResourceData,
+	prvClient interface{},
+) diag.Diagnostics {
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Id()
@@ -126,7 +134,11 @@ func resourceZNodeRead(_ context.Context, rscData *schema.ResourceData, prvClien
 	return setAttributesFromZNode(rscData, znode, diag.Diagnostics{})
 }
 
-func resourceZNodeUpdate(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceZNodeUpdate(
+	_ context.Context,
+	rscData *schema.ResourceData,
+	prvClient interface{},
+) diag.Diagnostics {
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Id()
@@ -153,7 +165,11 @@ func resourceZNodeUpdate(_ context.Context, rscData *schema.ResourceData, prvCli
 	return diag.Diagnostics{}
 }
 
-func resourceZNodeDelete(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func resourceZNodeDelete(
+	_ context.Context,
+	rscData *schema.ResourceData,
+	prvClient interface{},
+) diag.Diagnostics {
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Id()

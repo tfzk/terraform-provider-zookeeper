@@ -13,6 +13,13 @@ func (e *MissingEnvVarError) Error() string {
 	return "missing environment variable: " + e.varName
 }
 
+// NewMissingEnvVarError creates a new MissingEnvVarError.
+//
+// varName is the name of the missing environment variable.
+//
+// Example:
+//
+//	NewMissingEnvVarError("ZOOKEEPER_SERVERS")
 func NewMissingEnvVarError(varName string) *MissingEnvVarError {
 	return &MissingEnvVarError{varName}
 }
@@ -23,10 +30,23 @@ type NonSeqZNodeCannotEndWithPathSeparatorError struct {
 }
 
 func (e *NonSeqZNodeCannotEndWithPathSeparatorError) Error() string {
-	return fmt.Sprintf("non-sequential ZNode cannot have path '%s' because it ends in '%c'", e.path, zNodePathSeparator)
+	return fmt.Sprintf(
+		"non-sequential ZNode cannot have path '%s' because it ends in '%c'",
+		e.path,
+		zNodePathSeparator,
+	)
 }
 
-func NewNonSeqZNodeCannotEndWithPathSeparatorError(path string) *NonSeqZNodeCannotEndWithPathSeparatorError {
+// NewNonSeqZNodeCannotEndWithPathSeparatorError creates a new NonSeqZNodeCannotEndWithPathSeparatorError.
+//
+// path is the path of the non-sequential ZNode.
+//
+// Example:
+//
+//	NewNonSeqZNodeCannotEndWithPathSeparatorError("/path/to/znode")
+func NewNonSeqZNodeCannotEndWithPathSeparatorError(
+	path string,
+) *NonSeqZNodeCannotEndWithPathSeparatorError {
 	return &NonSeqZNodeCannotEndWithPathSeparatorError{path}
 }
 
@@ -39,6 +59,13 @@ func (e *CannotUpdateDoesNotExistError) Error() string {
 	return fmt.Sprintf("failed to update ZNode '%s': does not exist", e.path)
 }
 
+// NewCannotUpdateDoesNotExistError creates a new CannotUpdateDoesNotExistError.
+//
+// path is the path of the non-sequential ZNode.
+//
+// Example:
+//
+//	NewCannotUpdateDoesNotExistError("/path/to/znode")
 func NewCannotUpdateDoesNotExistError(path string) *CannotUpdateDoesNotExistError {
 	return &CannotUpdateDoesNotExistError{path}
 }

@@ -1,3 +1,4 @@
+// Package provider contains the Terraform provider implementation.
 package provider
 
 import (
@@ -12,16 +13,26 @@ import (
 	"github.com/tfzk/terraform-provider-zookeeper/internal/client"
 )
 
-var (
-	ErrACLPermNotAnInt = errors.New("acl permissions value is not an integer")
-)
+// ErrACLPermNotAnInt is returned when the permissions value of an ACL is not an integer.
+//
+// This is a special error that is used to distinguish between a user error (e.g. a user
+// providing a string value for the permissions field) and a provider error (e.g. a provider
+// providing an invalid ACL).
+//
+// This error is not returned by the provider itself, but by the provider's helper functions
+// that parse ACLs from the Terraform Schema.
+var ErrACLPermNotAnInt = errors.New("acl permissions value is not an integer")
 
 const (
 	zNodeLinkForDesc = "[ZooKeeper ZNode](https://zookeeper.apache.org/doc/current/zookeeperProgrammers.html#sc_zkDataModel_znodes)"
 )
 
 // setAttributesFromZNode takes a *client.ZNode and populates the *schema.ResourceData with its content.
-func setAttributesFromZNode(rscData *schema.ResourceData, znode *client.ZNode, diags diag.Diagnostics) diag.Diagnostics {
+func setAttributesFromZNode(
+	rscData *schema.ResourceData,
+	znode *client.ZNode,
+	diags diag.Diagnostics,
+) diag.Diagnostics {
 	if err := rscData.Set("path", znode.Path); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}

@@ -64,7 +64,11 @@ func datasourceZNode() *schema.Resource {
 	}
 }
 
-func dataSourceZNodeRead(_ context.Context, rscData *schema.ResourceData, prvClient interface{}) diag.Diagnostics {
+func dataSourceZNodeRead(
+	_ context.Context,
+	rscData *schema.ResourceData,
+	prvClient interface{},
+) diag.Diagnostics {
 	zkClient := prvClient.(*client.Client)
 
 	znodePath := rscData.Get("path").(string)

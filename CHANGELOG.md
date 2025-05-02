@@ -8,6 +8,12 @@ NOTES:
 * Updated repository `golangci-lint` version to `v2` (`2.1.5`)
   * Now used for both linting _and_ formatting
   * Also now using `golangci/golangci-lint-action@v7`
+
+IMPROVEMENTS:
+
+* Switching to `golangci-lint@v2` highlighted places where internal doc and formatting could improved, so did that
+* `Makefile` `fmt`, `lint` and `lint-fix` now solely rely on `golangci-lint`
+
 ## 1.2.5 (March 14, 2025)
 
 NOTES:

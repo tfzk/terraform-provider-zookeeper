@@ -1,4 +1,4 @@
-## 1.2.6 (WIP)
+## 1.2.6 (May 02, 2025)
 
 NOTES:
 
@@ -7,7 +7,7 @@ NOTES:
 * Updated all dependencies to latest
 * Updated repository `golangci-lint` version to `v2` (`2.1.5`)
   * Now used for both linting _and_ formatting
-  * Also now using `golangci/golangci-lint-action@v7`
+* Updated GitHub Action `golangci/golangci-lint-action` from `v6` to `v7`
 
 IMPROVEMENTS:
 

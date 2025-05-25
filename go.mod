@@ -2,7 +2,7 @@ module github.com/tfzk/terraform-provider-zookeeper
 
 go 1.24
 
-toolchain go1.24.2
+toolchain go1.24.3
 
 require (
 	github.com/go-zookeeper/zk v1.0.4

@@ -1,3 +1,8 @@
+## NEXT (Mon DD, YYYY)
+
+NOTES:
+
+* Updated repository Go version to `1.24.3`
 ## 1.2.6 (May 02, 2025)
 
 NOTES:

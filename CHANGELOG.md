@@ -4,6 +4,7 @@ NOTES:
 
 * Updated repository Go version to `1.24.3`
 * Updated repository `golangci-lint` version to `v2` (`2.1.6`)
+* Updated all dependencies to latest
 
 ## 1.2.6 (May 02, 2025)
 

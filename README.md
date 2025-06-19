@@ -56,9 +56,14 @@ workflow for details.
 ### Requirements
 
 * [Go](https://go.dev/dl/) >= `1.24`
+* [golangci-lint](https://golangci-lint.run/)
 * [Docker](https://docs.docker.com/get-docker/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
-* [golangci-lint](https://golangci-lint.run/)
+
+#### [asdf](https://asdf-vm.com/)
+
+The project comes pre-configured with `.tool-versions`: if you already use [asdf](https://asdf-vm.com/),
+just run `asdf install` to get started.
 
 ### Run acceptance tests locally
 

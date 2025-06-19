@@ -5,6 +5,7 @@ NOTES:
 * Updated repository Go version to `1.24.4`
 * Updated repository `golangci-lint` version to `v2` (`2.1.6`)
 * Updated all dependencies to latest
+* Added note in README about [asdf](https://asdf-vm.com/)
 
 ## 1.2.6 (May 02, 2025)
 

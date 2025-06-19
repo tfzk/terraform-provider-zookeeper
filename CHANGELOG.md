@@ -1,4 +1,4 @@
-## NEXT (Mon DD, YYYY)
+## 1.2.7 (Jun 19, 2025)
 
 NOTES:
 

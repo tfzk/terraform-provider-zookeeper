@@ -6,6 +6,9 @@ NOTES:
 * Updated repository `golangci-lint` version to `v2` (`2.1.6`)
 * Updated all dependencies to latest
 * Added note in README about [asdf](https://asdf-vm.com/)
+* Address 2 (duplicate) code scanning issues, related to `build-test.yml` workflow missing permission restriction
+  * https://github.com/tfzk/terraform-provider-zookeeper/security/code-scanning/2
+  * https://github.com/tfzk/terraform-provider-zookeeper/security/code-scanning/1
 
 ## 1.2.6 (May 02, 2025)
 

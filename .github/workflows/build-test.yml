@@ -16,6 +16,9 @@ on:
       - '.github/CONTRIBUTING.md'
       - '.github/SUPPORT.md'
 
+permissions:
+  contents: read
+
 jobs:
 
   build:

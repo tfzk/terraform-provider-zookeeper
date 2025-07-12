@@ -1,3 +1,9 @@
+## 1.2.8 (Jul 12, 2025)
+
+NOTES:
+
+* Updated repository Go version to `1.24.5`
+  * See the [Go `1.24.5` milestone](https://github.com/golang/go/issues?q=milestone%3AGo1.24.5+label%3ACherryPickApproved) on our issue tracker for details.
 ## 1.2.7 (Jun 19, 2025)
 
 NOTES:

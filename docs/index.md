@@ -1,6 +1,5 @@
 ---
 page_title: "ZooKeeper Provider"
-subcategory: ""
 description: |-
   The Terraform provider to manage resources like ZNodes and Sequential ZNodes.
 ---

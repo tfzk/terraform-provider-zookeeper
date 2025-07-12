@@ -11,7 +11,14 @@ import (
 )
 
 // Generate the Terraform provider documentation using `tfplugindocs`:
-//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+//go:generate echo "\n*** tfplugindocs: generating documentation... ***"
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate
+//go:generate echo "*** tfplugindocs: generated! ***"
+//
+// Validate the documentation generated (above) by `tfplugindocs`
+//go:generate echo "\n*** tfplugindocs: validation Documentation ***"
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs validate
+//go:generate echo "*** tfplugindocs: validated! ***"
 
 func main() {
 	p, err := provider.New()

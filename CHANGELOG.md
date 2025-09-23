@@ -8,6 +8,11 @@ NOTES:
 * Updated all dependencies to latest
 * Updated repository `golangci-lint` to `2.5.0`
 
+IMPROVEMENTS:
+
+* Enabling CI testing for versions `1.12` and `1.13` of Terraform
+* Enabling CI testing for versions `3.3` and `3.4` of ZooKeeper
+
 ## 1.2.8 (Jul 12, 2025)
 
 NOTES:

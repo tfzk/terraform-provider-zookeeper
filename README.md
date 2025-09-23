@@ -55,7 +55,7 @@ workflow for details.
 
 ### Requirements
 
-* [Go](https://go.dev/dl/) >= `1.24`
+* [Go](https://go.dev/dl/) >= `1.25`
 * [golangci-lint](https://golangci-lint.run/)
 * [Docker](https://docs.docker.com/get-docker/)
 * [Docker Compose](https://docs.docker.com/compose/install/)

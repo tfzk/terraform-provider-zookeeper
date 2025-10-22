@@ -1,3 +1,12 @@
+## 1.2.10 (?)
+
+NOTES:
+
+* Updated repository Go version to `1.25.3`
+  * See the [Go `1.25.3` milestone](https://github.com/golang/go/issues?q=milestone%3AGo1.25.3)
+  * See the [Go `1.25.3` release notes](https://go.dev/doc/devel/release#go1.25.3)
+* Updated all dependencies to latest
+
 ## 1.2.9 (Sep 23, 2025)
 
 NOTES:

@@ -7,6 +7,11 @@ NOTES:
   * See the [Go `1.25.3` release notes](https://go.dev/doc/devel/release#go1.25.3)
 * Updated all dependencies to latest
 
+IMPROVEMENTS:
+
+* Minor tweak to `Makefile` to ensure building and dependency updates commands
+  always include test code.
+
 ## 1.2.9 (Sep 23, 2025)
 
 NOTES:

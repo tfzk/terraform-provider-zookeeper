@@ -5,6 +5,7 @@ default: build
 
 build:
 	go build -v ./...
+	go test -c ./...
 
 install: build
 	go install -v ./...
@@ -28,7 +29,7 @@ fmt:
 
 # Updates all dependencies, recursively.
 deps.update:
-	go get -u ./...
+	go get -u -t ./...
 	go mod tidy
 
 test:

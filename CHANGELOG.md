@@ -1,3 +1,8 @@
+
+IMPROVEMENTS:
+
+* Enabling CI testing for versions `1.14` of Terraform
+
 ## 1.2.10 (Oct 22, 2025)
 
 NOTES:

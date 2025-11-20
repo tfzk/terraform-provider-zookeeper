@@ -1,3 +1,8 @@
+NOTES:
+
+* Updated repository Go version to `1.25.4`
+    * See the [Go `1.25.4` milestone](https://github.com/golang/go/issues?q=milestone%3AGo1.25.4)
+    * See the [Go `1.25.4` release notes](https://go.dev/doc/devel/release#go1.25.4)
 
 IMPROVEMENTS:
 

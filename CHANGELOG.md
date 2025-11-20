@@ -1,3 +1,5 @@
+## 1.2.11 (Nov 20, 2025)
+
 NOTES:
 
 * Updated repository Go version to `1.25.4`

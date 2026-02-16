@@ -1,3 +1,22 @@
+## 1.3.0 (Feb 16, 2026)
+
+NOTES:
+
+* Updated repository Go version to `1.26.0`
+  * See the [Go `1.26.0` milestone](https://github.com/golang/go/issues?q=milestone%3AGo1.26)
+  * See the [Go `1.26.0` release notes](https://go.dev/doc/go1.26)
+* Updated all dependencies to latest
+* Updated repository tooling:
+  * `golangci-lint` to `2.9.0`
+  * `goreleaser` to `2.13.3`
+  * GitHub `actions/checkout` to `v6`
+
+BREAKING CHANGES:
+
+* Dropping support for `arm` architecture: this `GOARCH` has been
+  [removed for Windows in Golang 1.26](https://go.dev/doc/go1.26#windows), and it sees very little use
+  in comparison to `arm64` for Terraform target audences.
+
 ## 1.2.11 (Nov 20, 2025)
 
 NOTES:
@@ -6,7 +25,7 @@ NOTES:
     * See the [Go `1.25.4` milestone](https://github.com/golang/go/issues?q=milestone%3AGo1.25.4)
     * See the [Go `1.25.4` release notes](https://go.dev/doc/devel/release#go1.25.4)
 * Updated all dependencies to latest
-* * Updated repository `golangci-lint` to `2.6.2`
+* Updated repository `golangci-lint` to `2.6.2`
 
 IMPROVEMENTS:
 

@@ -41,7 +41,10 @@ func setAttributesFromZNode(
 		diags = append(diags, diag.FromErr(err)...)
 	}
 
-	if err := rscData.Set("data_base64", base64.StdEncoding.EncodeToString(znode.Data)); err != nil {
+	if err := rscData.Set(
+		"data_base64",
+		base64.StdEncoding.EncodeToString(znode.Data),
+	); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 	}
 

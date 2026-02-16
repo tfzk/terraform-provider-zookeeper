@@ -1,3 +1,16 @@
+## 1.2.12 (Feb 16, 2026)
+
+NOTES:
+
+* Updated repository Go version to `1.26.0`
+  * See the [Go `1.26.0` milestone](https://github.com/golang/go/issues?q=milestone%3AGo1.26)
+  * See the [Go `1.26.0` release notes](https://go.dev/doc/go1.26)
+* Updated all dependencies to latest
+* Updated repository tooling:
+  * `golangci-lint` to `2.9.0`
+  * `goreleaser` to `2.13.3`
+  * GitHub `actions/checkout` to `v6`
+
 ## 1.2.11 (Nov 20, 2025)
 
 NOTES:
@@ -6,7 +19,7 @@ NOTES:
     * See the [Go `1.25.4` milestone](https://github.com/golang/go/issues?q=milestone%3AGo1.25.4)
     * See the [Go `1.25.4` release notes](https://go.dev/doc/devel/release#go1.25.4)
 * Updated all dependencies to latest
-* * Updated repository `golangci-lint` to `2.6.2`
+* Updated repository `golangci-lint` to `2.6.2`
 
 IMPROVEMENTS:
 

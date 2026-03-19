@@ -1,3 +1,21 @@
+## 1.3.2 (Mar 19, 2026)
+
+NOTES:
+
+* Updated dependencies (bumped `google.golang.org/grpc`)
+  * Addresses advisory [CVE-2026-33186](https://github.com/advisories/GHSA-p77j-4mvh-x3m3)
+
+## 1.3.1 (Mar 17, 2026)
+
+NOTES:
+
+* Added `FUNDING` file
+* Updated all dependencies to latest
+* Updated GitHub Actions used in this repository:
+  * `crazy-max/ghaction-import-gpg` to `v7`
+  * `goreleaser/goreleaser-action` to `v7`
+  * `hashicorp/setup-terraform` to `v4`
+
 ## 1.3.0 (Feb 16, 2026)
 
 NOTES:

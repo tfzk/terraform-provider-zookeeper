@@ -164,7 +164,7 @@ func NewClient(
 	}, nil
 }
 
-func newDialer(tlsConfig *TLSConfig) (zk.Dialer, error) {
+func newDialer(tlsConfig *TLSConfig) (zk.Dialer, error) { // #nosec G402
 	tlsDialerConfig := &tls.Config{
 		InsecureSkipVerify: tlsConfig.SkipVerify,
 	}

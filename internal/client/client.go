@@ -56,8 +56,16 @@ var (
 	ErrInvalidArguments   = zk.ErrBadArguments
 )
 
-// ErrUserPassBothOrNone returned when only one of username and password is specified: either both or none is allowed.
-var ErrUserPassBothOrNone = errors.New("both username and password must be specified together")
+var (
+	// ErrUserPassBothOrNone returned when only one of username and password is specified: either both or none is allowed.
+	ErrUserPassBothOrNone = errors.New("both username and password must be specified together")
+
+	// ErrTLSParseCACert returned when parsing the root CA certificate failed.
+	ErrTLSParseCACert = errors.New("unable to parse TLS root CA cert")
+
+	// ErrTLSCertKeyBothOrNone returned when one of either client certificate or client key are specified, but the other is not.
+	ErrTLSCertKeyBothOrNone = errors.New("TLS cert and key file paths are mutually inclusive (if one is specified, the other must be too)")
+)
 
 const (
 	serversStringSeparator = ","
@@ -165,17 +173,17 @@ func newDialer(tlsConfig *TLSConfig) (zk.Dialer, error) {
 
 		tlsRootCert, err := os.ReadFile(tlsConfig.RootCertPath)
 		if err != nil {
-			return nil, fmt.Errorf("unable to read TLS root CA cert file: %s", err)
+			return nil, fmt.Errorf("unable to read TLS root CA cert file: %w", err)
 		}
 
 		if !tlsDialerConfig.RootCAs.AppendCertsFromPEM(tlsRootCert) {
-			return nil, fmt.Errorf("unable to parse TLS root CA cert")
+			return nil, ErrTLSParseCACert
 		}
 	}
 
 	if tlsConfig.CertPath != "" || tlsConfig.KeyPath != "" {
 		if tlsConfig.CertPath == "" || tlsConfig.KeyPath == "" {
-			return nil, fmt.Errorf("TLS cert and key file paths are mutually inclusive (if one is specified, the other must be too)")
+			return nil, ErrTLSCertKeyBothOrNone
 		}
 
 		tlsCert, err := os.ReadFile(tlsConfig.CertPath)

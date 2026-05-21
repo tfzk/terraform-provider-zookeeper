@@ -4,6 +4,10 @@ NEW FEATURES:
 
 * ... WIP...
 
+IMPROVEMENTS:
+
+* Enabling CI testing for versions `1.15` of Terraform
+
 NOTES:
 
 * Updated repository Go version to `1.26.3`

@@ -81,6 +81,7 @@ jobs:
           - '1.12.*'
           - '1.13.*'
           - '1.14.*'
+          - '1.15.*'
         zookeeper: # https://zookeeper.apache.org/releases.html
           - '3.3'
           - '3.4'

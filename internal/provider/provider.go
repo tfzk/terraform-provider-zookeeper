@@ -52,6 +52,46 @@ func New() (*schema.Provider, error) {
 				Description: "Password for digest authentication. " +
 					"Can be set via `ZOOKEEPER_PASSWORD` environment variable.",
 			},
+			"tls_enable": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Sensitive:   false,
+				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSEnable, nil),
+				Description: "Use secure TLS connection when connecting to the server(s). " +
+					"Can be set via `ZOOKEEPER_TLS_ENABLE` environment variable.",
+			},
+			"tls_skip_verify": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Sensitive:   false,
+				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSSkipVerify, nil),
+				Description: "Skip verification of server's certificate chain and host name. " +
+					"Can be set via `ZOOKEEPER_TLS_SKIP_VERIFY` environment variable.",
+			},
+			"tls_root_ca_cert_path": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   false,
+				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSRootCertPath, nil),
+				Description: "File path to the root CA certificate to use when connecting to the server(s) using TLS. " +
+					"Can be set via `ZOOKEEPER_TLS_ROOT_CA_CERT_PATH` environment variable.",
+			},
+			"tls_cert_path": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   false,
+				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSCertPath, nil),
+				Description: "File path to the certificate to use when connecting to the server(s) using TLS. " +
+					"Can be set via `ZOOKEEPER_TLS_CERT_PATH` environment variable.",
+			},
+			"tls_key_path": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   false,
+				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSCertPath, nil),
+				Description: "File path to the key to use when connecting to the server(s) using TLS. " +
+					"Can be set via `ZOOKEEPER_TLS_KEY_PATH` environment variable.",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"zookeeper_znode":            resourceZNode(),
@@ -67,10 +107,18 @@ func New() (*schema.Provider, error) {
 			username := rscData.Get("username").(string)
 			password := rscData.Get("password").(string)
 
+			tlsConfig := &client.TLSConfig{
+				Enable:       rscData.Get("tls_enable").(bool),
+				SkipVerify:   rscData.Get("tls_skip_verify").(bool),
+				RootCertPath: rscData.Get("tls_root_ca_cert_path").(string),
+				CertPath:     rscData.Get("tls_cert_path").(string),
+				KeyPath:      rscData.Get("tls_key_path").(string),
+			}
+
 			if servers != "" {
 				// NOTE: Client Pool above is in a closure here
 				// because we don't have a way to add fields to the Provider.
-				c, err := clientPool.GetOrCreateClient(servers, sessionTimeout, username, password)
+				c, err := clientPool.GetOrCreateClient(servers, sessionTimeout, username, password, tlsConfig)
 				if err != nil {
 					// Report inability to connect internal Client
 					return nil, diag.Errorf(

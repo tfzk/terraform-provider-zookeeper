@@ -2,8 +2,11 @@
 package client
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"errors"
 	"fmt"
+	"net"
 	"os"
 	"path/filepath"
 	"sort"
@@ -13,6 +16,16 @@ import (
 
 	"github.com/go-zookeeper/zk"
 )
+
+// TLSConfig is an internal structure representing TLS-related settings
+// configured on the provider level.
+type TLSConfig struct {
+	Enable       bool
+	SkipVerify   bool
+	RootCertPath string
+	CertPath     string
+	KeyPath      string
+}
 
 // Client wraps a go-zookeeper `zk.Conn` object.
 //
@@ -77,20 +90,41 @@ const (
 	// EnvZooKeeperPassword environment variable providing the password part of a digest auth credentials.
 	// This is used by NewClientFromEnv.
 	EnvZooKeeperPassword = "ZOOKEEPER_PASSWORD"
+
+	// EnvZooKeeperEnableTLS environment variable enabling a TLS connection to the server(s).
+	// This is used by NewClientFromEnv.
+	EnvZooKeeperTLSEnable = "ZOOKEEPER_TLS_ENABLE"
+
+	// EnvZooKeeperTLSSkipVerify environment variable disabling verification of server's certificate chain and host name.
+	// This is used by NewClientFromEnv.
+	EnvZooKeeperTLSSkipVerify = "ZOOKEEPER_TLS_SKIP_VERIFY"
+
+	// EnvZooKeeperTLSRootCertPath environment variable providing file path to the TLS root certificate.
+	// This is used by NewClientFromEnv.
+	EnvZooKeeperTLSRootCertPath = "ZOOKEEPER_TLS_ROOT_CA_CERT_PATH"
+
+	// EnvZooKeeperTLSCertPath environment variable providing file path to the TLS certificate.
+	// This is used by NewClientFromEnv.
+	EnvZooKeeperTLSCertPath = "ZOOKEEPER_TLS_CERT_PATH"
+
+	// EnvZooKeeperTLSKeyPath environment variable providing file path to the TLS key.
+	// This is used by NewClientFromEnv.
+	EnvZooKeeperTLSKeyPath = "ZOOKEEPER_TLS_KEY_PATH"
 )
 
 // NewClient constructs a new Client instance.
-func NewClient(
-	servers string,
-	sessionTimeoutSec int,
-	username string,
-	password string,
-) (*Client, error) {
+func NewClient(servers string, sessionTimeoutSec int, username string, password string, tlsConfig *TLSConfig) (*Client, error) {
 	serversSplit := strings.Split(servers, serversStringSeparator)
+
+	dialer, err := newDialer(tlsConfig)
+	if err != nil {
+		return nil, err
+	}
 
 	conn, _, err := zk.Connect(
 		zk.FormatServers(serversSplit),
 		time.Duration(sessionTimeoutSec)*time.Second,
+		zk.WithDialer(dialer),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("unable to connect to ZooKeeper: %w", err)
@@ -112,6 +146,56 @@ func NewClient(
 
 	return &Client{
 		zkConn: conn,
+	}, nil
+}
+
+func newDialer(tlsConfig *TLSConfig) (zk.Dialer, error) {
+	tlsDialerConfig := &tls.Config{
+		InsecureSkipVerify: tlsConfig.SkipVerify,
+	}
+
+	if tlsConfig.RootCertPath != "" {
+		tlsDialerConfig.RootCAs = x509.NewCertPool()
+
+		tlsRootCert, err := os.ReadFile(tlsConfig.RootCertPath)
+		if err != nil {
+			return nil, fmt.Errorf("unable to read TLS root CA cert file: %s", err)
+		}
+
+		if !tlsDialerConfig.RootCAs.AppendCertsFromPEM(tlsRootCert) {
+			return nil, fmt.Errorf("unable to parse TLS root CA cert")
+		}
+	}
+
+	if tlsConfig.CertPath != "" || tlsConfig.KeyPath != "" {
+		if tlsConfig.CertPath == "" || tlsConfig.KeyPath == "" {
+			return nil, fmt.Errorf("TLS cert and key file paths are mutually inclusive (if one is specified, the other must be too)")
+		}
+
+		tlsCert, err := os.ReadFile(tlsConfig.CertPath)
+		if err != nil {
+			return nil, fmt.Errorf("unable to read TLS client cert file: %w", err)
+		}
+
+		tlsKey, err := os.ReadFile(tlsConfig.KeyPath)
+		if err != nil {
+			return nil, fmt.Errorf("unable to read TLS client key file: %w", err)
+		}
+
+		certificate, err := tls.X509KeyPair(tlsCert, tlsKey)
+		if err != nil {
+			return nil, fmt.Errorf("unable to parse TLS client X509 key pair: %w", err)
+		}
+
+		tlsDialerConfig.Certificates = []tls.Certificate{certificate}
+	}
+
+	return func(network, address string, timeout time.Duration) (net.Conn, error) {
+		if tlsConfig.Enable {
+			return tls.Dial(network, address, tlsDialerConfig)
+		}
+
+		return net.DialTimeout(network, address, timeout)
 	}, nil
 }
 
@@ -137,8 +221,20 @@ func NewClientFromEnv() (*Client, error) {
 	zkUsername, _ := os.LookupEnv(EnvZooKeeperUsername)
 	zkPassword, _ := os.LookupEnv(EnvZooKeeperPassword)
 
+	tlsConfig := &TLSConfig{}
+
+	tlsEnable, _ := os.LookupEnv(EnvZooKeeperTLSEnable)
+	tlsConfig.Enable = tlsEnable == "true"
+
+	tlsSkipVerify, _ := os.LookupEnv(EnvZooKeeperTLSSkipVerify)
+	tlsConfig.SkipVerify = tlsSkipVerify == "true"
+
+	tlsConfig.RootCertPath, _ = os.LookupEnv(EnvZooKeeperTLSRootCertPath)
+	tlsConfig.CertPath, _ = os.LookupEnv(EnvZooKeeperTLSCertPath)
+	tlsConfig.KeyPath, _ = os.LookupEnv(EnvZooKeeperTLSKeyPath)
+
 	fmt.Println("[DEBUG] Creating Client from Environment Variables")
-	return NewClient(zkServers, zkSessionInt, zkUsername, zkPassword)
+	return NewClient(zkServers, zkSessionInt, zkUsername, zkPassword, tlsConfig)
 }
 
 // Create a ZNode at the given path.

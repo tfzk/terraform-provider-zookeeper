@@ -64,7 +64,8 @@ var (
 	ErrTLSParseCACert = errors.New("unable to parse TLS root CA cert")
 
 	// ErrTLSCertKeyBothOrNone returned when one of either client certificate or client key are specified, but the other is not.
-	ErrTLSCertKeyBothOrNone = errors.New("TLS cert and key file paths are mutually inclusive (if one is specified, the other must be too)")
+	ErrTLSCertKeyBothOrNone = errors.New("TLS cert and key file paths are mutually inclusive " +
+		"(if one is specified, the other must be too)")
 )
 
 const (

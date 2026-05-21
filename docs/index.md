@@ -47,10 +47,47 @@ as they require a persistent connection: they are more targeted at runtime servi
 
 ## Example Usage
 
+**Basic usage**
+
 ```terraform
 provider "zookeeper" {
   servers         = "zk-server-01:2181,zk-server-02:2181"
   session_timeout = 30
+}
+```
+
+**With TLS enabled**
+
+```terraform
+provider "zookeeper" {
+  servers               = "zk-server-01:2182,zk-server-02:2182"
+  session_timeout       = 30
+  tls_enable            = true
+  tls_root_ca_cert_path = "/path/to/root_CA_certificate.pem"
+}
+```
+
+**With TLS enabled** (server's cert verification disabled)
+
+```terraform
+provider "zookeeper" {
+  servers         = "zk-server-01:2182,zk-server-02:2182"
+  session_timeout = 30
+  tls_enable      = true
+  tls_skip_verify = true
+}
+```
+
+**With mTLS enabled**
+
+```terraform
+provider "zookeeper" {
+  servers               = "zk-server-01:2182,zk-server-02:2182"
+  session_timeout       = 30
+  tls_enable            = true
+  tls_root_ca_cert_path = "/path/to/root_CA_certificate.pem"
+  tls_cert_path         = "/path/to/client_certificate.pem"
+  tls_key_path          = "/path/to/client_key.key"
 }
 ```
 
@@ -63,6 +100,13 @@ provider "zookeeper" {
 - `servers` (String) A comma separated list of 'host:port' pairs, pointing at ZooKeeper Server(s). Can be set via `ZOOKEEPER_SERVERS` environment variable.
 - `session_timeout` (Number) How many seconds a session is considered valid after losing connectivity. More information about ZooKeeper sessions can be found [here](#zookeeper-sessions). Can be set via `ZOOKEEPER_SESSION` environment variable.
 - `username` (String, Sensitive) Username for digest authentication. Can be set via `ZOOKEEPER_USERNAME` environment variable.
+- `tls_enable` (Boolean) Enable TLS when connecting to ZooKeeper server(s). Can be set via `ZOOKEEPER_TLS_ENABLE` environment variable.
+- `tls_skip_verify` (Boolean) Skip verification of server's certificate chain and host name. Can be set via `ZOOKEEPER_TLS_SKIP_VERIFY` environment variable.
+- `tls_root_ca_cert_path` (String) File path to the root CA certificate to use when connecting to the server(s) using TLS. Can be set via `ZOOKEEPER_TLS_ROOT_CA_CERT_PATH` environment variable.
+- `tls_cert_path` (String) File path to a client certificate to use when connecting to the server(s) using TLS. Can be set via `ZOOKEEPER_TLS_CERT_PATH` environment variable.
+- `tls_key_path` (String) File path to a client key to use when connecting to the server(s) using TLS. Can be set via `ZOOKEEPER_TLS_KEY_PATH` environment variable.
+
+**NOTE:** The `tls_cert_path` and `tls_key_path` attributes are mutually inclusive - if you specify one of them, you are required to specify the other as well.
 
 ## Important aspects about ZooKeeper and this provider
 

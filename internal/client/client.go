@@ -192,7 +192,11 @@ func newDialer(tlsConfig *TLSConfig) (zk.Dialer, error) {
 
 	return func(network, address string, timeout time.Duration) (net.Conn, error) {
 		if tlsConfig.Enable {
-			return tls.Dial(network, address, tlsDialerConfig)
+			dialer := &net.Dialer{
+				Timeout: timeout,
+			}
+
+			return tls.DialWithDialer(dialer, network, address, tlsDialerConfig)
 		}
 
 		return net.DialTimeout(network, address, timeout)

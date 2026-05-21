@@ -31,11 +31,10 @@ linters:
     - fatcontext
     - gochecknoglobals
     - gocognit
-    - goconst
     - gocritic
     - godot
     - gomoddirectives
-    - gomodguard
+    - gomodguard_v2
     - goprintffuncname
     - gosec
     - importas

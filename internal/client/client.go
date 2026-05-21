@@ -113,7 +113,13 @@ const (
 )
 
 // NewClient constructs a new Client instance.
-func NewClient(servers string, sessionTimeoutSec int, username string, password string, tlsConfig *TLSConfig) (*Client, error) {
+func NewClient(
+	servers string,
+	sessionTimeoutSec int,
+	username string,
+	password string,
+	tlsConfig *TLSConfig,
+) (*Client, error) {
 	serversSplit := strings.Split(servers, serversStringSeparator)
 
 	dialer, err := newDialer(tlsConfig)

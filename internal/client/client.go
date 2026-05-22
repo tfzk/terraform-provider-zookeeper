@@ -100,7 +100,7 @@ const (
 	// This is used by NewClientFromEnv.
 	EnvZooKeeperPassword = "ZOOKEEPER_PASSWORD"
 
-	// EnvZooKeeperEnableTLS environment variable enabling a TLS connection to the server(s).
+	// EnvZooKeeperTLSEnable environment variable enabling a TLS connection to the server(s).
 	// This is used by NewClientFromEnv.
 	EnvZooKeeperTLSEnable = "ZOOKEEPER_TLS_ENABLE"
 

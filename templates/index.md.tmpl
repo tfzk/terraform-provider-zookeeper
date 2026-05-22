@@ -56,9 +56,25 @@ as they require a persistent connection: they are more targeted at runtime servi
 
 ## Example Usage
 
-{{ tffile "examples/provider/provider.tf" }}
+**Basic usage**
+
+{{ tffile "examples/provider/basic/provider.tf" }}
+
+**With TLS enabled**
+
+{{ tffile "examples/provider/with_TLS/provider.tf" }}
+
+**With TLS enabled** (server's cert verification disabled)
+
+{{ tffile "examples/provider/with_TLS_skip_verify/provider.tf" }}
+
+**With mTLS enabled**
+
+{{ tffile "examples/provider/with_mTLS/provider.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
+
+**NOTE:** The `tls_cert_path` and `tls_key_path` attributes are mutually inclusive - if you specify one of them, you are required to specify the other as well.
 
 ## Important aspects about ZooKeeper and this provider
 

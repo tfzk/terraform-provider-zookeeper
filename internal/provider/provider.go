@@ -57,7 +57,7 @@ func New() (*schema.Provider, error) {
 				Optional:    true,
 				Sensitive:   false,
 				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSEnable, nil),
-				Description: "Use secure TLS connection when connecting to the server(s). " +
+				Description: "Use secure TLS connection when connecting to the ZooKeeper server(s). " +
 					"Can be set via `ZOOKEEPER_TLS_ENABLE` environment variable.",
 			},
 			"tls_skip_verify": {
@@ -73,24 +73,26 @@ func New() (*schema.Provider, error) {
 				Optional:    true,
 				Sensitive:   false,
 				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSRootCertPath, nil),
-				Description: "File path to the root CA certificate to use when connecting to the server(s) using TLS. " +
-					"Can be set via `ZOOKEEPER_TLS_ROOT_CA_CERT_PATH` environment variable.",
+				Description: "File path to the root CA certificate to use when connecting to the " +
+					"ZooKeeper server(s) using TLS. Can be set via `ZOOKEEPER_TLS_ROOT_CA_CERT_PATH` " +
+					"environment variable.",
 			},
 			"tls_cert_path": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   false,
 				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSCertPath, nil),
-				Description: "File path to the certificate to use when connecting to the server(s) using TLS. " +
-					"Can be set via `ZOOKEEPER_TLS_CERT_PATH` environment variable.",
+				Description: "File path to a client certificate to use when connecting to the " +
+					"ZooKeeper server(s) using TLS. Can be set via `ZOOKEEPER_TLS_CERT_PATH` " +
+					"environment variable.",
 			},
 			"tls_key_path": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   false,
 				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSCertPath, nil),
-				Description: "File path to the key to use when connecting to the server(s) using TLS. " +
-					"Can be set via `ZOOKEEPER_TLS_KEY_PATH` environment variable.",
+				Description: "File path to a client key to use when connecting to the ZooKeeper " +
+					"server(s) using TLS. Can be set via `ZOOKEEPER_TLS_KEY_PATH` environment variable.",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{

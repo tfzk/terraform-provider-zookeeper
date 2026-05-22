@@ -39,7 +39,13 @@ func (p *Pool) GetOrCreateClient(
 	}
 
 	// Create new client, and cache it for the given key
-	client, err := NewClient(servers, sessionTimeoutSec, username, password, tlsConfig)
+	client, err := NewClient(
+		servers,
+		sessionTimeoutSec,
+		username,
+		password,
+		tlsConfig,
+	)
 	p.pool[clientKey] = client
 
 	return client, err

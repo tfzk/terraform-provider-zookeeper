@@ -118,7 +118,7 @@ func New() (*schema.Provider, error) {
 			if servers != "" {
 				// NOTE: Client Pool above is in a closure here
 				// because we don't have a way to add fields to the Provider.
-				c, err := clientPool.GetOrCreateClient(
+				c, err := clientPool.GetOrCreateClient( //nolint:contextcheck
 					servers,
 					sessionTimeout,
 					username,

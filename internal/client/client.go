@@ -2,6 +2,7 @@
 package client
 
 import (
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
@@ -206,15 +207,20 @@ func newDialer(tlsConfig *TLSConfig) (zk.Dialer, error) { // #nosec G402
 	}
 
 	return func(network, address string, timeout time.Duration) (net.Conn, error) {
+		ctx := context.Background()
+
+		dialer := &net.Dialer{Timeout: timeout}
+
 		if tlsConfig.Enable {
-			dialer := &net.Dialer{
-				Timeout: timeout,
+			tlsDialer := &tls.Dialer{
+				NetDialer: dialer,
+				Config:    tlsDialerConfig,
 			}
 
-			return tls.DialWithDialer(dialer, network, address, tlsDialerConfig)
+			return tlsDialer.DialContext(ctx, network, address)
 		}
 
-		return net.DialTimeout(network, address, timeout)
+		return dialer.DialContext(ctx, network, address)
 	}, nil
 }
 
@@ -253,7 +259,13 @@ func NewClientFromEnv() (*Client, error) {
 	tlsConfig.KeyPath, _ = os.LookupEnv(EnvZooKeeperTLSKeyPath)
 
 	fmt.Println("[DEBUG] Creating Client from Environment Variables")
-	return NewClient(zkServers, zkSessionInt, zkUsername, zkPassword, tlsConfig)
+	return NewClient(
+		zkServers,
+		zkSessionInt,
+		zkUsername,
+		zkPassword,
+		tlsConfig,
+	)
 }
 
 // Create a ZNode at the given path.

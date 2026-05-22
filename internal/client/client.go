@@ -18,16 +18,6 @@ import (
 	"github.com/go-zookeeper/zk"
 )
 
-// TLSConfig is an internal structure representing TLS-related settings
-// configured on the provider level.
-type TLSConfig struct {
-	Enable       bool
-	SkipVerify   bool
-	RootCertPath string
-	CertPath     string
-	KeyPath      string
-}
-
 // Client wraps a go-zookeeper `zk.Conn` object.
 //
 // It's designed to offer the functionalities that we will expose via the

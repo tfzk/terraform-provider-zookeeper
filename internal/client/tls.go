@@ -11,11 +11,8 @@ import (
 // TLSConfig is an internal structure representing TLS-related settings
 // configured on the provider level.
 type TLSConfig struct {
-	Enable       bool
-	SkipVerify   bool
-	RootCertPath string
-	CertPath     string
-	KeyPath      string
+	*tls.Config
+	Enable bool
 }
 
 var (
@@ -27,37 +24,46 @@ var (
 		"(if one is specified, the other must be too)")
 )
 
-// GetDialerConfig reads and parses necessary certs/keys and returns them in form of std lib's *tls.Config.
-func (tlsConfig *TLSConfig) GetDialerConfig() (*tls.Config, error) { // #nosec G402
-	dialerConfig := &tls.Config{
-		InsecureSkipVerify: tlsConfig.SkipVerify,
+// NewTLSConfig reads and parses necessary certs/keys and constructs new *TLSConfig.
+func NewTLSConfig(
+	enable bool,
+	skipVerify bool,
+	rootCertPath string,
+	certPath string,
+	keyPath string,
+) (*TLSConfig, error) { // #nosec G402
+	tlsConfig := &TLSConfig{
+		Config: &tls.Config{
+			InsecureSkipVerify: skipVerify,
+		},
+		Enable: enable,
 	}
 
-	if tlsConfig.RootCertPath != "" {
-		certPool, err := tlsConfig.readCACert()
+	if rootCertPath != "" {
+		certPool, err := tlsConfig.readCACert(rootCertPath)
 		if err != nil {
 			return nil, err
 		}
 
-		dialerConfig.RootCAs = certPool
+		tlsConfig.RootCAs = certPool
 	}
 
-	if tlsConfig.CertPath != "" || tlsConfig.KeyPath != "" {
-		certificate, err := tlsConfig.readClientKeyPair()
+	if certPath != "" || keyPath != "" {
+		certificate, err := tlsConfig.readClientKeyPair(certPath, keyPath)
 		if err != nil {
 			return nil, err
 		}
 
-		dialerConfig.Certificates = []tls.Certificate{certificate}
+		tlsConfig.Certificates = []tls.Certificate{certificate}
 	}
 
-	return dialerConfig, nil
+	return tlsConfig, nil
 }
 
-func (tlsConfig *TLSConfig) readCACert() (*x509.CertPool, error) {
+func (tlsConfig *TLSConfig) readCACert(rootCertPath string) (*x509.CertPool, error) {
 	certPool := x509.NewCertPool()
 
-	pemCert, err := os.ReadFile(tlsConfig.RootCertPath)
+	pemCert, err := os.ReadFile(rootCertPath) //nolint:gosec
 	if err != nil {
 		return nil, fmt.Errorf("unable to read TLS root CA cert file: %w", err)
 	}
@@ -69,17 +75,17 @@ func (tlsConfig *TLSConfig) readCACert() (*x509.CertPool, error) {
 	return certPool, nil
 }
 
-func (tlsConfig *TLSConfig) readClientKeyPair() (tls.Certificate, error) {
-	if tlsConfig.CertPath == "" || tlsConfig.KeyPath == "" {
+func (tlsConfig *TLSConfig) readClientKeyPair(certPath, keyPath string) (tls.Certificate, error) {
+	if certPath == "" || keyPath == "" {
 		return tls.Certificate{}, ErrTLSCertKeyBothOrNone
 	}
 
-	pemCert, err := os.ReadFile(tlsConfig.CertPath)
+	pemCert, err := os.ReadFile(certPath) //nolint:gosec
 	if err != nil {
 		return tls.Certificate{}, fmt.Errorf("unable to read TLS client cert file: %w", err)
 	}
 
-	pemKey, err := os.ReadFile(tlsConfig.KeyPath)
+	pemKey, err := os.ReadFile(keyPath) //nolint:gosec
 	if err != nil {
 		return tls.Certificate{}, fmt.Errorf("unable to read TLS client key file: %w", err)
 	}

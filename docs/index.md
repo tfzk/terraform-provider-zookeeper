@@ -99,14 +99,14 @@ provider "zookeeper" {
 - `password` (String, Sensitive) Password for digest authentication. Can be set via `ZOOKEEPER_PASSWORD` environment variable.
 - `servers` (String) A comma separated list of 'host:port' pairs, pointing at ZooKeeper Server(s). Can be set via `ZOOKEEPER_SERVERS` environment variable.
 - `session_timeout` (Number) How many seconds a session is considered valid after losing connectivity. More information about ZooKeeper sessions can be found [here](#zookeeper-sessions). Can be set via `ZOOKEEPER_SESSION` environment variable.
-- `tls_cert_path` (String) File path to a client certificate to use when connecting to the ZooKeeper server(s) using TLS. Can be set via `ZOOKEEPER_TLS_CERT_PATH` environment variable.
-- `tls_enable` (Boolean) Use secure TLS connection when connecting to the ZooKeeper server(s). Can be set via `ZOOKEEPER_TLS_ENABLE` environment variable.
-- `tls_key_path` (String) File path to a client key to use when connecting to the ZooKeeper server(s) using TLS. Can be set via `ZOOKEEPER_TLS_KEY_PATH` environment variable.
-- `tls_root_ca_cert_path` (String) File path to the root CA certificate to use when connecting to the ZooKeeper server(s) using TLS. Can be set via `ZOOKEEPER_TLS_ROOT_CA_CERT_PATH` environment variable.
+- `tls_ca_file` (String) File path to the root CA certificate to use when connecting to the ZooKeeper server(s) using TLS. Can be set via `ZOOKEEPER_TLS_CA_FILE` environment variable.
+- `tls_cert_file` (String) File path to a client certificate to use when connecting to the ZooKeeper server(s) using TLS. Can be set via `ZOOKEEPER_TLS_CERT_FILE` environment variable.
+- `tls_enabled` (Boolean) Use secure TLS connection when connecting to the ZooKeeper server(s). Can be set via `ZOOKEEPER_TLS_ENABLED` environment variable.
+- `tls_key_file` (String) File path to a client key to use when connecting to the ZooKeeper server(s) using TLS. Can be set via `ZOOKEEPER_TLS_KEY_FILE` environment variable.
 - `tls_skip_verify` (Boolean) Skip verification of server's certificate chain and host name. Can be set via `ZOOKEEPER_TLS_SKIP_VERIFY` environment variable.
 - `username` (String, Sensitive) Username for digest authentication. Can be set via `ZOOKEEPER_USERNAME` environment variable.
 
-**NOTE:** The `tls_cert_path` and `tls_key_path` attributes are mutually inclusive - if you specify one of them, you are required to specify the other as well.
+**NOTE:** The `tls_cert_file` and `tls_key_file` attributes are mutually inclusive - if you specify one of them, you are required to specify the other as well.
 
 ## Important aspects about ZooKeeper and this provider
 

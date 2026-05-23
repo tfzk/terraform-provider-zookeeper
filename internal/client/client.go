@@ -81,25 +81,25 @@ const (
 	// This is used by NewClientFromEnv.
 	EnvZooKeeperPassword = "ZOOKEEPER_PASSWORD"
 
-	// EnvZooKeeperTLSEnable environment variable enabling a TLS connection to the server(s).
+	// EnvZooKeeperTLSEnabled environment variable enabling a TLS connection to the server(s).
 	// This is used by NewClientFromEnv.
-	EnvZooKeeperTLSEnable = "ZOOKEEPER_TLS_ENABLE"
+	EnvZooKeeperTLSEnabled = "ZOOKEEPER_TLS_ENABLED"
 
 	// EnvZooKeeperTLSSkipVerify environment variable disabling verification of server's certificate chain and host name.
 	// This is used by NewClientFromEnv.
 	EnvZooKeeperTLSSkipVerify = "ZOOKEEPER_TLS_SKIP_VERIFY"
 
-	// EnvZooKeeperTLSRootCertPath environment variable providing file path to the TLS root certificate.
+	// EnvZooKeeperTLSCAFile environment variable providing file path to the TLS root certificate.
 	// This is used by NewClientFromEnv.
-	EnvZooKeeperTLSRootCertPath = "ZOOKEEPER_TLS_ROOT_CA_CERT_PATH"
+	EnvZooKeeperTLSCAFile = "ZOOKEEPER_TLS_CA_FILE"
 
-	// EnvZooKeeperTLSCertPath environment variable providing file path to the TLS certificate.
+	// EnvZooKeeperTLSCertFile environment variable providing file path to the TLS certificate.
 	// This is used by NewClientFromEnv.
-	EnvZooKeeperTLSCertPath = "ZOOKEEPER_TLS_CERT_PATH"
+	EnvZooKeeperTLSCertFile = "ZOOKEEPER_TLS_CERT_FILE"
 
-	// EnvZooKeeperTLSKeyPath environment variable providing file path to the TLS key.
+	// EnvZooKeeperTLSKeyFile environment variable providing file path to the TLS key.
 	// This is used by NewClientFromEnv.
-	EnvZooKeeperTLSKeyPath = "ZOOKEEPER_TLS_KEY_PATH"
+	EnvZooKeeperTLSKeyFile = "ZOOKEEPER_TLS_KEY_FILE"
 )
 
 // NewClient constructs a new Client instance.
@@ -146,7 +146,7 @@ func newDialer(tlsConfig *TLSConfig) zk.Dialer {
 
 		dialer := &net.Dialer{Timeout: timeout}
 
-		if tlsConfig.Enable {
+		if tlsConfig.IsEnabled {
 			tlsDialer := &tls.Dialer{
 				NetDialer: dialer,
 				Config:    tlsConfig.Config,
@@ -181,18 +181,18 @@ func NewClientFromEnv() (*Client, error) {
 	zkUsername, _ := os.LookupEnv(EnvZooKeeperUsername)
 	zkPassword, _ := os.LookupEnv(EnvZooKeeperPassword)
 
-	tlsEnable, _ := os.LookupEnv(EnvZooKeeperTLSEnable)
+	tlsIsEnabled, _ := os.LookupEnv(EnvZooKeeperTLSEnabled)
 	tlsSkipVerify, _ := os.LookupEnv(EnvZooKeeperTLSSkipVerify)
-	tlsRootCertPath, _ := os.LookupEnv(EnvZooKeeperTLSRootCertPath)
-	tlsCertPath, _ := os.LookupEnv(EnvZooKeeperTLSCertPath)
-	tlsKeyPath, _ := os.LookupEnv(EnvZooKeeperTLSKeyPath)
+	tlsCAFile, _ := os.LookupEnv(EnvZooKeeperTLSCAFile)
+	tlsCertFile, _ := os.LookupEnv(EnvZooKeeperTLSCertFile)
+	tlsKeyFile, _ := os.LookupEnv(EnvZooKeeperTLSKeyFile)
 
 	tlsConfig, err := NewTLSConfig(
-		tlsEnable == "true",
+		tlsIsEnabled == "true",
 		tlsSkipVerify == "true",
-		tlsRootCertPath,
-		tlsCertPath,
-		tlsKeyPath,
+		tlsCAFile,
+		tlsCertFile,
+		tlsKeyFile,
 	)
 	if err != nil {
 		return nil, err

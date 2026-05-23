@@ -12,7 +12,7 @@ import (
 // configured on the provider level.
 type TLSConfig struct {
 	*tls.Config
-	Enable bool
+	IsEnabled bool
 }
 
 var (
@@ -26,21 +26,21 @@ var (
 
 // NewTLSConfig reads and parses necessary certs/keys and constructs new *TLSConfig.
 func NewTLSConfig(
-	enable bool,
+	isEnabled bool,
 	skipVerify bool,
-	rootCertPath string,
-	certPath string,
-	keyPath string,
+	caFile string,
+	certFile string,
+	keyFile string,
 ) (*TLSConfig, error) { // #nosec G402
 	tlsConfig := &TLSConfig{
 		Config: &tls.Config{
 			InsecureSkipVerify: skipVerify,
 		},
-		Enable: enable,
+		IsEnabled: isEnabled,
 	}
 
-	if rootCertPath != "" {
-		certPool, err := tlsConfig.readCACert(rootCertPath)
+	if caFile != "" {
+		certPool, err := tlsConfig.readCACert(caFile)
 		if err != nil {
 			return nil, err
 		}
@@ -48,8 +48,8 @@ func NewTLSConfig(
 		tlsConfig.RootCAs = certPool
 	}
 
-	if certPath != "" || keyPath != "" {
-		certificate, err := tlsConfig.readClientKeyPair(certPath, keyPath)
+	if certFile != "" || keyFile != "" {
+		certificate, err := tlsConfig.readClientKeyPair(certFile, keyFile)
 		if err != nil {
 			return nil, err
 		}
@@ -60,10 +60,10 @@ func NewTLSConfig(
 	return tlsConfig, nil
 }
 
-func (tlsConfig *TLSConfig) readCACert(rootCertPath string) (*x509.CertPool, error) {
+func (tlsConfig *TLSConfig) readCACert(caFile string) (*x509.CertPool, error) {
 	certPool := x509.NewCertPool()
 
-	pemCert, err := os.ReadFile(rootCertPath) //nolint:gosec
+	pemCert, err := os.ReadFile(caFile) //nolint:gosec
 	if err != nil {
 		return nil, fmt.Errorf("unable to read TLS root CA cert file: %w", err)
 	}
@@ -75,17 +75,17 @@ func (tlsConfig *TLSConfig) readCACert(rootCertPath string) (*x509.CertPool, err
 	return certPool, nil
 }
 
-func (tlsConfig *TLSConfig) readClientKeyPair(certPath, keyPath string) (tls.Certificate, error) {
-	if certPath == "" || keyPath == "" {
+func (tlsConfig *TLSConfig) readClientKeyPair(certFile, keyFile string) (tls.Certificate, error) {
+	if certFile == "" || keyFile == "" {
 		return tls.Certificate{}, ErrTLSCertKeyBothOrNone
 	}
 
-	pemCert, err := os.ReadFile(certPath) //nolint:gosec
+	pemCert, err := os.ReadFile(certFile) //nolint:gosec
 	if err != nil {
 		return tls.Certificate{}, fmt.Errorf("unable to read TLS client cert file: %w", err)
 	}
 
-	pemKey, err := os.ReadFile(keyPath) //nolint:gosec
+	pemKey, err := os.ReadFile(keyFile) //nolint:gosec
 	if err != nil {
 		return tls.Certificate{}, fmt.Errorf("unable to read TLS client key file: %w", err)
 	}

@@ -112,15 +112,10 @@ func NewClient(
 ) (*Client, error) {
 	serversSplit := strings.Split(servers, serversStringSeparator)
 
-	dialer, err := newDialer(tlsConfig)
-	if err != nil {
-		return nil, err
-	}
-
 	conn, _, err := zk.Connect(
 		zk.FormatServers(serversSplit),
 		time.Duration(sessionTimeoutSec)*time.Second,
-		zk.WithDialer(dialer),
+		zk.WithDialer(newDialer(tlsConfig)),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("unable to connect to ZooKeeper: %w", err)
@@ -145,12 +140,7 @@ func NewClient(
 	}, nil
 }
 
-func newDialer(tlsConfig *TLSConfig) (zk.Dialer, error) {
-	tlsDialerConfig, err := tlsConfig.GetDialerConfig()
-	if err != nil {
-		return nil, err
-	}
-
+func newDialer(tlsConfig *TLSConfig) zk.Dialer {
 	return func(network, address string, timeout time.Duration) (net.Conn, error) {
 		ctx := context.Background()
 
@@ -159,14 +149,14 @@ func newDialer(tlsConfig *TLSConfig) (zk.Dialer, error) {
 		if tlsConfig.Enable {
 			tlsDialer := &tls.Dialer{
 				NetDialer: dialer,
-				Config:    tlsDialerConfig,
+				Config:    tlsConfig.Config,
 			}
 
 			return tlsDialer.DialContext(ctx, network, address)
 		}
 
 		return dialer.DialContext(ctx, network, address)
-	}, nil
+	}
 }
 
 // NewClientFromEnv constructs a Client instance from environment variables.
@@ -191,17 +181,22 @@ func NewClientFromEnv() (*Client, error) {
 	zkUsername, _ := os.LookupEnv(EnvZooKeeperUsername)
 	zkPassword, _ := os.LookupEnv(EnvZooKeeperPassword)
 
-	tlsConfig := &TLSConfig{}
-
 	tlsEnable, _ := os.LookupEnv(EnvZooKeeperTLSEnable)
-	tlsConfig.Enable = tlsEnable == "true"
-
 	tlsSkipVerify, _ := os.LookupEnv(EnvZooKeeperTLSSkipVerify)
-	tlsConfig.SkipVerify = tlsSkipVerify == "true"
+	tlsRootCertPath, _ := os.LookupEnv(EnvZooKeeperTLSRootCertPath)
+	tlsCertPath, _ := os.LookupEnv(EnvZooKeeperTLSCertPath)
+	tlsKeyPath, _ := os.LookupEnv(EnvZooKeeperTLSKeyPath)
 
-	tlsConfig.RootCertPath, _ = os.LookupEnv(EnvZooKeeperTLSRootCertPath)
-	tlsConfig.CertPath, _ = os.LookupEnv(EnvZooKeeperTLSCertPath)
-	tlsConfig.KeyPath, _ = os.LookupEnv(EnvZooKeeperTLSKeyPath)
+	tlsConfig, err := NewTLSConfig(
+		tlsEnable == "true",
+		tlsSkipVerify == "true",
+		tlsRootCertPath,
+		tlsCertPath,
+		tlsKeyPath,
+	)
+	if err != nil {
+		return nil, err
+	}
 
 	fmt.Println("[DEBUG] Creating Client from Environment Variables")
 	return NewClient(

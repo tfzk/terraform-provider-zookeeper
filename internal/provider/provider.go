@@ -109,12 +109,16 @@ func New() (*schema.Provider, error) {
 			username := rscData.Get("username").(string)
 			password := rscData.Get("password").(string)
 
-			tlsConfig := &client.TLSConfig{
-				Enable:       rscData.Get("tls_enable").(bool),
-				SkipVerify:   rscData.Get("tls_skip_verify").(bool),
-				RootCertPath: rscData.Get("tls_root_ca_cert_path").(string),
-				CertPath:     rscData.Get("tls_cert_path").(string),
-				KeyPath:      rscData.Get("tls_key_path").(string),
+			tlsConfig, err := client.NewTLSConfig(
+				rscData.Get("tls_enable").(bool),
+				rscData.Get("tls_skip_verify").(bool),
+				rscData.Get("tls_root_ca_cert_path").(string),
+				rscData.Get("tls_cert_path").(string),
+				rscData.Get("tls_key_path").(string),
+			)
+			if err != nil {
+				// Report invalid TLS configuration
+				return nil, diag.Errorf("Unable to parse TLS config: %v", err)
 			}
 
 			if servers != "" {

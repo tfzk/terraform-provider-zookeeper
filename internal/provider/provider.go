@@ -52,13 +52,13 @@ func New() (*schema.Provider, error) {
 				Description: "Password for digest authentication. " +
 					"Can be set via `ZOOKEEPER_PASSWORD` environment variable.",
 			},
-			"tls_enable": {
+			"tls_enabled": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Sensitive:   false,
-				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSEnable, nil),
+				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSEnabled, nil),
 				Description: "Use secure TLS connection when connecting to the ZooKeeper server(s). " +
-					"Can be set via `ZOOKEEPER_TLS_ENABLE` environment variable.",
+					"Can be set via `ZOOKEEPER_TLS_ENABLED` environment variable.",
 			},
 			"tls_skip_verify": {
 				Type:        schema.TypeBool,
@@ -68,31 +68,31 @@ func New() (*schema.Provider, error) {
 				Description: "Skip verification of server's certificate chain and host name. " +
 					"Can be set via `ZOOKEEPER_TLS_SKIP_VERIFY` environment variable.",
 			},
-			"tls_root_ca_cert_path": {
+			"tls_ca_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   false,
-				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSRootCertPath, nil),
+				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSCAFile, nil),
 				Description: "File path to the root CA certificate to use when connecting to the " +
-					"ZooKeeper server(s) using TLS. Can be set via `ZOOKEEPER_TLS_ROOT_CA_CERT_PATH` " +
+					"ZooKeeper server(s) using TLS. Can be set via `ZOOKEEPER_TLS_CA_FILE` " +
 					"environment variable.",
 			},
-			"tls_cert_path": {
+			"tls_cert_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   false,
-				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSCertPath, nil),
+				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSCertFile, nil),
 				Description: "File path to a client certificate to use when connecting to the " +
-					"ZooKeeper server(s) using TLS. Can be set via `ZOOKEEPER_TLS_CERT_PATH` " +
+					"ZooKeeper server(s) using TLS. Can be set via `ZOOKEEPER_TLS_CERT_FILE` " +
 					"environment variable.",
 			},
-			"tls_key_path": {
+			"tls_key_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   false,
-				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSCertPath, nil),
+				DefaultFunc: schema.EnvDefaultFunc(client.EnvZooKeeperTLSKeyFile, nil),
 				Description: "File path to a client key to use when connecting to the ZooKeeper " +
-					"server(s) using TLS. Can be set via `ZOOKEEPER_TLS_KEY_PATH` environment variable.",
+					"server(s) using TLS. Can be set via `ZOOKEEPER_TLS_KEY_FILE` environment variable.",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -110,11 +110,11 @@ func New() (*schema.Provider, error) {
 			password := rscData.Get("password").(string)
 
 			tlsConfig, err := client.NewTLSConfig(
-				rscData.Get("tls_enable").(bool),
+				rscData.Get("tls_enabled").(bool),
 				rscData.Get("tls_skip_verify").(bool),
-				rscData.Get("tls_root_ca_cert_path").(string),
-				rscData.Get("tls_cert_path").(string),
-				rscData.Get("tls_key_path").(string),
+				rscData.Get("tls_ca_file").(string),
+				rscData.Get("tls_cert_file").(string),
+				rscData.Get("tls_key_file").(string),
 			)
 			if err != nil {
 				// Report invalid TLS configuration

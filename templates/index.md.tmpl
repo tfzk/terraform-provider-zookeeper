@@ -64,6 +64,12 @@ as they require a persistent connection: they are more targeted at runtime servi
 
 {{ tffile "examples/provider/with_TLS/provider.tf" }}
 
+**With TLS enabled** (self-signed certificate)
+
+The root CA certificate can be set explicitly (for example if the server uses self-signed certificate.)
+
+{{ tffile "examples/provider/with_TLS_self-signed/provider.tf" }}
+
 **With TLS enabled** (server's cert verification disabled)
 
 {{ tffile "examples/provider/with_TLS_skip_verify/provider.tf" }}

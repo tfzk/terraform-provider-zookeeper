@@ -1,8 +1,11 @@
-## UNRELEASED (TBD)
+## 1.4.0 (May 29, 2026)
 
 NEW FEATURES:
 
-* ... WIP...
+* Added support for fully controlled TLS communication with ZooKeeper:
+  encrypted communication; bespoke Root CA; mTLS (i.e. mutual certificate exchange); option to disable server certificate verification.
+  Comes with updated documentation and examples.
+  Thank you [@simunic-cz](https://github.com/simunic-cz) for this great contribution!
 
 IMPROVEMENTS:
 

@@ -32,7 +32,7 @@ version it implements, and Terraform:
 
 The provider is tested against all combinations of:
 
-* **Terraform** - versions `0.12` to `1.13`
+* **Terraform** - versions `0.12` to `1.15`
 * **ZooKeeper** - versions `3.3` to `3.9` 
 
 See the [Build and Test](https://github.com/tfzk/terraform-provider-zookeeper/blob/main/.github/workflows/build-test.yml)
@@ -42,6 +42,7 @@ workflow for details.
 
 * [x] support for ZK standard multi-server connection string
 * [x] support for ZK authentication
+* [x] support for TLS and mTLS
 * [x] support for ZK ACLs
 * [x] "session timeout" configuration
 * [x] create ZNode

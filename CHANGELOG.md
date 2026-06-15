@@ -1,3 +1,11 @@
+## 1.4.1 (Jun 15, 2026)
+
+NOTES:
+
+* Updated repository Go version to `1.26.4`
+  * See the [Go `1.26.4` milestone](https://github.com/golang/go/issues?q=milestone%3AGo1.26.4)
+* Updated all dependencies to latest
+
 ## 1.4.0 (May 29, 2026)
 
 NEW FEATURES:

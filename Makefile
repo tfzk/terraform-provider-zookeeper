@@ -51,4 +51,8 @@ local.zk.restart:
 local.test:
 	ZOOKEEPER_SERVERS=$(LOCAL_ZOOKEEPER_SERVERS) TF_ACC=1 make test
 
-.PHONY: build install lint generate fmt deps.update test local.zk.up local.zk.down local.zk.restart local.test
+snyk:
+	snyk test --severity-threshold=high
+	snyk code test --severity-threshold=high
+
+.PHONY: build install lint generate fmt deps.update test local.zk.up local.zk.down local.zk.restart local.test snyk

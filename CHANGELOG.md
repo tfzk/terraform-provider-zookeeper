@@ -1,5 +1,9 @@
 ## 1.4.1 (Jun 15, 2026)
 
+IMPROVEMENTS:
+
+* Setup Snyk for vulns and code scanning
+
 NOTES:
 
 * Updated repository Go version to `1.26.4`

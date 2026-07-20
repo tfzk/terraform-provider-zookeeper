@@ -1,3 +1,11 @@
+## 1.4.2 (Jul 20, 2026)
+
+NOTES:
+
+* Updated repository Go version to `1.26.5`
+  * `go1.26.5` (released `2026-07-07`) includes security fixes to the `crypto/tls` and `os` packages, as well as bug fixes to the compiler, the runtime, the go command, and the net, os, and syscall packages. See the [Go 1.26.5 milestone](https://github.com/golang/go/issues?q=milestone%3AGo1.26.5+label%3ACherryPickApproved) on our issue tracker for details.
+* Updated all dependencies and tools in toolchain to latest
+
 ## 1.4.1 (Jun 15, 2026)
 
 IMPROVEMENTS:

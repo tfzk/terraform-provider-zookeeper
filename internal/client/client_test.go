@@ -1,6 +1,7 @@
 package client_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/go-zookeeper/zk"
@@ -13,11 +14,14 @@ func initTest(
 	t *testing.T,
 ) (*client.Client, *testifyAssert.Assertions, *testifyRequire.Assertions) {
 	t.Helper()
+	if os.Getenv("TF_ACC") == "" || os.Getenv(client.EnvZooKeeperServer) == "" {
+		t.Skipf("Acceptance tests skipped unless env 'TF_ACC' and '%s' are set", client.EnvZooKeeperServer)
+	}
+
 	assert := testifyAssert.New(t)
 	require := testifyRequire.New(t)
 
 	client, err := client.NewClientFromEnv()
-	require.NoError(err)
 	require.NoError(err)
 
 	return client, assert, require

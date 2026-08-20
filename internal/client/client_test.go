@@ -15,7 +15,10 @@ func initTest(
 ) (*client.Client, *testifyAssert.Assertions, *testifyRequire.Assertions) {
 	t.Helper()
 	if os.Getenv("TF_ACC") == "" || os.Getenv(client.EnvZooKeeperServer) == "" {
-		t.Skipf("Acceptance tests skipped unless env 'TF_ACC' and '%s' are set", client.EnvZooKeeperServer)
+		t.Skipf(
+			"Acceptance tests skipped unless env 'TF_ACC' and '%s' are set",
+			client.EnvZooKeeperServer,
+		)
 	}
 
 	assert := testifyAssert.New(t)

@@ -21,7 +21,6 @@ func TestProvider(t *testing.T) {
 	assert.NoError(p.InternalValidate())
 }
 
-//nolint:unparam
 func providerFactoriesMap() map[string]func() (*schema.Provider, error) {
 	// Instantiate the provider in advance...
 	p, err := provider.New()

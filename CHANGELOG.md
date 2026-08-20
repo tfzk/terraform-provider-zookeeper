@@ -1,3 +1,20 @@
+## 1.4.3 (Unreleased)
+
+IMPROVEMENTS:
+
+* Migrated repository task automation from `Makefile` to [Taskfile](https://taskfile.dev/) (`Taskfile.yml`)
+* Added `ruok` 4LW healthchecks to local ZooKeeper ensemble setup scripts (`docker-compose.yml`), ensuring containers are healthy before tests execute
+* Updated client tests to skip cleanly when acceptance testing environment variables (`TF_ACC` / `ZOOKEEPER_SERVERS`) are absent, allowing standalone unit testing via `task test`
+
+NOTES:
+
+* Updated repository Go version to `1.27.0`
+  * See the [Go 1.27 release notes](https://go.dev/doc/go1.27)
+* Updated all dependencies and tools in toolchain to latest
+  * Updated `golangci-lint` to `2.13.1`
+  * Added `task` `3.53.1` to `.tool-versions`
+* Updated GitHub Actions `build-test.yml` workflow to use `go-task/setup-task@v2`
+
 ## 1.4.2 (Jul 20, 2026)
 
 NOTES:

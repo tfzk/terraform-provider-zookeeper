@@ -37,21 +37,26 @@ jobs:
           cache: true
           check-latest: true
 
+      - name: Setup Task
+        uses: go-task/setup-task@v2
+        with:
+          version: 3.x
+
       - name: Run linters
         uses: golangci/golangci-lint-action@v9
         with:
           version: latest
 
       - name: Generate
-        run: make generate
+        run: task generate
 
       - name: Confirm no diff
         run: |
           git diff --compact-summary --exit-code || \
-            (echo "*** Unexpected differences after code generation. Run 'make generate' and commit."; exit 1)
+            (echo "*** Unexpected differences after code generation. Run 'task generate' and commit."; exit 1)
 
       - name: Build
-        run: make build
+        run: task build
 
   test:
     name: 'Tests (TF: ${{ matrix.terraform }} / ZK: ${{ matrix.zookeeper }})'
@@ -115,8 +120,13 @@ jobs:
           terraform_version: ${{ matrix.terraform }}
           terraform_wrapper: false
 
+      - name: Setup Task
+        uses: go-task/setup-task@v2
+        with:
+          version: 3.x
+
       - name: Run acceptance test
         env:
           ZOOKEEPER_SERVERS: localhost:2181
           TF_ACC: 1
-        run: make test
+        run: task test

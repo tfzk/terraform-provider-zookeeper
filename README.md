@@ -58,7 +58,8 @@ workflow for details.
 
 ### Requirements
 
-* [Go](https://go.dev/dl/) >= `1.26`
+* [Go](https://go.dev/dl/) >= `1.27`
+* [Task](https://taskfile.dev/)
 * [golangci-lint](https://golangci-lint.run/)
 * [Docker](https://docs.docker.com/get-docker/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
@@ -66,27 +67,53 @@ workflow for details.
 #### [asdf](https://asdf-vm.com/)
 
 The project comes pre-configured with `.tool-versions`: if you already use [asdf](https://asdf-vm.com/),
-just run `asdf install` to get started.
+just run `asdf install` to get all required development tools.
 
-### Run acceptance tests locally
+### Testing locally
 
-To run acceptance tests, you will need a ZooKeeper Ensemble running:
+#### One-shot acceptance tests
+To run the full suite of acceptance tests automatically (spinning up the local 3-server ZooKeeper ensemble, running all tests, and shutting down the ensemble afterwards), execute:
 
 ```shell
-$ make local.zk.up
-
-$ make local.test
-
-# ... do your development / fixing ...
-
-$ make local.zk.down
+$ task local.test
 ```
-In `scripts/zk-local-ensemble` we provide a `docker-compose.yml` that can spin
-up an ensemble made of 3 servers, running on `localhost` ports `2181, 2182 and 2183`.
-Everything can be controlled via the `make local.*` commands provided.
 
-If you are curious, please take a look at the `Makefile` to understand how those are then passed to
-go during (Acceptance) Tests.
+#### Running `task test` directly
+By default, running:
+
+```shell
+$ task test
+```
+
+will run unit tests and **skip any acceptance tests** (so no running ZooKeeper cluster is required).
+
+#### Iterative acceptance testing against a running ensemble
+If you want to run acceptance tests iteratively during development using `task test`:
+
+1. Start the local ZooKeeper ensemble:
+   ```shell
+   $ task local.zk.up
+   ```
+
+2. Run tests with `TF_ACC=1`:
+   ```shell
+   $ TF_ACC=1 task test
+   # or export TF_ACC=1 and then run: task test
+   ```
+
+3. When finished developing, shut down the local ensemble:
+   ```shell
+   $ task local.zk.down
+   ```
+
+> [!NOTE]
+> You can provide your own ZooKeeper ensemble by setting the `ZOOKEEPER_SERVERS` environment variable to a comma-separated list
+> of `host:port` pairs (e.g. `export ZOOKEEPER_SERVERS="localhost:2181,localhost:2182,localhost:2183"`).
+> In that case, just do step 2 above.
+
+In `scripts/zk-local-ensemble` we provide a `docker-compose.yml` that spins up an ensemble made of 3 servers running on `localhost` ports `2181, 2182, and 2183`. Everything can be controlled via the `task local.zk.*` commands provided.
+
+If you are curious, please take a look at `Taskfile.yml` to understand how variables and environment configurations are passed to Go during tests.
 
 ## License
 

@@ -1,0 +1,88 @@
+version: '3'
+
+vars:
+  LOCAL_ZOOKEEPER_SERVERS: localhost:2181,localhost:2182,localhost:2183
+
+tasks:
+  default:
+    desc: Build the provider binary and test binaries
+    cmds:
+      - task: build
+
+  build:
+    desc: Build the provider binary and test binaries
+    cmds:
+      - go build -v ./...
+      - go test -c ./...
+
+  install:
+    desc: Install the provider binary
+    deps: [build]
+    cmds:
+      - go install -v ./...
+
+  lint:
+    desc: Execute golangci-lint
+    cmds:
+      - golangci-lint run
+
+  lint-fix:
+    desc: Execute golangci-lint with auto-fix
+    cmds:
+      - golangci-lint run --fix
+
+  generate:
+    desc: Generate provider documentation
+    cmds:
+      - go generate ./...
+
+  fmt:
+    desc: Format the codebase using golangci-lint
+    cmds:
+      - golangci-lint fmt
+
+  deps.update:
+    desc: Update all dependencies recursively
+    cmds:
+      - go get -u -t ./...
+      - go mod tidy
+
+  test:
+    desc: Run unit tests
+    env:
+      ZOOKEEPER_SERVERS: '{{.ZOOKEEPER_SERVERS}}'
+      TF_ACC: '{{.TF_ACC}}'
+    cmds:
+      - go test -v -cover -timeout=2m -parallel=4 ./...
+
+  local.zk.up:
+    desc: Stand up a ZooKeeper Ensemble for testing
+    cmds:
+      - ./scripts/zk-local-ensemble/up
+
+  local.zk.down:
+    desc: Shut down the ZooKeeper Ensemble
+    cmds:
+      - ./scripts/zk-local-ensemble/down
+
+  local.zk.restart:
+    desc: Restart the ZooKeeper Ensemble
+    cmds:
+      - ./scripts/zk-local-ensemble/restart
+
+  local.test:
+    desc: Run acceptance tests against the ZooKeeper Ensemble running locally
+    cmds:
+      - task: local.zk.up
+      - defer:
+          task: local.zk.down
+      - task: test
+        vars:
+          ZOOKEEPER_SERVERS: '{{.LOCAL_ZOOKEEPER_SERVERS}}'
+          TF_ACC: '1'
+
+  snyk:
+    desc: Run Snyk security scans
+    cmds:
+      - snyk test --severity-threshold=high
+      - snyk code test --severity-threshold=high

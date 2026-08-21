@@ -1,9 +1,12 @@
-version: '3.1'
-
 x-common: &x-common
   init: true
   restart: always
   image: zookeeper:3.5
+  healthcheck:
+    test: ["CMD-SHELL", "echo ruok | nc 127.0.0.1 2181 | grep imok"]
+    interval: 2s
+    timeout: 2s
+    retries: 15
 
 x-environment: &x-environment
   ZOO_ADMINSERVER_ENABLED: "true"

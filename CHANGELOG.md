@@ -1,3 +1,10 @@
+
+IMPROVEMENTS:
+
+* Altered CI release process: `goreleaser/goreleaser-action` now picks the version of `goreleaser`
+  [from the `.tool-versions` file](https://github.com/goreleaser/goreleaser-action#inputs).
+* While at it, moved to [goreleaser](https://goreleaser.com/) `2.18` (latest)
+
 NOTES:
 
 * Updated repository Go version to `1.27.3`

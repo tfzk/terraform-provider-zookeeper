@@ -2,6 +2,7 @@
 
 IMPROVEMENTS:
 
+* Enabling CI testing for versions `1.16` of Terraform
 * Altered CI release process: `goreleaser/goreleaser-action` now picks the version of `goreleaser`
   [from the `.tool-versions` file](https://github.com/goreleaser/goreleaser-action#inputs).
 * While at it, moved to [goreleaser](https://goreleaser.com/) `2.18` (latest)

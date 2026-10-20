@@ -1,4 +1,4 @@
-golang 1.27.0
-golangci-lint 2.13.1
-snyk 1.1306.4
-task 3.53.1
+golang 1.27.3
+golangci-lint 2.15.0
+snyk 1.1309.0
+task 3.54.0

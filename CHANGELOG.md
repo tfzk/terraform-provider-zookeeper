@@ -1,3 +1,7 @@
+NOTES:
+
+* Updated all tools in toolchain to latest
+
 ## 1.4.3 (Aug 21, 2026)
 
 IMPROVEMENTS:

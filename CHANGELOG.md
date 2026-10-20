@@ -6,6 +6,7 @@ NOTES:
     * [`1.27.1`](https://github.com/golang/go/issues?q=milestone%3AGo1.27.1+label%3ACherryPickApproved)
     * [`1.27.2`](https://github.com/golang/go/issues?q=milestone%3AGo1.27.2+label%3ACherryPickApproved)
     * [`1.27.3`](https://github.com/golang/go/issues?q=milestone%3AGo1.27.3+label%3ACherryPickApproved)
+* Updated all dependencies to latest
 * Updated all tools in toolchain to latest
 
 ## 1.4.3 (Aug 21, 2026)

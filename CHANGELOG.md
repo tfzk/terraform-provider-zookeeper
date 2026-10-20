@@ -1,5 +1,11 @@
 NOTES:
 
+* Updated repository Go version to `1.27.3`
+  * See the [Go 1.27 release notes](https://go.dev/doc/devel/release#go1.27.0) for info about intermediate releases
+  * What each release includes:
+    * [`1.27.1`](https://github.com/golang/go/issues?q=milestone%3AGo1.27.1+label%3ACherryPickApproved)
+    * [`1.27.2`](https://github.com/golang/go/issues?q=milestone%3AGo1.27.2+label%3ACherryPickApproved)
+    * [`1.27.3`](https://github.com/golang/go/issues?q=milestone%3AGo1.27.3+label%3ACherryPickApproved)
 * Updated all tools in toolchain to latest
 
 ## 1.4.3 (Aug 21, 2026)

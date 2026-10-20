@@ -1,3 +1,23 @@
+## 1.4.4 (Oct 20, 2026)
+
+IMPROVEMENTS:
+
+* Enabling CI testing for versions `1.16` of Terraform
+* Altered CI release process: `goreleaser/goreleaser-action` now picks the version of `goreleaser`
+  [from the `.tool-versions` file](https://github.com/goreleaser/goreleaser-action#inputs).
+* While at it, moved to [goreleaser](https://goreleaser.com/) `2.18` (latest)
+
+NOTES:
+
+* Updated repository Go version to `1.27.3`
+  * See the [Go 1.27 release notes](https://go.dev/doc/devel/release#go1.27.0) for info about intermediate releases
+  * What each release includes:
+    * [`1.27.1`](https://github.com/golang/go/issues?q=milestone%3AGo1.27.1+label%3ACherryPickApproved)
+    * [`1.27.2`](https://github.com/golang/go/issues?q=milestone%3AGo1.27.2+label%3ACherryPickApproved)
+    * [`1.27.3`](https://github.com/golang/go/issues?q=milestone%3AGo1.27.3+label%3ACherryPickApproved)
+* Updated all dependencies to latest
+* Updated all tools in toolchain to latest
+
 ## 1.4.3 (Aug 21, 2026)
 
 IMPROVEMENTS:

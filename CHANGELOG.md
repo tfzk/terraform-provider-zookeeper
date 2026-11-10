@@ -1,3 +1,19 @@
+## 1.4.5 (Nov 10, 2026)
+
+IMPROVEMENTS:
+
+* Enabling CI testing for versions `1.17` of Terraform
+* Updated README to indicate testing against Terraform up to `1.17`
+* While at it, moved to [goreleaser](https://goreleaser.com/) `2.20.0` (latest)
+
+NOTES:
+
+* Updated repository Go version to `1.27.4`
+  * See the [Go 1.27 release notes](https://go.dev/doc/devel/release#go1.27.0) for info about intermediate releases
+  * What this release includes: [`1.27.4`](https://github.com/golang/go/issues?q=milestone%3AGo1.27.4+label%3ACherryPickApproved)
+* Updated all dependencies to latest
+* Updated all tools in toolchain to latest
+
 ## 1.4.4 (Oct 20, 2026)
 
 IMPROVEMENTS:

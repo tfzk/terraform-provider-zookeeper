@@ -32,7 +32,7 @@ version it implements, and Terraform:
 
 The provider is tested against all combinations of:
 
-* **Terraform** - versions `0.12` to `1.16`
+* **Terraform** - versions `0.12` to `1.17`
 * **ZooKeeper** - versions `3.3` to `3.9` 
 
 See the [Build and Test](https://github.com/tfzk/terraform-provider-zookeeper/blob/main/.github/workflows/build-test.yml)

@@ -5,7 +5,7 @@ go 1.27.4
 require (
 	github.com/go-zookeeper/zk v1.0.4
 	github.com/hashicorp/terraform-plugin-docs v0.25.0
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.40.1
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.41.1
 	github.com/stretchr/testify v1.12.1
 )
 
